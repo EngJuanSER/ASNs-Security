@@ -1,0 +1,35 @@
+\section{OBJETIVOS ESPECÍFICOS}
+\subsection{Objetivo 1: Identificación y Caracterización de la Exposición por ASN}
+
+Realizar un análisis de dos fases para identificar y cuantificar los servicios expuestos en las redes más importantes de Bogotá:
+
+\textbf{Identificación de ASNs:} Utilizar la base de datos pública de LACNIC (Registro de Direcciones de Internet de América Latina y el Caribe) para identificar y documentar los números de Sistema Autónomo (ASN) de los principales ISPs y entidades académicas que operan en Bogotá.
+
+\textbf{Caracterización de Servicios:} Ejecutar consultas SQL sobre los conjuntos de datos públicos de Censys en Google BigQuery para analizar los ASNs identificados, cuantificando la prevalencia de:
+\begin{itemize}
+  \item Protocolos de texto plano y obsoletos (Telnet, FTP).
+  \item Servicios de bases de datos expuestas (MongoDB, Redis, MySQL, Elasticsearch).
+  \item Paneles de control de acceso remoto (RDP, VNC).
+  \item Dispositivos de infraestructura con interfaces de gestión públicas (ej. routers con HTTP/HTTPS).
+\end{itemize}
+
+\subsection{Objetivo 2: Desarrollo de un Modelo Cuantitativo de Puntuación de Higiene Digital}
+
+Diseñar un modelo de puntuación que permita evaluar y comparar la postura de seguridad de cada ASN de forma objetiva. El modelo:
+
+\begin{itemize}
+  \item Asignará un factor de riesgo a cada tipo de servicio expuesto, considerando la probabilidad de explotación y el impacto potencial (ej. un RDP expuesto tiene un riesgo mayor que un FTP).
+  \item Normalizará los resultados en función del tamaño del espacio de direcciones IP del ASN para permitir una comparación justa entre redes de diferente escala.
+  \item Calculará una "Puntuación de Higiene Digital" final para cada ASN, clasificándolos para facilitar la identificación de aquellos con mayor área de mejora.
+\end{itemize}
+
+\subsection{Objetivo 3: Implementación de un Dashboard de Inteligencia de Amenazas Públicas}
+
+Desarrollar una aplicación web (dashboard) para presentar los resultados de forma clara e interactiva. La plataforma no requerirá inicio de sesión y visualizará los datos agregados:
+
+\begin{itemize}
+  \item Mostrará un ranking de los ASNs analizados según su Puntuación de Higiene Digital.
+  \item Presentará gráficos estadísticos sobre los servicios inseguros más comunes encontrados en toda la infraestructura de Bogotá.
+  \item Permitirá filtrar y explorar los resultados por ASN específico, para ver en detalle su perfil de exposición.
+  \item Incluirá una sección educativa que explique los riesgos asociados a cada servicio expuesto y ofrezca recomendaciones generales para mitigarlos.
+\end{itemize}
