@@ -1,29 +1,22 @@
 \section{RESULTADOS ESPERADOS}
 
-\subsection{Resultado Principal: Observatorio Público de la Higiene Digital de Redes en Bogotá}
-
-Una plataforma web analítica y estática (actualizada periódicamente) que sirva como una fuente de información pública, presentando:
+\subsection{Resultado Principal: Plataforma Web "IP Intelligence Dashboard"}
+Una herramienta web funcional y de acceso público que, a partir de una IP, presente un informe completo con los siguientes componentes:
 
 \begin{itemize}
-  \item \textbf{Ranking de ASNs:} Una tabla comparativa que clasifica los principales proveedores y redes de Bogotá por su postura de seguridad, basada en datos cuantificables.
-  \item \textbf{Perfil de Riesgo de la Ciudad:} Estadísticas agregadas que respondan a preguntas como: ¿Cuál es el protocolo inseguro más común en Bogotá? ¿Cuántas bases de datos están potencialmente expuestas?
-  \item \textbf{Visualización de Datos:} Gráficos interactivos que muestren la distribución geográfica de los ASNs con riesgos críticos.
+    \item \textbf{Panel de Seguridad:} Un resumen de los puertos y servicios detectados por Censys, con advertencias claras sobre configuraciones de alto riesgo.
+    \item \textbf{Mapa de Ubicación Aproximada:} Un mapa visual que muestre el país y la ciudad asociados a la IP, junto con un descargo de responsabilidad claro y visible sobre la naturaleza aproximada y no exacta de la geolocalización por IP, explicando que representa la ubicación del proveedor de servicios.
+    \item \textbf{Informe de Red y Reputación:} Información detallada sobre el ISP, el ASN (obtenida del WHOIS) y un resumen de los reportes de actividad maliciosa, incluyendo el puntaje de confianza de AbuseIPDB.
+    \item \textbf{Puntuación de Riesgo General:} Una calificación final que resuma el nivel de amenaza o exposición de la IP analizada, facilitando su interpretación rápida.
 \end{itemize}
 
-\subsection{Resultado Secundario: Manual Metodológico para Análisis de Exposición Digital}
-
-Un documento técnico que detalla el proceso de análisis, incluyendo:
-
-\begin{itemize}
-  \item Descripción del método de recolección de datos (Censys, LACNIC, Google BigQuery).
-  \item Procedimiento para la asignación de puntuaciones de riesgo.
-  \item Herramientas y software utilizados (Python, Pandas, Matplotlib, Flask).
-  \item Recomendaciones para la implementación de medidas de seguridad en redes de Bogotá.
-\end{itemize}
+\subsection{Resultado Secundario: Manual Técnico de Integración y Metodología}
+Un documento técnico detallado que servirá como guía para la replicación y expansión del proyecto. Incluirá:
 
 \begin{itemize}
-  \item Descripción del método de recolección de datos (Censys, LACNIC, Google BigQuery).
-  \item Procedimiento para la asignación de puntuaciones de riesgo.
-  \item Herramientas y software utilizados (Python, Pandas, Matplotlib, Flask).
-  \item Recomendaciones para la implementación de medidas de seguridad en redes de Bogotá.
+    \item La arquitectura del sistema, mostrando el flujo de datos desde las fuentes hasta la presentación final en el dashboard.
+    \item Los procedimientos y el código para descargar, configurar y consultar localmente la base de datos GeoLite2.
+    \item Las consultas SQL exactas utilizadas en Google BigQuery.
+    \item La lógica y fundamentación del modelo de puntuación de riesgo, asegurando la transparencia del análisis.
+    \item Una guía para el despliegue de la aplicación web.
 \end{itemize}

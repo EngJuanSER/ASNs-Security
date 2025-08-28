@@ -1,35 +1,31 @@
 \section{OBJETIVOS ESPECÍFICOS}
-\subsection{Objetivo 1: Identificación y Caracterización de la Exposición por ASN}
 
-Realizar un análisis de dos fases para identificar y cuantificar los servicios expuestos en las redes más importantes de Bogotá:
+\subsection{Objetivo 1: Integración de Fuentes de Datos de Reconocimiento Pasivo Gratuitas}
+Desarrollar un sistema backend capaz de consultar y unificar información de diversas fuentes de datos 100\% gratuitas, garantizando la viabilidad del proyecto sin incurrir en costos. Las fuentes a integrar son:
 
-\textbf{Identificación de ASNs:} Utilizar la base de datos pública de LACNIC (Registro de Direcciones de Internet de América Latina y el Caribe) para identificar y documentar los números de Sistema Autónomo (ASN) de los principales ISPs y entidades académicas que operan en Bogotá.
-
-\textbf{Caracterización de Servicios:} Ejecutar consultas SQL sobre los conjuntos de datos públicos de Censys en Google BigQuery para analizar los ASNs identificados, cuantificando la prevalencia de:
 \begin{itemize}
-  \item Protocolos de texto plano y obsoletos (Telnet, FTP).
-  \item Servicios de bases de datos expuestas (MongoDB, Redis, MySQL, Elasticsearch).
-  \item Paneles de control de acceso remoto (RDP, VNC).
-  \item Dispositivos de infraestructura con interfaces de gestión públicas (ej. routers con HTTP/HTTPS).
+    \item \textbf{Análisis de Puertos y Servicios:} Ejecutar consultas SQL sobre los conjuntos de datos públicos de Censys en Google BigQuery para obtener un perfil histórico de los servicios y puertos expuestos por la IP objetivo, operando dentro del nivel gratuito de la plataforma.
+    \item \textbf{Geolocalización Aproximada Local:} Descargar e implementar la base de datos GeoLite2 City de MaxMind. Las consultas de geolocalización se realizarán localmente contra este archivo, lo que garantiza un rendimiento extremadamente rápido y elimina por completo los límites de uso.
+    \item \textbf{Contexto de Red y Propiedad:} Realizar consultas WHOIS a los servidores públicos de los Registros Regionales de Internet (como LACNIC para la región) para identificar el Número de Sistema Autónomo (ASN), el ISP propietario del bloque de IP y los datos de contacto de abuso.
+    \item \textbf{Reputación y Amenazas:} Integrar la API gratuita de AbuseIPDB para verificar si la dirección IP ha sido reportada por actividades maliciosas y obtener un puntaje de confianza, gestionando el uso dentro de los límites establecidos por su plan gratuito.
 \end{itemize}
 
-\subsection{Objetivo 2: Desarrollo de un Modelo Cuantitativo de Puntuación de Higiene Digital}
-
-Diseñar un modelo de puntuación que permita evaluar y comparar la postura de seguridad de cada ASN de forma objetiva. El modelo:
+\subsection{Objetivo 2: Desarrollo de un Modelo de Puntuación de Riesgo y Contexto}
+Diseñar un modelo algorítmico que procese los datos recolectados para generar una evaluación clara y concisa de la IP analizada. El modelo deberá:
 
 \begin{itemize}
-  \item Asignará un factor de riesgo a cada tipo de servicio expuesto, considerando la probabilidad de explotación y el impacto potencial (ej. un RDP expuesto tiene un riesgo mayor que un FTP).
-  \item Normalizará los resultados en función del tamaño del espacio de direcciones IP del ASN para permitir una comparación justa entre redes de diferente escala.
-  \item Calculará una "Puntuación de Higiene Digital" final para cada ASN, clasificándolos para facilitar la identificación de aquellos con mayor área de mejora.
+    \item Asignar un factor de riesgo a los servicios expuestos, priorizando aquellos de mayor criticidad (ej. RDP, SMB, bases de datos abiertas).
+    \item Incorporar el puntaje de reputación de AbuseIPDB como un factor clave en la evaluación de riesgo general.
+    \item Presentar la información de geolocalización y propiedad de forma clara, enfatizando siempre la naturaleza aproximada de la ubicación.
+    \item Calcular una puntuación de riesgo final (ej. Bajo, Medio, Alto, Malicioso Conocido) para la IP analizada.
 \end{itemize}
 
-\subsection{Objetivo 3: Implementación de un Dashboard de Inteligencia de Amenazas Públicas}
-
-Desarrollar una aplicación web (dashboard) para presentar los resultados de forma clara e interactiva. La plataforma no requerirá inicio de sesión y visualizará los datos agregados:
+\subsection{Objetivo 3: Implementación de un Dashboard de Diagnóstico Interactivo}
+Desarrollar una aplicación web de cara al usuario que sirva como la interfaz para la herramienta. El dashboard deberá:
 
 \begin{itemize}
-  \item Mostrará un ranking de los ASNs analizados según su Puntuación de Higiene Digital.
-  \item Presentará gráficos estadísticos sobre los servicios inseguros más comunes encontrados en toda la infraestructura de Bogotá.
-  \item Permitirá filtrar y explorar los resultados por ASN específico, para ver en detalle su perfil de exposición.
-  \item Incluirá una sección educativa que explique los riesgos asociados a cada servicio expuesto y ofrezca recomendaciones generales para mitigarlos.
+    \item Proveer una interfaz simple donde el usuario pueda introducir una dirección IP o un dominio para su análisis.
+    \item Presentar el informe consolidado en una vista organizada y fácil de entender, con secciones para seguridad, ubicación, reputación y propiedad.
+    \item Visualizar la ubicación aproximada (ciudad/país) obtenida de la base de datos GeoLite2 en un mapa interactivo.
+    \item Ofrecer recomendaciones de seguridad contextuales y automatizadas basadas en los hallazgos (ej. "Puerto 3389 (RDP) abierto. Este es un riesgo alto de ataque de ransomware").
 \end{itemize}
