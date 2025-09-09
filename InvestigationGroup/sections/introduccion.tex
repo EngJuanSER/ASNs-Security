@@ -1,0 +1,23 @@
+\section{Introducción}
+
+Este proyecto consolida, en un único flujo de consulta y presentación, información pasiva sobre direcciones IP usando exclusivamente fuentes gratuitas y de acceso público: (i) conjuntos de datos de Censys disponibles en Google BigQuery y (ii) la base GeoLite2 de MaxMind. No se usarán APIs con planes limitados ni servicios propietarios de pago.
+
+\subsection{Propósito}
+
+Aprovechar estas dos fuentes abiertas para producir una vista integrada que incluya, como mínimo: presencia observada en escaneos de Censys (puertos/servicios y certificados asociados) y geolocalización aproximada (país/ciudad si aplica) desde GeoLite2, presentadas de forma clara y reproducible.
+
+\subsection{Alcance}
+
+El trabajo comprende: (a) consulta y filtrado de datos en BigQuery (tablas públicas de Censys), (b) resolución local con GeoLite2, y (c) una plantilla de reporte que estandariza la lectura de resultados. No se crean nuevas fuentes ni métricas propietarias; se organiza y documenta lo existente.
+
+\subsection{Restricciones}
+
+- Solo se emplean fuentes gratuitas (BigQuery con datasets públicos de Censys y GeoLite2)
+- Geolocalización es aproximada y sujeta a las limitaciones de la base
+- No se ejecutan escaneos activos; se usa reconocimiento pasivo
+
+\subsection{Entregables}
+
+- Consultas de ejemplo en BigQuery sobre datasets de Censys
+- Procedimiento para resolución/localización con GeoLite2
+- Estructura de reporte para presentar hallazgos de manera consistente

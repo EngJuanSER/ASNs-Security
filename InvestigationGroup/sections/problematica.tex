@@ -1,0 +1,26 @@
+\section{Problemática}
+
+\subsection{Necesidad y contexto}
+
+La información relevante para contextualizar una dirección IP existe, pero suele estar fragmentada entre múltiples servicios y modelos de acceso. Parte importante del ecosistema impone límites de uso por API o requiere suscripciones, lo que afecta reproducibilidad y acceso.
+
+\subsection{Criterio de selección de fuentes}
+
+Para garantizar gratuidad, acceso sostenible y replicabilidad, este proyecto se restringe a:
+
+\begin{itemize}
+\item \textbf{Censys en Google BigQuery}: conjuntos de datos públicos que permiten consultas reproducibles sobre observaciones de puertos/servicios y certificados sin depender de claves de API
+\item \textbf{MaxMind GeoLite2}: base gratuita ampliamente utilizada para geolocalización aproximada de IP
+\end{itemize}
+
+\subsection{Limitaciones asumidas}
+
+\begin{itemize}
+\item La geolocalización es aproximada (propia de GeoLite2)
+\item Las observaciones de Censys reflejan cortes/ventanas de tiempo de los datasets públicos
+\item Sin escaneo activo ni enriquecimientos propietarios
+\end{itemize}
+
+\subsection{Objetivo práctico}
+
+Reducir la fricción operativa mediante una presentación integrada y documentada de estas dos fuentes, priorizando claridad, trazabilidad y facilidad de replicación sin costos.

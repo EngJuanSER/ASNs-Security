@@ -1,0 +1,19 @@
+\section{Estado del Arte}
+
+Existen numerosas herramientas para reputación, reconocimiento y geolocalización de IP. Muchas requieren suscripción o imponen límites estrictos en APIs gratuitas, lo que complica la replicación abierta. Este proyecto se centra en dos pilares gratuitos y ampliamente aceptados.
+
+\subsection{Censys en Google BigQuery}
+
+Censys publica datasets que capturan observaciones de servicios y certificados en Internet. Su disponibilidad en BigQuery permite consultas SQL reproducibles sobre grandes volúmenes, sin necesidad de claves de API ni dependencias de planes comerciales.
+
+\subsection{MaxMind GeoLite2}
+
+GeoLite2 ofrece bases gratuitas para geolocalización aproximada de direcciones IP. Es una referencia común en proyectos abiertos y académicos cuando no se requiere la precisión y soporte de las versiones comerciales.
+
+\subsection{Razonamiento de exclusión de otras fuentes}
+
+Se excluyen herramientas comerciales o con APIs fuertemente limitadas (p. ej., VirusTotal, SecurityTrails, servicios premium de geolocalización) para mantener gratuidad, acceso sostenible y reproducibilidad del flujo propuesto.
+
+\subsection{Implicación}
+
+Concentrarse en Censys (BigQuery) y GeoLite2 permite un pipeline abierto, verificable y suficiente para construir una vista integrada básica (servicios observados + geolocalización aproximada) sin costos ni dependencias propietarias.

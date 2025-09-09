@@ -1,0 +1,25 @@
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,english]{babel}
+\usepackage{cite}
+\usepackage{biblatex}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{float}
+
+\newenvironment{resumen}
+  {\renewcommand{\abstractname}{Resumen}\begin{abstract}}
+  {\end{abstract}}
+
+\newenvironment{palabrasclave}
+  {\renewcommand{\IEEEkeywordsname}{Palabras clave}\begin{IEEEkeywords}}
+  {\end{IEEEkeywords}}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
