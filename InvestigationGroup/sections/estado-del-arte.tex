@@ -1,19 +1,111 @@
 \section{Estado del Arte}
 
-Existen numerosas herramientas para reputación, reconocimiento y geolocalización de IP. Muchas requieren suscripción o imponen límites estrictos en APIs gratuitas, lo que complica la replicación abierta. Este proyecto se centra en dos pilares gratuitos y ampliamente aceptados.
+\subsection{Reconocimiento Pasivo en Ciberseguridad}
 
-\subsection{Censys en Google BigQuery}
+\subsubsection{Definición y Metodologías}
 
-Censys publica datasets que capturan observaciones de servicios y certificados en Internet. Su disponibilidad en BigQuery permite consultas SQL reproducibles sobre grandes volúmenes, sin necesidad de claves de API ni dependencias de planes comerciales.
+El reconocimiento pasivo, definido como el proceso de recolección de información sin interactuar directamente con los sistemas objetivo, representa una metodología fundamental en el arsenal de herramientas de ciberseguridad [3]. A diferencia del reconocimiento activo, que implica el envío de consultas directas y puede ser detectado por sistemas de seguridad, el reconocimiento pasivo permite obtener información valiosa manteniendo un perfil bajo y minimizando el riesgo de detección [4].
 
-\subsection{MaxMind GeoLite2}
+\subsubsection{Técnicas y Herramientas Modernas}
 
-GeoLite2 ofrece bases gratuitas para geolocalización aproximada de direcciones IP. Es una referencia común en proyectos abiertos y académicos cuando no se requiere la precisión y soporte de las versiones comerciales.
+Las técnicas modernas de reconocimiento pasivo han evolucionado significativamente con la integración de inteligencia artificial y aprendizaje automático. Los atacantes utilizan herramientas impulsadas por IA como Maltego, SpiderFoot y Recon-ng para automatizar la recolección de OSINT (Open-Source Intelligence), el análisis de actividades en redes sociales y la extracción de datos de bases de datos filtradas [17]. Esta evolución ha llevado a que el reconocimiento pasivo sea más eficiente y difícil de detectar, aumentando la necesidad de contramedidas defensivas más sofisticadas.
 
-\subsection{Razonamiento de exclusión de otras fuentes}
+\subsubsection{Metodologías de Detección}
 
-Se excluyen herramientas comerciales o con APIs fuertemente limitadas (p. ej., VirusTotal, SecurityTrails, servicios premium de geolocalización) para mantener gratuidad, acceso sostenible y reproducibilidad del flujo propuesto.
+La identificación de actividades de reconocimiento presenta desafíos significativos, pero varios indicadores pueden sugerir que alguien está recopilando información para planificar un ciberataque. Estos incluyen tráfico de red inusual, patrones de acceso anómalos, indicadores de ingeniería social, uso de herramientas de reconocimiento y alertas de inteligencia de amenazas externas [5]. Los sistemas modernos de detección emplean análisis de comportamiento y aprendizaje automático para identificar estas actividades de manera más efectiva.
 
-\subsection{Implicación}
+\subsection{Geolocalización de Direcciones IP}
 
-Concentrarse en Censys (BigQuery) y GeoLite2 permite un pipeline abierto, verificable y suficiente para construir una vista integrada básica (servicios observados + geolocalización aproximada) sin costos ni dependencias propietarias.
+\subsubsection{Técnicas Tradicionales y Limitaciones}
+
+La geolocalización de direcciones IP, aunque inherentemente aproximada debido a las limitaciones técnicas de los métodos disponibles, proporciona información contextual valiosa para el análisis de seguridad [6]. Las técnicas tradicionales se basan principalmente en mediciones de latencia y análisis topológico, pero estas presentan limitaciones significativas en términos de precisión y cobertura [18].
+
+\subsubsection{Enfoques de Aprendizaje Automático}
+
+Los avances recientes en técnicas de geolocalización han demostrado mejoras significativas en la precisión, particularmente cuando se combinan múltiples fuentes de datos y se implementan algoritmos de machine learning para procesar la información recolectada [7]. Un estudio de 2024 propuso un marco novedoso que combina redes convolucionales de grafos (GCNs) y optimización de función de energía con muestreo de Monte Carlo para abordar los desafíos de incertidumbre en la geolocalización IP [8].
+
+\subsubsection{Limitaciones de Precisión en Bases de Datos Comerciales}
+
+La investigación sobre la precisión de bases de datos comerciales de geolocalización ha revelado discrepancias significativas entre las precisiones reportadas y las medidas empíricamente. Un estudio de 2021 sobre la base de datos GeoLite2 City de MaxMind encontró que las precisiones reportadas por MaxMind caían fuera de los intervalos de confianza del 99\% en el 72\% de los casos evaluados, con diferencias de precisión promedio de 4.2\% para un radio de 10 km, 11.7\% para 50 km y 11.1\% para 250 km [9]. Estas limitaciones subrayan la importancia de evaluar críticamente la confiabilidad de las fuentes de datos de geolocalización.
+
+\subsection{Inteligencia de Amenazas Cibernéticas}
+
+\subsubsection{Evolución de los Marcos de Trabajo}
+
+La inteligencia de amenazas cibernéticas ha evolucionado considerablemente en los últimos años, transitando desde análisis manuales hacia sistemas automatizados sofisticados impulsados por inteligencia artificial [10]. Esta evolución ha sido impulsada por la necesidad de procesar volúmenes masivos de datos en tiempo real y la complejidad creciente de los patrones de ataque [11].
+
+\subsubsection{Marcos de Trabajo Contemporáneos}
+
+Los marcos de trabajo modernos incluyen NIST Cybersecurity Framework 2.0, que en 2024 expandió su alcance más allá de la infraestructura crítica para incluir organizaciones de diversos tamaños y sectores [20]. MITRE ATT\&CK continúa siendo fundamental para el mapeo de tácticas, técnicas y procedimientos adversarios, mientras que marcos complementarios como D3FEND y ENGAGE proporcionan enfoques defensivos y de compromiso respectivamente.
+
+\subsubsection{Integración Multi-fuente}
+
+Las plataformas modernas de inteligencia de amenazas integran múltiples fuentes de datos, utilizan algoritmos avanzados de análisis y proporcionan capacidades predictivas que permiten a las organizaciones adoptar una postura proactiva frente a las amenazas emergentes. Un estudio reciente propuso un marco mejorado de inteligencia de amenazas que integra flujos de datos diversos, incluyendo logs de red corporativa, inteligencia de código abierto y monitoreo de la web oscura [2].
+
+\subsection{Plataformas de Datos y Fuentes de Información}
+
+\subsubsection{Censys y Google BigQuery}
+
+Censys publica datasets que capturan observaciones de servicios y certificados en Internet, y su disponibilidad en BigQuery permite consultas SQL reproducibles sobre grandes volúmenes de datos sin necesidad de claves de API ni dependencias de planes comerciales [12]. La arquitectura CQRS (Command Query Responsibility Segregation) de Censys permite el procesamiento independiente de operaciones de lectura y escritura, manejando aproximadamente 5 mil millones de eventos por día en 2024.
+
+\subsubsection{MaxMind GeoLite2 y Limitaciones}
+
+GeoLite2 ofrece bases gratuitas para geolocalización aproximada de direcciones IP y es una referencia común en proyectos abiertos y académicos cuando no se requiere la precisión y soporte de las versiones comerciales. Sin embargo, estudios independientes han cuestionado las precisiones reportadas, encontrando diferencias significativas entre las métricas publicitadas y las mediciones empíricas [9].
+
+\subsubsection{Datos WHOIS en Ciberseguridad}
+
+Las bases de datos WHOIS proporcionan información crítica sobre el registro y propiedad de dominios, siendo esenciales para la investigación de amenazas y la aplicación de la ley. El uso de WHOIS reverso permite a los expertos en ciberseguridad rastrear campañas maliciosas, identificar infraestructuras de atacantes y detectar patrones de registro sospechosos. La integración de datos WHOIS con plataformas de inteligencia de amenazas mejora significativamente las capacidades de hunting de amenazas y respuesta a incidentes.
+
+\subsection{Evaluación de Riesgo y Puntuación Algorítmica}
+
+\subsubsection{Modelos de Puntuación de Riesgo}
+
+Los sistemas modernos de evaluación de riesgo implementan modelos algorítmicos que procesan múltiples vectores de datos para generar puntuaciones comprehensivas. Estos modelos consideran no solo la presencia de anomalías, sino también la velocidad y contexto en que se encuentran, permitiendo clasificaciones más matizadas de riesgo.
+
+\subsubsection{Integración con AbuseIPDB}
+
+AbuseIPDB proporciona una plataforma colaborativa donde la comunidad de ciberseguridad reporta direcciones IP involucradas en actividades maliciosas. La integración de AbuseIPDB con sistemas de evaluación de riesgo permite obtener una segunda opinión basada en reportes de la comunidad, con puntuaciones de abuso calculadas utilizando sistemas de pesos ponderados que previenen la manipulación por usuarios individuales [13].
+
+\subsection{Herramientas de Escaneo y Análisis Comparativo}
+
+\subsubsection{Análisis Comparativo de Herramientas}
+
+Un análisis comparativo reciente de herramientas de enumeración de red reveló que cada herramienta posee características y funcionalidades únicas. OpenVAS es altamente valorado por sus capacidades comprehensivas de escaneo de vulnerabilidades, mientras que Zenmap y Nmap sobresalen en mapeo de red y escaneo de puertos [14]. Nessus se destaca por su extensa base de datos de vulnerabilidades y robustas capacidades de reporte.
+
+\subsubsection{Eficacia de Herramientas de Escaneo de Puertos}
+
+Un estudio experimental comparativo de 2023 que evaluó Nmap, Zmap y masscan no encontró diferencias en el rendimiento general, pero reveló diferencias estadísticamente significativas en eficiencia [15]. Estos resultados pueden guiar la selección de herramientas de escaneo de puertos basada en necesidades específicas y requisitos de rendimiento.
+
+\subsection{Aprendizaje Automático en Ciberseguridad}
+
+\subsubsection{Aplicaciones en Detección de Amenazas}
+
+El aprendizaje automático transforma la ciberseguridad al permitir detección de amenazas más inteligente, respuesta a incidentes mejorada y asignación más eficiente de recursos. Los algoritmos de ML pueden analizar patrones históricos y adaptarse a nuevos patrones, mejorando tanto las medidas de seguridad preventivas como reactivas.
+
+\subsubsection{Tipos de Aprendizaje y Sus Aplicaciones}
+
+El aprendizaje supervisado utiliza conjuntos de datos etiquetados para entrenar modelos que detecten tipos específicos de amenazas, como correos de phishing o variantes conocidas de malware. El aprendizaje no supervisado identifica amenazas desconocidas analizando patrones en datos no etiquetados, siendo particularmente efectivo para detectar anomalías en actividad de red que podrían indicar ataques de día cero. El aprendizaje por refuerzo permite que los modelos aprendan y mejoren optimizando mecanismos de defensa basados en el éxito de acciones previas.
+
+\subsubsection{Beneficios y Desafíos}
+
+Los beneficios principales incluyen precisión mejorada en detección de amenazas, capacidades de análisis y respuesta en tiempo real, reducción de falsos positivos y negativos, y escalabilidad para manejar grandes volúmenes de datos. Sin embargo, los desafíos incluyen la necesidad de datos de entrenamiento de alta calidad, la interpretabilidad de modelos complejos y la adaptación a amenazas en evolución constante [16].
+
+\subsection{Marcos de Ciberseguridad Contemporáneos}
+
+\subsubsection{NIST Cybersecurity Framework 2.0}
+
+El NIST Cybersecurity Framework 2.0, lanzado en 2024, representa la actualización más significativa desde la versión 1.1 de 2018. La nueva versión extiende su alcance más allá de la infraestructura crítica, dirigiéndose a una gama más amplia de organizaciones independientemente de su expertise en ciberseguridad. Una adición notable es el énfasis en governance de ciberseguridad, reconociendo la ciberseguridad como un componente clave de la gestión de riesgos empresariales [20].
+
+\subsubsection{Otros Marcos Relevantes}
+
+Los marcos MITRE (ATT\&CK, D3FEND, ENGAGE) han ganado popularidad como herramientas comprehensivas para reconocer y combatir amenazas cibernéticas. Estos marcos proporcionan bases de conocimiento que cubren tácticas, técnicas y procedimientos cibernéticos, con actualizaciones consistentes para reflejar cambios en el panorama de amenazas [17].
+
+\subsection{Brechas y Oportunidades de Investigación}
+
+\subsubsection{Limitaciones Actuales}
+
+A pesar de los avances significativos, persisten brechas importantes en el campo. La fragmentación de información entre múltiples servicios y modelos de acceso continúa siendo un desafío, particularmente para organizaciones con recursos limitados. La precisión de datos de geolocalización sigue siendo problemática, y la dependencia de fuentes comerciales introduce vulnerabilidades en términos de disponibilidad y costo [18].
+
+\subsubsection{Oportunidades Emergentes}
+
+Las oportunidades de investigación incluyen el desarrollo de algoritmos más sofisticados de fusión de datos, la mejora de técnicas de geolocalización mediante integración de múltiples metodologías, y el desarrollo de marcos de evaluación más robustos que consideren la incertidumbre inherente en las fuentes de datos. La integración de técnicas de inteligencia artificial explicable (XAI) podría mejorar la interpretabilidad de sistemas de evaluación de riesgo complejos [19].
