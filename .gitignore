@@ -1,1 +1,9 @@
 /Paper/Paper-Full/
+# Archivos temporales de LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.toc
+*.out
