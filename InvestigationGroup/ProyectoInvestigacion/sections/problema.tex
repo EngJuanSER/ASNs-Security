@@ -1,0 +1,144 @@
+\section{Selección y Definición del Tema de Investigación}
+
+\subsection{Tema de Investigación}
+"Desarrollo de una Herramienta de Diagnóstico Unificado para el Análisis de Seguridad y Geolocalización de Direcciones IP mediante Integración de Fuentes Abiertas en el Contexto de Ciberseguridad Colombiana"
+
+\subsection{Título Provisional}
+"Diagnóstico de Seguridad IP con Fuentes Abiertas en Colombia"
+
+\subsection{Línea de Investigación}
+Este proyecto se enmarca dentro de la línea de investigación en \textbf{Inteligencia de Amenazas Cibernéticas}, específicamente en el área de \textbf{Análisis Automatizado de Infraestructuras de Red} y \textbf{Desarrollo de Herramientas de Ciberseguridad Basadas en Fuentes Abiertas}.
+
+\subsection{Área del Conocimiento}
+\begin{itemize}
+    \item \textbf{Área principal:} Ingeniería de Sistemas y Computación
+    \item \textbf{Subárea:} Ciberseguridad y Redes de Computadores
+    \item \textbf{Disciplina:} Inteligencia de Amenazas y Análisis de Vulnerabilidades
+\end{itemize}
+
+\section{El Problema de Investigación}
+
+\subsection{Planteamiento del Problema}
+
+\subsubsection{Situación Actual (Diagnóstico)}
+En el contexto actual de amenazas cibernéticas sofisticadas, la evaluación de la legitimidad y seguridad de direcciones IP se ha convertido en una actividad fundamental para profesionales de ciberseguridad en Colombia. Según el reporte del Computer Emergency Response Team de Colombia (COLCERT), el país registró 36.000 millones de intentos de ciberataques en 2024, ubicándose como el cuarto país en América Latina con mayor exposición a amenazas cibernéticas [1].
+
+El análisis detallado de la situación revela múltiples problemáticas interconectadas:
+
+\textbf{Fragmentación de la Información de Seguridad:}
+Las organizaciones colombianas dependen de múltiples plataformas especializadas como VirusTotal, Shodan, AbuseIPDB, y servicios comerciales como IBM X-Force y ThreatConnect para obtener información sobre direcciones IP sospechosas. Esta fragmentación genera inconsistencias en los análisis, requiere múltiples subscripciones costosas, y consume tiempo significativo en la correlación manual de datos [2].
+
+\textbf{Limitaciones Económicas para Acceso a Herramientas Comerciales:}
+Un estudio realizado por la Cámara Colombiana de Informática y Telecomunicaciones (CCIT) en 2024 reveló que el 73\% de las PYMES colombianas consideran prohibitivos los costos de herramientas especializadas de ciberseguridad, con precios que oscilan entre USD \$5,000 y \$50,000 anuales para soluciones empresariales [3].
+
+\textbf{Dependencia de APIs Comerciales con Restricciones:}
+Los servicios gratuitos de análisis IP imponen limitaciones severas: VirusTotal permite 4 consultas por minuto para usuarios gratuitos, Shodan limita a 100 consultas mensuales, y AbuseIPDB restringe a 1,000 consultas diarias. Estas limitaciones hacen impracticable el análisis masivo requerido en contextos empresariales [4].
+
+\textbf{Carencia de Capacidades Técnicas Locales:}
+El déficit de profesionales especializados en desarrollo de herramientas de ciberseguridad en Colombia es evidente. Según MinTIC, existe una brecha de 68,000 profesionales en ciberseguridad a nivel nacional, lo que limita las capacidades para desarrollar soluciones tecnológicas autóctonas [5].
+
+\textbf{Ausencia de Estándares Nacionales:}
+Colombia carece de marcos estandarizados para la integración de fuentes abiertas en análisis de ciberseguridad, lo que resulta en implementaciones ad-hoc inconsistentes entre organizaciones [6].
+
+\subsubsection{Análisis de Causas}
+Las causas identificadas mediante análisis de Ishikawa incluyen:
+
+\textbf{Factores Tecnológicos:}
+\begin{itemize}
+    \item Dispersión de datos de inteligencia en servicios propietarios
+    \item Falta de APIs unificadas para consulta de múltiples fuentes
+    \item Limitaciones técnicas en la integración de datasets heterogéneos
+    \item Ausencia de herramientas nacionales especializadas
+\end{itemize}
+
+\textbf{Factores Económicos:}
+\begin{itemize}
+    \item Costos elevados de licencias para herramientas comerciales
+    \item Limitaciones presupuestarias en organizaciones públicas y PYMES
+    \item Dependencia de monedas extranjeras para servicios internacionales
+    \item Falta de financiación para I+D en ciberseguridad nacional
+\end{itemize}
+
+\textbf{Factores Humanos:}
+\begin{itemize}
+    \item Escasez de expertise técnico especializado
+    \item Falta de programas de formación en desarrollo de herramientas de ciberseguridad
+    \item Resistencia al cambio hacia soluciones open source
+    \item Limitada cultura de colaboración entre organizaciones
+\end{itemize}
+
+\textbf{Factores Regulatorios:}
+\begin{itemize}
+    \item Ausencia de políticas públicas para fomento de desarrollo tecnológico nacional
+    \item Falta de estándares técnicos para herramientas de ciberseguridad
+    \item Limitaciones en marcos legales para compartir información de amenazas
+\end{itemize}
+
+\subsubsection{Pronóstico}
+Si persiste esta situación, se proyectan las siguientes consecuencias para el período 2025-2027:
+
+\textbf{Impacto Operacional:}
+\begin{itemize}
+    \item Incremento del 40\% en tiempos de respuesta ante incidentes de seguridad
+    \item Reducción del 25\% en la efectividad de detección de amenazas
+    \item Aumento del 60\% en costos operativos por múltiples licencias
+\end{itemize}
+
+\textbf{Impacto Estratégico:}
+\begin{itemize}
+    \item Profundización de la brecha tecnológica con países desarrollados
+    \item Mayor dependencia de proveedores extranjeros
+    \item Limitación en capacidades de soberanía digital nacional
+\end{itemize}
+
+\textbf{Impacto Económico:}
+\begin{itemize}
+    \item Pérdidas estimadas de USD \$2.8 billones anuales por ciberataques exitosos
+    \item Reducción de la competitividad de organizaciones colombianas
+    \item Limitación en adopción de tecnologías emergentes por riesgos de seguridad
+\end{itemize}
+
+\subsubsection{Control al Pronóstico}
+Para evitar este escenario negativo, es fundamental desarrollar una solución tecnológica que:
+
+\begin{enumerate}
+    \item \textbf{Integre fuentes abiertas gratuitas} como Censys (disponible en Google BigQuery) y MaxMind GeoLite2 para proporcionar análisis comprehensivos sin costos de licenciamiento.
+    \item \textbf{Implemente algoritmos de correlación avanzados} que combinen reconocimiento pasivo con geolocalización para generar evaluaciones de riesgo contextualizadas.
+    \item \textbf{Proporcione interfaces intuitivas} que democraticen el acceso a capacidades avanzadas de análisis IP.
+    \item \textbf{Establezca metodologías reproducibles} que puedan ser adoptadas por organizaciones con diferentes niveles de madurez tecnológica.
+    \item \textbf{Genere capacidades técnicas locales} mediante documentación detallada y código abierto que facilite la transferencia de conocimiento.
+\end{enumerate}
+
+\subsection{Formulación del Problema}
+¿Cómo desarrollar e implementar una herramienta de diagnóstico unificado que integre eficientemente el análisis de seguridad y geolocalización de direcciones IP utilizando exclusivamente fuentes abiertas, para fortalecer las capacidades de inteligencia de amenazas cibernéticas en organizaciones colombianas, considerando las limitaciones presupuestarias, técnicas y operacionales del contexto nacional?
+
+\subsection{Sistematización del Problema}
+
+\subsubsection{Preguntas Técnicas}
+\begin{enumerate}
+    \item ¿Qué características técnicas debe poseer una herramienta unificada de análisis de seguridad IP para maximizar la utilidad de fuentes abiertas disponibles como Censys BigQuery y GeoLite2?
+    \item ¿Cómo integrar efectivamente los conjuntos de datos de Censys en BigQuery con la base de datos GeoLite2 de MaxMind para generar análisis correlacionados?
+    \item ¿Qué algoritmos de machine learning son más efectivos para la clasificación automatizada de amenazas basada en patrones de comportamiento de IP?
+    \item ¿Cómo optimizar las consultas SQL en BigQuery para minimizar costos de procesamiento manteniendo tiempos de respuesta aceptables?
+\end{enumerate}
+
+\subsubsection{Preguntas Metodológicas}
+\begin{enumerate}
+    \item ¿Qué metodologías de presentación de resultados garantizan la reproducibilidad y comprensión de análisis de seguridad IP por parte de usuarios con diferentes niveles técnicos?
+    \item ¿Cómo establecer métricas de evaluación que permitan comparar objetivamente la efectividad de la herramienta desarrollada con soluciones comerciales?
+    \item ¿Qué protocolos de validación son necesarios para asegurar la precisión y confiabilidad de los resultados obtenidos?
+\end{enumerate}
+
+\subsubsection{Preguntas Contextuales}
+\begin{enumerate}
+    \item ¿Cuáles son las limitaciones inherentes del uso exclusivo de fuentes gratuitas en comparación con servicios comerciales en el contexto de amenazas específicas a Colombia?
+    \item ¿Cómo adaptar la herramienta a las particularidades del panorama de amenazas cibernéticas colombiano?
+    \item ¿Qué estrategias de implementación son más efectivas para facilitar la adopción de la herramienta en organizaciones con diferentes niveles de madurez tecnológica?
+\end{enumerate}
+
+\subsubsection{Preguntas de Evaluación}
+\begin{enumerate}
+    \item ¿Cómo validar la efectividad y precisión de la herramienta desarrollada en contextos reales de ciberseguridad colombiana?
+    \item ¿Qué indicadores de impacto permiten medir la contribución de la herramienta al fortalecimiento de capacidades nacionales de ciberseguridad?
+    \item ¿Cómo asegurar la sostenibilidad y evolución continua de la herramienta desarrollada?
+\end{enumerate}

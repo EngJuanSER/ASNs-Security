@@ -1,0 +1,359 @@
+\section{Aspectos Metodológicos}
+
+\subsection{Tipo de Estudio}
+
+\subsubsection{Clasificación Epistemológica}
+La investigación adopta un \textbf{paradigma post-positivista} que reconoce la objetividad aproximada del conocimiento científico mientras acepta las limitaciones inherentes en la medición de fenómenos complejos en ciberseguridad. Se fundamenta en el \textbf{realismo crítico} de Bhaskar (1975), que distingue entre dominios empírico, actual y real en la investigación de sistemas socio-técnicos [30].
+
+\subsubsection{Diseño de Investigación Mixto}
+El estudio implementa un \textbf{diseño explicativo secuencial} (QUAN → qual) donde:
+
+\textbf{Fase Cuantitativa Dominante:}
+\begin{itemize}
+    \item \textbf{Nivel descriptivo:} Caracterización estadística del estado actual de herramientas de análisis IP disponibles y necesidades específicas del contexto colombiano
+    \item \textbf{Nivel explicativo:} Establecimiento de relaciones causales entre la integración de fuentes abiertas y la efectividad de análisis de seguridad
+    \item \textbf{Nivel correlacional:} Análisis de asociaciones entre variables técnicas, económicas y operacionales
+\end{itemize}
+
+\textbf{Fase Cualitativa Complementaria:}
+\begin{itemize}
+    \item Exploración fenomenológica de percepciones de usuarios
+    \item Análisis interpretativo de contextos organizacionales
+    \item Evaluación hermenéutica de usabilidad y aceptación
+\end{itemize}
+
+\subsubsection{Componente Experimental}
+\textbf{Diseño Cuasi-experimental con Grupos de Comparación:}
+\begin{itemize}
+    \item \textbf{Grupo Experimental:} Herramienta desarrollada (fuentes abiertas)
+    \item \textbf{Grupos Control:} Soluciones comerciales (VirusTotal Premium, Shodan Enterprise, IBM X-Force)
+    \item \textbf{Variables Dependientes:} Precisión, recall, tiempo de respuesta, cobertura
+    \item \textbf{Variables Independientes:} Tipo de herramienta utilizada
+    \item \textbf{Variables de Control:} Conjunto de datos de prueba, condiciones de red, configuración hardware
+\end{itemize}
+
+\subsection{Método de Investigación}
+
+\subsubsection{Enfoque Metodológico Integrado}
+
+\textbf{Design Science Research (DSR):}
+Siguiendo el framework de Hevner et al. (2004), la investigación combina rigor científico con relevancia práctica mediante ciclos iterativos de construcción y evaluación [31]:
+
+\begin{enumerate}
+    \item \textbf{Identificación del Problema:} Análisis sistemático de limitaciones en herramientas existentes
+    \item \textbf{Definición de Objetivos:} Especificación de requisitos funcionales y no funcionales
+    \item \textbf{Diseño y Desarrollo:} Construcción iterativa del artefacto tecnológico
+    \item \textbf{Demostración:} Pruebas de concepto en entornos controlados
+    \item \textbf{Evaluación:} Validación empírica mediante métricas objetivas
+    \item \textbf{Comunicación:} Diseminación de resultados y artefactos
+\end{enumerate}
+
+\textbf{Método Científico Deductivo-Inductivo:}
+\begin{itemize}
+    \item \textbf{Deductivo:} Derivación de hipótesis específicas desde marcos teóricos establecidos
+    \item \textbf{Inductivo:} Generalización de patrones observados hacia principios aplicables
+    \item \textbf{Abductivo:} Inferencia de mejores explicaciones para fenómenos observados
+\end{itemize}
+
+\textbf{Método Analítico-Sintético:}
+\begin{itemize}
+    \item \textbf{Análisis:} Descomposición del problema en componentes específicos (consultas BigQuery, integración GeoLite2, algoritmos de correlación, presentación de resultados)
+    \item \textbf{Síntesis:} Integración holística de componentes en solución unificada
+\end{itemize}
+
+\subsubsection{Estrategias Metodológicas Específicas}
+
+\textbf{Benchmarking Comparativo:}
+Implementación de metodología estandarizada para comparación objetiva con soluciones comerciales:
+\begin{itemize}
+    \item Conjuntos de datos de referencia estandarizados
+    \item Métricas de evaluación consistentes
+    \item Protocolos de prueba reproducibles
+    \item Análisis estadístico de significancia
+\end{itemize}
+
+\textbf{Ingeniería de Software Ágil:}
+\begin{itemize}
+    \item Desarrollo iterativo con sprints de 2 semanas
+    \item Integration y deployment continuos (CI/CD)
+    \item Test-driven development (TDD)
+    \item Refactoring continuo basado en feedback
+\end{itemize}
+
+\textbf{Evaluación Centrada en Usuario:}
+\begin{itemize}
+    \item Design thinking para comprensión de necesidades
+    \item Prototyping rápido con feedback iterativo
+    \item Usability testing con métodos cuanti-cualitativos
+    \item Accessibility evaluation según estándares WCAG 2.1
+\end{itemize}
+
+\subsection{Fuentes y Técnicas para Recolección de Información}
+
+\subsubsection{Fuentes Primarias}
+
+\textbf{Datasets Técnicos:}
+\begin{itemize}
+    \item \textbf{Censys BigQuery Dataset:} Datos históricos y actuales de scanning de Internet (2015-2025)
+    \begin{itemize}
+        \item Volumen: ~50TB de datos estructurados
+        \item Frecuencia: Actualizaciones semanales
+        \item Cobertura: 4.3 billones de direcciones IPv4, 28 trillones IPv6
+        \item Granularidad: Puerto, servicio, certificado, geolocalización básica
+    \end{itemize}
+    
+    \item \textbf{MaxMind GeoLite2 Database:} Base de datos de geolocalización IP
+    \begin{itemize}
+        \item Volumen: ~500MB (CSV), ~200MB (MMDB)
+        \item Frecuencia: Actualizaciones mensuales
+        \item Cobertura: Global con énfasis en países desarrollados
+        \item Precisión: 95\% a nivel país, 75\% a nivel ciudad
+    \end{itemize}
+    
+    \item \textbf{Threat Intelligence Feeds Públicos:}
+    \begin{itemize}
+        \item SANS Internet Storm Center
+        \item Emerging Threats Open Ruleset
+        \item MISP Community Feeds
+        \item ThreatCrowd API
+    \end{itemize}
+\end{itemize}
+
+\textbf{Datos Experimentales Generados:}
+\begin{itemize}
+    \item Métricas de rendimiento de consultas optimizadas vs. naive
+    \item Tiempos de respuesta bajo diferentes cargas de trabajo
+    \item Resultados de comparación con herramientas comerciales
+    \item Logs de uso y comportamiento de usuarios durante testing
+\end{itemize}
+
+\textbf{Datos de Campo:}
+\begin{itemize}
+    \item \textbf{Encuesta a profesionales de ciberseguridad (n=200):}
+    \begin{itemize}
+        \item Población: Profesionales colombianos en ciberseguridad
+        \item Muestreo: Estratificado por sector (público, privado, académico)
+        \item Instrumento: Cuestionario estructurado (40 preguntas)
+        \item Distribución: Online mediante plataformas profesionales
+    \end{itemize}
+    
+    \item \textbf{Entrevistas semi-estructuradas (n=30):}
+    \begin{itemize}
+        \item Participantes: CISOs, analistas SOC, investigadores
+        \item Duración: 45-60 minutos por entrevista
+        \item Modalidad: Virtual con grabación (previo consentimiento)
+        \item Enfoque: Fenomenológico-interpretativo
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Fuentes Secundarias}
+
+\textbf{Literatura Científica:}
+\begin{itemize}
+    \item Bases de datos académicas: IEEE Xplore, ACM Digital Library, SpringerLink, ScienceDirect
+    \item Repositorios especializados: arXiv, IACR ePrint Archive, SANS Reading Room
+    \item Conferencias relevantes: S\&P, CCS, NDSS, USENIX Security, BlackHat, DEF CON
+    \item Journals especializados: TDSC, TIFS, Computer \& Security, JCS
+\end{itemize}
+
+\textbf{Documentación Técnica y Estándares:}
+\begin{itemize}
+    \item APIs y documentación de Censys, MaxMind, Google BigQuery
+    \item Estándares ISO/IEC 27000 series
+    \item NIST Cybersecurity Framework documentation
+    \item MITRE ATT\&CK Framework knowledge base
+    \item RFC documents relacionados con protocolos de Internet
+\end{itemize}
+
+\textbf{Reportes Institucionales:}
+\begin{itemize}
+    \item Reportes de amenazas de COLCERT
+    \item Estadísticas de MinTIC sobre infraestructura nacional
+    \item Informes de organismos internacionales (ITU, ENISA, CISA)
+    \item Análisis de mercado de firmas consultoras (Gartner, Forrester)
+\end{itemize}
+
+\subsubsection{Técnicas de Recolección de Datos}
+
+\textbf{Técnicas Automatizadas:}
+\begin{itemize}
+    \item \textbf{Web Scraping Ético:} Extracción de datos públicos de threat intelligence
+    \item \textbf{API Integration:} Consultas programáticas a servicios públicos
+    \item \textbf{Database Queries:} Extracción optimizada desde BigQuery
+    \item \textbf{Log Mining:} Análisis de patrones en logs de sistema durante pruebas
+\end{itemize}
+
+\textbf{Técnicas de Medición Experimental:}
+\begin{itemize}
+    \item \textbf{Benchmarking Automatizado:} Scripts para evaluación consistente de rendimiento
+    \item \textbf{A/B Testing:} Comparación de interfaces y algoritmos alternativos
+    \item \textbf{Load Testing:} Evaluación de escalabilidad con herramientas como JMeter
+    \item \textbf{Security Testing:} Vulnerability assessment de la aplicación desarrollada
+\end{itemize}
+
+\textbf{Técnicas de Investigación Social:}
+\begin{itemize}
+    \item \textbf{Encuestas Online:} Cuestionarios estructurados con escalas Likert
+    \item \textbf{Focus Groups:} Sesiones de 6-8 participantes por perfil de usuario
+    \item \textbf{User Journey Mapping:} Documentación de procesos de uso
+    \item \textbf{Think-Aloud Protocol:} Evaluación de usabilidad con verbalización
+\end{itemize}
+
+\subsection{Población y Muestra}
+
+\subsubsection{Definición de Poblaciones}
+
+\textbf{Población 1: Profesionales de Ciberseguridad en Colombia}
+\begin{itemize}
+    \item \textbf{Tamaño estimado:} 15,000 profesionales (MinTIC, 2024)
+    \item \textbf{Características:} Profesionales activos en roles de seguridad informática
+    \item \textbf{Distribución geográfica:} 60\% Bogotá, 20\% Medellín, 10\% Cali, 10\% otras ciudades
+    \item \textbf{Distribución sectorial:} 35\% privado, 25\% público, 20\% consultoría, 20\% académico
+\end{itemize}
+
+\textbf{Población 2: Organizaciones con Capacidades de Ciberseguridad}
+\begin{itemize}
+    \item \textbf{Tamaño estimado:} 2,500 organizaciones
+    \item \textbf{Criterios de inclusión:} Presupuesto IT > \$50,000 USD anuales, personal dedicado a seguridad
+    \item \textbf{Sectores:} Financiero, gobierno, telecomunicaciones, energía, educación superior
+\end{itemize}
+
+\textbf{Población 3: Direcciones IP para Análisis Técnico}
+\begin{itemize}
+    \item \textbf{Conjunto de referencia:} 1 millón de direcciones IP categorizadas
+    \item \textbf{Distribución:} 40\% legítimas, 30\% sospechosas, 20\% maliciosas confirmadas, 10\% neutrales
+    \item \textbf{Fuentes:} Threat intelligence feeds, honeypots, reportes de incidentes
+\end{itemize}
+
+\subsubsection{Estrategia de Muestreo}
+
+\textbf{Muestreo Estratificado Proporcional:}
+Para la encuesta a profesionales:
+\begin{itemize}
+    \item \textbf{Estratos:} Sector (público/privado), experiencia (<5 años, 5-10 años, >10 años), rol (analista, manager, director)
+    \item \textbf{Tamaño muestral:} n = 200 (error muestral ±6.9\%, confianza 95\%)
+    \item \textbf{Asignación:} Proporcional al tamaño del estrato en la población
+\end{itemize}
+
+\textbf{Muestreo Intencional:}
+Para entrevistas cualitativas:
+\begin{itemize}
+    \item \textbf{Criterio:} Máxima variación en experiencia y contexto organizacional
+    \item \textbf{Tamaño:} n = 30 (saturación teórica esperada en 25-30 casos)
+    \item \textbf{Distribución:} 10 sector público, 10 sector privado, 10 académico/consultoría
+\end{itemize}
+
+\textbf{Muestreo Aleatorio Simple:}
+Para evaluación técnica:
+\begin{itemize}
+    \item \textbf{Dataset de prueba:} 10,000 direcciones IP seleccionadas aleatoriamente
+    \item \textbf{Dataset de validación:} 5,000 direcciones IP adicionales
+    \item \textbf{Criterio:} Representatividad de distribución geográfica y sectorial
+\end{itemize}
+
+\subsection{Tratamiento de la Información}
+
+\subsubsection{Análisis Estadístico Cuantitativo}
+
+\textbf{Estadística Descriptiva:}
+\begin{itemize}
+    \item Medidas de tendencia central (media, mediana, moda)
+    \item Medidas de dispersión (desviación estándar, rango intercuartílico)
+    \item Distribuciones de frecuencia y percentiles
+    \item Análisis de normalidad (Shapiro-Wilk, Kolmogorov-Smirnov)
+\end{itemize}
+
+\textbf{Estadística Inferencial:}
+\begin{itemize}
+    \item \textbf{Pruebas paramétricas:} t-test, ANOVA, regresión lineal múltiple
+    \item \textbf{Pruebas no paramétricas:} Mann-Whitney U, Kruskal-Wallis, Spearman correlation
+    \item \textbf{Análisis multivariado:} PCA, clustering jerárquico, análisis discriminante
+    \item \textbf{Machine Learning:} Random Forest, SVM, Neural Networks para clasificación
+\end{itemize}
+
+\textbf{Métricas Especializadas de Ciberseguridad:}
+\begin{itemize}
+    \item \textbf{Precision:} $P = \frac{TP}{TP + FP}$
+    \item \textbf{Recall:} $R = \frac{TP}{TP + FN}$
+    \item \textbf{F1-Score:} $F1 = 2 \times \frac{P \times R}{P + R}$
+    \item \textbf{Accuracy:} $Acc = \frac{TP + TN}{TP + TN + FP + FN}$
+    \item \textbf{AUC-ROC:} Área bajo la curva ROC
+    \item \textbf{Mean Time to Detection (MTTD):} Tiempo promedio de detección
+    \item \textbf{Coverage Efficiency:} $CE = \frac{Indicadores\_Detectados}{Recursos\_Computacionales}$
+\end{itemize}
+
+\subsubsection{Análisis Cualitativo}
+
+\textbf{Codificación Temática:}
+\begin{enumerate}
+    \item \textbf{Codificación abierta:} Identificación inductiva de conceptos emergentes
+    \item \textbf{Codificación axial:} Establecimiento de relaciones entre categorías
+    \item \textbf{Codificación selectiva:} Integración alrededor de categorías centrales
+\end{enumerate}
+
+\textbf{Análisis de Contenido:}
+\begin{itemize}
+    \item Análisis léxico con herramientas NLP (frequency analysis, sentiment analysis)
+    \item Identificación de patrones discursivos y marcos interpretativos
+    \item Análisis de narrativas sobre experiencias con herramientas de ciberseguridad
+\end{itemize}
+
+\textbf{Triangulación de Fuentes:}
+\begin{itemize}
+    \item Validación cruzada entre datos cuantitativos y cualitativos
+    \item Comparación de perspectivas entre diferentes stakeholders
+    \item Contraste entre datos auto-reportados y observaciones directas
+\end{itemize}
+
+\subsubsection{Herramientas y Software}
+
+\textbf{Análisis Estadístico:}
+\begin{itemize}
+    \item \textbf{R:} Análisis estadístico avanzado y visualización
+    \item \textbf{Python:} Machine learning con scikit-learn, pandas, numpy
+    \item \textbf{SPSS:} Análisis estadístico para ciencias sociales
+    \item \textbf{Tableau:} Visualización de datos y dashboards interactivos
+\end{itemize}
+
+\textbf{Análisis Cualitativo:}
+\begin{itemize}
+    \item \textbf{NVivo:} Análisis de datos cualitativos y codificación
+    \item \textbf{ATLAS.ti:} Análisis de contenido y teoría fundamentada
+    \item \textbf{MaxQDA:} Análisis de métodos mixtos
+\end{itemize}
+
+\textbf{Desarrollo y Testing:}
+\begin{itemize}
+    \item \textbf{Google Cloud Platform:} Infraestructura y BigQuery
+    \item \textbf{Docker:} Containerización y deployment
+    \item \textbf{Kubernetes:} Orquestación y escalamiento
+    \item \textbf{Git/GitHub:} Control de versiones y colaboración
+    \item \textbf{JMeter:} Load testing y performance evaluation
+    \item \textbf{SonarQube:} Code quality y security analysis
+\end{itemize}
+
+\subsection{Consideraciones Éticas}
+
+\subsubsection{Aspectos Éticos Técnicos}
+\begin{itemize}
+    \item \textbf{Uso Responsable de Datos:} Cumplimiento con regulaciones de privacidad
+    \item \textbf{Transparencia Algorítmica:} Documentación detallada de decisiones de diseño
+    \item \textbf{Prevención de Uso Malicioso:} Controles de acceso y audit trails
+    \item \textbf{Responsabilidad Social:} Consideración de impactos societales
+\end{itemize}
+
+\subsubsection{Protección de Participantes}
+\begin{itemize}
+    \item Consentimiento informado para todas las actividades de investigación
+    \item Anonimización de datos personales y organizacionales
+    \item Derecho de retiro sin penalización
+    \item Confidencialidad de información sensible empresarial
+\end{itemize}
+
+\subsubsection{Consideraciones de Seguridad}
+\begin{itemize}
+    \item Implementación de security by design en la herramienta
+    \item Evaluación de vulnerabilidades antes del deployment
+    \item Protección de datos en tránsito y en reposo
+    \item Compliance con estándares de seguridad relevantes
+\end{itemize}

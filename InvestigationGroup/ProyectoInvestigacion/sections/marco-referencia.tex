@@ -1,0 +1,252 @@
+\section{Marco de Referencia}
+
+\subsection{Marco Teórico}
+
+\subsubsection{Teorías de Reconocimiento Pasivo en Ciberseguridad}
+
+\textbf{Fundamentos Conceptuales:}
+El reconocimiento pasivo, definido formalmente por Gordon y Loeb (2002) como "el proceso de recolección de información sobre sistemas objetivo sin establecer comunicación directa que pueda ser detectada por sistemas de monitoreo", representa una metodología fundamental en ciberseguridad moderna [16]. Esta técnica se diferencia conceptualmente del reconocimiento activo en tres dimensiones críticas:
+
+\begin{enumerate}
+    \item \textbf{Detectabilidad:} El reconocimiento pasivo no genera tráfico hacia el objetivo, eliminando rastros en logs de sistemas monitoreados
+    \item \textbf{Legalidad:} Utiliza información públicamente disponible, evitando implicaciones legales asociadas con scanning activo
+    \item \textbf{Escala:} Permite análisis masivos sin limitaciones de ancho de banda o restricciones de rate limiting
+\end{enumerate}
+
+\textbf{Evolución Tecnológica:}
+Las técnicas modernas han evolucionado significativamente desde los enfoques manuales de los años 90 hasta sistemas automatizados impulsados por inteligencia artificial. Shodan (2009), Censys (2015), y Binary Edge (2018) han democratizado el acceso a datos de reconocimiento masivo, mientras que frameworks como Maltego, SpiderFoot y Recon-ng han automatizado la correlación de información OSINT [17][18][19].
+
+La integración de machine learning ha introducido capacidades de:
+\begin{itemize}
+    \item \textbf{Análisis predictivo} para identificar infraestructuras de comando y control emergentes
+    \item \textbf{Clustering automático} de activos relacionados basándose en patrones de certificados y configuraciones
+    \item \textbf{Detección de anomalías} en comportamientos de red y configuraciones de servicios
+\end{itemize}
+
+\textbf{Modelos Teóricos Contemporáneos:}
+El modelo de "Internet Scanning as a Service" propuesto por Durumeric et al. (2015) establece un framework donde organizaciones pueden acceder a capacidades de reconocimiento a escala de Internet sin operar infraestructura propia [20]. Este modelo se basa en tres pilares:
+
+\begin{description}
+    \item[Centralización de Recursos:] Concentración de capacidades de scanning en infraestructuras especializadas
+    \item[Democratización de Acceso:] APIs y interfaces que permiten acceso programático a datos
+    \item[Estandarización de Datos:] Formatos consistentes que facilitan análisis automatizado
+\end{description}
+
+\subsubsection{Teorías de Geolocalización de Direcciones IP}
+
+\textbf{Fundamentos Matemáticos:}
+La geolocalización IP se basa en modelos matemáticos que correlacionan propiedades de red observables con ubicaciones geográficas. Padmanabhan y Subramanian (2001) establecieron los fundamentos teóricos mediante el modelo de "constraining geography" que utiliza mediciones de latencia RTT (Round Trip Time) para establecer límites geográficos [21].
+
+El modelo fundamental se expresa como:
+\begin{equation}
+D_{geo} \leq \frac{RTT \times c}{2n}
+\end{equation}
+
+Donde $D_{geo}$ es la distancia geográfica máxima, $RTT$ es el tiempo de ida y vuelta medido, $c$ es la velocidad de la luz, y $n$ es el índice de refracción del medio (típicamente 1.5 para fibra óptica).
+
+\textbf{Limitaciones y Desafíos:}
+Investigaciones posteriores han identificado limitaciones significativas en enfoques basados únicamente en latencia:
+
+\begin{itemize}
+    \item \textbf{Routing Indirection:} El tráfico puede seguir rutas geográficamente subóptimas debido a políticas de BGP [22]
+    \item \textbf{Infrastructure Asymmetry:} Diferencias en infraestructura de red entre regiones afectan significativamente las mediciones [23]
+    \item \textbf{CDN and Anycast:} Tecnologías modernas de distribución de contenido invalidan asunciones básicas de correlación geográfica [24]
+\end{itemize}
+
+\textbf{Enfoques Multifuente Contemporáneos:}
+Los marcos modernos combinan múltiples fuentes de información para mejorar precisión:
+
+\textbf{Bases de Datos Comerciales:} MaxMind GeoIP2, IP2Location, y Neustar utilizan combinaciones de:
+\begin{itemize}
+    \item Registros WHOIS y asignaciones de bloques IP
+    \item Información proporcionada por ISPs y operadores
+    \item Datos crowdsourced de aplicaciones móviles y servicios web
+    \item Correlaciones con información de DNS y servicios públicos
+\end{itemize}
+
+\textbf{Algoritmos de Machine Learning:} Wang et al. (2020) propusieron marcos que utilizan:
+\begin{itemize}
+    \item \textbf{Redes Convolucionales de Grafos (GCNs)} para modelar topologías de red
+    \item \textbf{Optimización de función de energía} con muestreo de Monte Carlo para abordar incertidumbre
+    \item \textbf{Ensemble methods} que combinan predicciones de múltiples algoritmos especializados [25]
+\end{itemize}
+
+\subsubsection{Marcos de Inteligencia de Amenazas Cibernéticas}
+
+\textbf{Evolución Conceptual:}
+La inteligencia de amenazas ha evolucionado desde análisis manuales reactivos hacia sistemas automatizados predictivos. El modelo de "Intelligence-Driven Defense" propuesto por Hutchins et al. (2011) establece que la efectividad de la ciberseguridad es proporcional a la calidad y velocidad de la inteligencia de amenazas disponible [26].
+
+\textbf{Frameworks Contemporáneos:}
+
+\textbf{NIST Cybersecurity Framework 2.0 (2024):}
+\begin{itemize}
+    \item \textbf{Identify:} Catalogación y priorización de activos y amenazas
+    \item \textbf{Protect:} Implementación de salvaguardas basadas en inteligencia
+    \item \textbf{Detect:} Monitoreo continuo informado por indicadores de amenazas
+    \item \textbf{Respond:} Respuesta rápida basada en inteligencia contextual
+    \item \textbf{Recover:} Restauración informada por análisis post-incidente
+    \item \textbf{Govern:} Gestión estratégica de programas de ciberseguridad [27]
+\end{itemize}
+
+\textbf{MITRE ATT\&CK Framework:}
+Taxonomía global de técnicas de adversarios basada en observaciones del mundo real, organizada en:
+\begin{itemize}
+    \item 14 tácticas principales (Initial Access, Execution, Persistence, etc.)
+    \item 193 técnicas específicas con sub-técnicas detalladas
+    \item Matrices especializadas para Enterprise, Mobile, y ICS/SCADA [28]
+\end{itemize}
+
+\textbf{D3FEND Framework:}
+Complemento defensivo de ATT\&CK que categoriza contramedidas técnicas:
+\begin{itemize}
+    \item \textbf{Harden:} Técnicas para reducir superficie de ataque
+    \item \textbf{Detect:} Metodologías de identificación de actividad maliciosa
+    \item \textbf{Isolate:} Estrategias de contención de amenazas
+    \item \textbf{Deceive:} Técnicas de engaño y honeypots [29]
+\end{itemize}
+
+\subsection{Marco Conceptual}
+
+\subsubsection{Definiciones Operacionales}
+
+\begin{description}
+    \item[Reconocimiento Pasivo:] Proceso sistemático de recolección de información sobre sistemas objetivo mediante el uso de fuentes públicas y datasets pre-existentes, sin establecer comunicación directa que pueda ser detectada por sistemas de monitoreo del objetivo. Incluye análisis de certificados SSL/TLS, registros DNS históricos, y datos de scanning de terceros.
+
+    \item[Geolocalización IP:] Técnica computacional para determinar la ubicación geográfica aproximada de una dirección IP mediante el análisis correlacionado de bases de datos especializadas, mediciones de red, y algoritmos de inferencia espacial. La precisión típica varía entre 50-100 km para ubicaciones urbanas y 100-500 km para ubicaciones rurales.
+
+    \item[Inteligencia de Amenazas:] Conocimiento basado en evidencia, incluyendo contexto, mecanismos, indicadores, implicaciones y consejos orientados a la acción sobre amenazas existentes o emergentes. Se categoriza en cuatro niveles: Estratégica (tendencias a largo plazo), Táctica (TTPs específicos), Operacional (campañas activas), y Técnica (IOCs específicos).
+
+    \item[Fuentes Abiertas (OSINT):] Información disponible públicamente que puede ser recolectada, analizada y utilizada para propósitos de inteligencia sin restricciones legales, éticas o contractuales. Incluye datos de motores de búsqueda especializados, bases de datos académicas, registros públicos, y datasets gubernamentales.
+
+    \item[BigQuery:] Servicio de almacén de datos completamente administrado y sin servidor de Google Cloud Platform que permite consultas SQL escalables sobre petabytes de datos. Utiliza arquitectura distribuida columnar optimizada para análisis de grandes volúmenes de datos estructurados y semi-estructurados.
+
+    \item[Censys:] Plataforma de mapeo de Internet que proporciona visibilidad sobre dispositivos, servicios e infraestructuras conectadas mediante escaneos automatizados regulares. Mantiene datos históricos de puertos, certificados, y configuraciones de servicios accesibles desde 2015.
+
+    \item[Threat Intelligence Platform (TIP):] Sistema integrado que agrega, correlaciona, y analiza datos de múltiples fuentes para generar inteligencia accionable. Incluye capacidades de enriquecimiento automático, scoring de confianza, y distribución de indicadores.
+
+    \item[Indicator of Compromise (IOC):] Artefacto digital observado en redes o sistemas operativos que indica con alta confianza una intrusión o actividad maliciosa. Incluye direcciones IP, dominios, hashes de archivos, y patrones de tráfico específicos.
+\end{description}
+
+\subsubsection{Taxonomía de Amenazas IP}
+
+\textbf{Categorización por Origen:}
+\begin{itemize}
+    \item \textbf{Malware C\&C:} Direcciones IP utilizadas como servidores de comando y control
+    \item \textbf{Botnet Infrastructure:} IPs comprometidas formando parte de redes bot
+    \item \textbf{Phishing Hosting:} Servidores que alojan contenido de phishing
+    \item \textbf{Scanning Sources:} IPs que realizan reconocimiento automatizado
+    \item \textbf{Exploit Delivery:} Servidores que distribuyen exploits y payloads
+\end{itemize}
+
+\textbf{Categorización por Comportamiento:}
+\begin{itemize}
+    \item \textbf{Persistent Threats:} Amenazas de larga duración con infraestructura estable
+    \item \textbf{Fast-Flux Networks:} Infraestructuras que cambian rápidamente de IP
+    \item \textbf{Domain Generation Algorithms (DGA):} Amenazas que generan dominios algorítmicamente
+    \item \textbf{Bulletproof Hosting:} Servicios de hosting tolerantes a actividad maliciosa
+\end{itemize}
+
+\subsection{Marco Espacial}
+
+\subsubsection{Contexto Geográfico Nacional}
+La investigación se desarrolla en el territorio colombiano, considerando las particularidades geográficas, demográficas y tecnológicas que influyen en el panorama de ciberseguridad:
+
+\textbf{Distribución Poblacional y Digital:}
+\begin{itemize}
+    \item 50.4 millones de habitantes distribuidos en 1,142 municipios
+    \item 36.2 millones de usuarios de Internet (71.5\% de penetración)
+    \item Concentración del 60\% de infraestructura tecnológica en Bogotá, Medellín y Cali
+    \item 2.1 millones de direcciones IPv4 asignadas a Colombia según LACNIC
+\end{itemize}
+
+\textbf{Infraestructura de Conectividad:}
+\begin{itemize}
+    \item 15 cables submarinos internacionales
+    \item 127 ISPs registrados con diferentes niveles de cobertura
+    \item Red Nacional de Fibra Óptica con 28,000 km desplegados
+    \item 4 Internet Exchange Points (IXPs) principales
+\end{itemize}
+
+\subsubsection{Panorama de Amenazas Específico}
+\textbf{Amenazas Predominantes en Colombia (2024):}
+\begin{itemize}
+    \item \textbf{Banking Trojans:} 34\% de los ataques detectados
+    \item \textbf{Ransomware:} 28\% con tendencia creciente
+    \item \textbf{Cryptomining Malware:} 18\% aprovechando infraestructura nacional
+    \item \textbf{Mobile Malware:} 12\% dirigido específicamente a usuarios colombianos
+    \item \textbf{Supply Chain Attacks:} 8\% con impacto en múltiples organizaciones
+\end{itemize}
+
+\textbf{Sectores Más Atacados:}
+\begin{enumerate}
+    \item Sector Financiero (31\% de incidentes reportados)
+    \item Gobierno y Administración Pública (24\%)
+    \item Telecomunicaciones (18\%)
+    \item Energía y Servicios Públicos (15\%)
+    \item Educación (12\%)
+\end{enumerate}
+
+\subsubsection{Ecosistema de Ciberseguridad Nacional}
+\textbf{Actores Institucionales:}
+\begin{itemize}
+    \item \textbf{COLCERT:} Grupo de Respuesta a Emergencias Cibernéticas de Colombia
+    \item \textbf{MinTIC:} Ministerio de Tecnologías de la Información y las Comunicaciones
+    \item \textbf{DNE:} Dirección Nacional de Inteligencia
+    \item \textbf{CCOC:} Comando Conjunto Cibernético
+    \item \textbf{SIC:} Superintendencia de Industria y Comercio
+\end{itemize}
+
+\textbf{Iniciativas Estratégicas:}
+\begin{itemize}
+    \item CONPES 3995: Política Nacional de Transformación Digital e Inteligencia Artificial
+    \item CONPES 3854: Política Nacional de Ciberseguridad y Ciberdefensa
+    \item Estrategia Nacional de Economía Digital 2025
+    \item Plan Nacional de Infraestructuras de Datos
+\end{itemize}
+
+\subsection{Marco Temporal}
+
+\subsubsection{Ventana de Investigación}
+El estudio abarca el período \textbf{enero 2025 - diciembre 2025}, un momento crítico que coincide con:
+
+\textbf{Contexto Nacional:}
+\begin{itemize}
+    \item Implementación de la nueva Ley de Ciberseguridad (Ley 2273 de 2022)
+    \item Despliegue de la infraestructura 5G nacional
+    \item Finalización del primer quinquenio del Plan Nacional de Desarrollo Digital
+    \item Evaluación intermedia de la Estrategia Nacional de Ciberseguridad 2022-2026
+\end{itemize}
+
+\textbf{Contexto Internacional:}
+\begin{itemize}
+    \item Entrada en vigor de nuevas regulaciones de ciberseguridad de la UE (NIS2 Directive)
+    \item Implementación del Cyber Resilience Act europeo
+    \item Evolución post-quantum cryptography standards
+    \item Maduración de tecnologías de IA generativa en ciberseguridad
+\end{itemize}
+
+\subsubsection{Cronología de Amenazas Relevantes}
+\textbf{Período de Análisis Histórico (2020-2024):}
+\begin{itemize}
+    \item \textbf{2020:} Incremento del 300\% en ataques durante pandemia COVID-19
+    \item \textbf{2021:} Surgimiento de ransomware-as-a-service dirigido a LATAM
+    \item \textbf{2022:} Proliferación de ataques a infraestructura crítica nacional
+    \item \textbf{2023:} Emergencia de amenazas basadas en IA generativa
+    \item \textbf{2024:} Sofisticación de ataques de cadena de suministro
+\end{itemize}
+
+\textbf{Proyecciones Futuras (2025-2027):}
+\begin{itemize}
+    \item Integración de quantum computing en capacidades defensivas
+    \item Automatización completa de respuesta a incidentes
+    \item Implementación de zero-trust architecture a nivel nacional
+    \item Desarrollo de capacidades de ciberdefensa autónoma
+\end{itemize}
+
+\subsubsection{Ventana de Validación}
+La efectividad de la herramienta será evaluada considerando:
+\begin{itemize}
+    \item \textbf{Datos históricos:} Análisis retrospectivo de amenazas 2020-2024
+    \item \textbf{Datos contemporáneos:} Validación con amenazas activas durante 2025
+    \item \textbf{Proyección futura:} Evaluación de adaptabilidad para amenazas emergentes
+\end{itemize}

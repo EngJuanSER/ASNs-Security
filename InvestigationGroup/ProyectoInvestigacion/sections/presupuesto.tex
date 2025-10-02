@@ -1,0 +1,450 @@
+\section{Presupuesto}
+
+\subsection{Metodología de Costeo}
+
+El presupuesto se desarrolla utilizando la metodología de \textbf{Activity-Based Costing (ABC)} combinada con \textbf{Bottom-Up Estimation} para asegurar precisión en la estimación de recursos. Se incluyen contingencias del 15\% para gestión de riesgos y un buffer de inflación del 8\% anual considerando el contexto económico colombiano.
+
+\subsection{Estructura de Costos}
+
+\subsubsection{Categorías Presupuestarias}
+\begin{enumerate}
+    \item \textbf{Recursos Humanos:} Personal directo e indirecto del proyecto
+    \item \textbf{Infraestructura Tecnológica:} Cloud services, licencias, hardware
+    \item \textbf{Investigación y Desarrollo:} Materiales, herramientas especializadas
+    \item \textbf{Transferencia y Diseminación:} Eventos, publicaciones, capacitación
+    \item \textbf{Administración y Overhead:} Gestión, legal, contabilidad
+    \item \textbf{Contingencias:} Reserva para riesgos identificados
+\end{enumerate}
+
+\subsection{Recursos Humanos}
+
+\subsubsection{Personal Científico y Técnico}
+
+\begin{table}[H]
+    \centering
+    \caption{Costos de Personal Científico y Técnico}
+    \label{tab:personal_cientifico}
+    \small
+    \begin{tabular}{|l|c|c|r|r|}
+        \hline
+        \textbf{Rol} & \textbf{Dedicación} & \textbf{Duración} & \textbf{Costo Mensual} & \textbf{Total} \\
+        \hline
+        Investigador Principal PhD & 100\% & 12 meses & \$8.500.000 & \$102.000.000 \\
+        \hline
+        Desarrollador Senior Backend & 75\% & 8 meses & \$6.750.000 & \$54.000.000 \\
+        \hline
+        Desarrollador Frontend & 75\% & 6 meses & \$5.625.000 & \$33.750.000 \\
+        \hline
+        Analista Ciberseguridad Senior & 50\% & 10 meses & \$3.800.000 & \$38.000.000 \\
+        \hline
+        Arquitecto de Software & 25\% & 4 meses & \$2.250.000 & \$9.000.000 \\
+        \hline
+        UX/UI Designer & 25\% & 4 meses & \$1.875.000 & \$7.500.000 \\
+        \hline
+        DevOps Engineer & 50\% & 6 meses & \$3.500.000 & \$21.000.000 \\
+        \hline
+        QA/Testing Specialist & 50\% & 4 meses & \$2.400.000 & \$9.600.000 \\
+        \hline
+        \multicolumn{4}{|r|}{\textbf{Subtotal Personal Técnico}} & \textbf{\$274.850.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Personal de Apoyo y Administrativo}
+
+\begin{table}[H]
+    \centering
+    \caption{Costos de Personal de Apoyo}
+    \label{tab:personal_apoyo}
+    \small
+    \begin{tabular}{|l|c|c|r|r|}
+        \hline
+        \textbf{Rol} & \textbf{Dedicación} & \textbf{Duración} & \textbf{Costo Mensual} & \textbf{Total} \\
+        \hline
+        Gerente de Proyecto & 25\% & 12 meses & \$1.750.000 & \$21.000.000 \\
+        \hline
+        Asistente de Investigación & 50\% & 8 meses & \$1.500.000 & \$12.000.000 \\
+        \hline
+        Especialista en Comunicaciones & 20\% & 6 meses & \$1.200.000 & \$7.200.000 \\
+        \hline
+        Consultor Legal (Propiedad Intelectual) & 10\% & 3 meses & \$1.000.000 & \$3.000.000 \\
+        \hline
+        \multicolumn{4}{|r|}{\textbf{Subtotal Personal Apoyo}} & \textbf{\$43.200.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Prestaciones Sociales y Beneficios}
+
+\begin{table}[H]
+    \centering
+    \caption{Prestaciones Sociales (38.5\% del salario base)}
+    \label{tab:prestaciones}
+    \small
+    \begin{tabular}{|l|r|r|}
+        \hline
+        \textbf{Concepto} & \textbf{Porcentaje} & \textbf{Valor} \\
+        \hline
+        Personal Técnico & 38.5\% & \$105.837.250 \\
+        \hline
+        Personal de Apoyo & 38.5\% & \$16.632.000 \\
+        \hline
+        \multicolumn{2}{|r|}{\textbf{Total Prestaciones}} & \textbf{\$122.469.250} \\
+        \hline
+        \multicolumn{2}{|r|}{\textbf{TOTAL RECURSOS HUMANOS}} & \textbf{\$440.519.250} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Infraestructura Tecnológica}
+
+\subsubsection{Servicios de Cloud Computing}
+
+\begin{table}[H]
+    \centering
+    \caption{Costos de Infraestructura Cloud}
+    \label{tab:cloud_costs}
+    \small
+    \begin{tabular}{|l|c|r|r|}
+        \hline
+        \textbf{Servicio} & \textbf{Duración} & \textbf{Costo Mensual} & \textbf{Total} \\
+        \hline
+        Google BigQuery (Processing + Storage) & 12 meses & \$2.800.000 & \$33.600.000 \\
+        \hline
+        Compute Engine (Desarrollo y Testing) & 12 meses & \$1.200.000 & \$14.400.000 \\
+        \hline
+        Cloud Storage (Datasets y Backups) & 12 meses & \$400.000 & \$4.800.000 \\
+        \hline
+        Cloud Load Balancer & 8 meses & \$300.000 & \$2.400.000 \\
+        \hline
+        Cloud Monitoring y Logging & 12 meses & \$200.000 & \$2.400.000 \\
+        \hline
+        Cloud Security Command Center & 8 meses & \$500.000 & \$4.000.000 \\
+        \hline
+        Kubernetes Engine & 8 meses & \$800.000 & \$6.400.000 \\
+        \hline
+        \multicolumn{3}{|r|}{\textbf{Subtotal Cloud Services}} & \textbf{\$68.000.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Licencias de Software}
+
+\begin{table}[H]
+    \centering
+    \caption{Licencias de Software y Herramientas}
+    \label{tab:software_licenses}
+    \small
+    \begin{tabular}{|l|c|r|r|}
+        \hline
+        \textbf{Software/Herramienta} & \textbf{Licencias} & \textbf{Costo Anual} & \textbf{Total} \\
+        \hline
+        GitHub Enterprise & 8 usuarios & \$800.000 & \$800.000 \\
+        \hline
+        JetBrains IntelliJ Ultimate & 6 licencias & \$450.000 & \$450.000 \\
+        \hline
+        Docker Enterprise & 1 licencia & \$1.200.000 & \$1.200.000 \\
+        \hline
+        SonarQube Enterprise & 1 licencia & \$1.800.000 & \$1.800.000 \\
+        \hline
+        Postman Pro & 4 usuarios & \$600.000 & \$600.000 \\
+        \hline
+        Tableau Desktop & 2 licencias & \$1.400.000 & \$1.400.000 \\
+        \hline
+        SPSS Statistics & 2 licencias & \$2.200.000 & \$2.200.000 \\
+        \hline
+        NVivo (Análisis Cualitativo) & 2 licencias & \$1.500.000 & \$1.500.000 \\
+        \hline
+        Slack Pro & 10 usuarios & \$480.000 & \$480.000 \\
+        \hline
+        Zoom Pro & 5 usuarios & \$360.000 & \$360.000 \\
+        \hline
+        \multicolumn{3}{|r|}{\textbf{Subtotal Licencias}} & \textbf{\$10.790.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Hardware y Equipamiento}
+
+\begin{table}[H]
+    \centering
+    \caption{Hardware y Equipamiento}
+    \label{tab:hardware}
+    \small
+    \begin{tabular}{|l|c|r|r|}
+        \hline
+        \textbf{Equipo} & \textbf{Cantidad} & \textbf{Costo Unitario} & \textbf{Total} \\
+        \hline
+        Workstation Alto Rendimiento & 3 & \$12.000.000 & \$36.000.000 \\
+        \hline
+        Laptops Desarrollo & 5 & \$4.500.000 & \$22.500.000 \\
+        \hline
+        Servidor de Testing Local & 1 & \$15.000.000 & \$15.000.000 \\
+        \hline
+        Equipos de Red y Seguridad & 1 set & \$8.000.000 & \$8.000.000 \\
+        \hline
+        Monitores 4K & 6 & \$1.200.000 & \$7.200.000 \\
+        \hline
+        UPS y Equipos de Respaldo & 1 set & \$3.500.000 & \$3.500.000 \\
+        \hline
+        \multicolumn{3}{|r|}{\textbf{Subtotal Hardware}} & \textbf{\$92.200.000} \\
+        \hline
+        \multicolumn{3}{|r|}{\textbf{TOTAL INFRAESTRUCTURA}} & \textbf{\$170.990.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Investigación y Desarrollo}
+
+\subsubsection{Materiales y Recursos de Investigación}
+
+\begin{table}[H]
+    \centering
+    \caption{Costos de Investigación y Desarrollo}
+    \label{tab:investigacion}
+    \small
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{Concepto} & \textbf{Costo} \\
+        \hline
+        Datasets comerciales para validación (VirusTotal Premium) & \$8.500.000 \\
+        \hline
+        Acceso a bases de datos académicas especializadas & \$3.200.000 \\
+        \hline
+        Servicios de threat intelligence para benchmarking & \$12.000.000 \\
+        \hline
+        Certificaciones y training especializado para el equipo & \$15.600.000 \\
+        \hline
+        Consultoría externa especializada (40 horas @ \$200.000/hora) & \$8.000.000 \\
+        \hline
+        Materiales de prototipado y testing & \$2.800.000 \\
+        \hline
+        Subscripciones a herramientas de análisis de malware & \$4.500.000 \\
+        \hline
+        \textbf{Subtotal I+D} & \textbf{\$54.600.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Transferencia y Diseminación}
+
+\subsubsection{Eventos y Comunicación Científica}
+
+\begin{table}[H]
+    \centering
+    \caption{Costos de Transferencia y Diseminación}
+    \label{tab:diseminacion}
+    \small
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{Concepto} & \textbf{Costo} \\
+        \hline
+        Participación en 3 conferencias internacionales (registro + viáticos) & \$24.000.000 \\
+        \hline
+        Organización de workshop nacional de ciberseguridad & \$8.500.000 \\
+        \hline
+        Publicación en revistas indexadas (APCs) & \$6.000.000 \\
+        \hline
+        Desarrollo de material de capacitación y demos & \$4.200.000 \\
+        \hline
+        Website del proyecto y material de marketing & \$3.800.000 \\
+        \hline
+        Videos educativos y documentales técnicos & \$5.500.000 \\
+        \hline
+        Traducción de documentación técnica & \$2.800.000 \\
+        \hline
+        Eventos de networking y colaboración & \$3.200.000 \\
+        \hline
+        \textbf{Subtotal Transferencia} & \textbf{\$58.000.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Gastos Administrativos y Overhead}
+
+\subsubsection{Administración General}
+
+\begin{table}[H]
+    \centering
+    \caption{Gastos Administrativos}
+    \label{tab:administrativos}
+    \small
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{Concepto} & \textbf{Costo} \\
+        \hline
+        Overhead institucional (15\% de costos directos) & \$67.560.000 \\
+        \hline
+        Servicios legales y de propiedad intelectual & \$8.500.000 \\
+        \hline
+        Auditoría financiera y compliance & \$4.200.000 \\
+        \hline
+        Seguros de equipos y responsabilidad civil & \$3.600.000 \\
+        \hline
+        Servicios de contabilidad especializada & \$6.000.000 \\
+        \hline
+        Gastos de oficina y comunicaciones & \$4.800.000 \\
+        \hline
+        Utilidades (energía, internet, teléfono) & \$7.200.000 \\
+        \hline
+        \textbf{Subtotal Administrativo} & \textbf{\$101.860.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Contingencias y Reservas}
+
+\subsubsection{Gestión de Riesgos Financieros}
+
+\begin{table}[H]
+    \centering
+    \caption{Contingencias y Reservas}
+    \label{tab:contingencias}
+    \small
+    \begin{tabular}{|l|c|r|}
+        \hline
+        \textbf{Tipo de Riesgo} & \textbf{\% de Contingencia} & \textbf{Monto} \\
+        \hline
+        Riesgos técnicos (cambios en APIs, performance) & 10\% & \$45.000.000 \\
+        \hline
+        Riesgos de mercado (inflación, fluctuación USD) & 8\% & \$36.000.000 \\
+        \hline
+        Riesgos de personal (rotación, capacitación adicional) & 5\% & \$22.500.000 \\
+        \hline
+        Riesgos regulatorios (compliance, licencias) & 3\% & \$13.500.000 \\
+        \hline
+        \textbf{Total Contingencias} & & \textbf{\$117.000.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Resumen Ejecutivo del Presupuesto}
+
+\begin{table}[H]
+    \centering
+    \caption{Resumen Ejecutivo del Presupuesto}
+    \label{tab:resumen_presupuesto}
+    \small
+    \begin{tabular}{|l|r|c|}
+        \hline
+        \textbf{Categoría} & \textbf{Monto (COP)} & \textbf{\% del Total} \\
+        \hline
+        Recursos Humanos & \$440.519.250 & 45.2\% \\
+        \hline
+        Infraestructura Tecnológica & \$170.990.000 & 17.5\% \\
+        \hline
+        Investigación y Desarrollo & \$54.600.000 & 5.6\% \\
+        \hline
+        Transferencia y Diseminación & \$58.000.000 & 6.0\% \\
+        \hline
+        Gastos Administrativos & \$101.860.000 & 10.5\% \\
+        \hline
+        Contingencias y Reservas & \$117.000.000 & 12.0\% \\
+        \hline
+        \textbf{PRESUPUESTO TOTAL} & \textbf{\$942.969.250} & \textbf{100.0\%} \\
+        \hline
+        \textbf{Equivalente en USD} & \textbf{\$235.742} & (TRM: \$4.000) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Flujo de Caja Proyectado}
+
+\begin{table}[H]
+    \centering
+    \caption{Flujo de Caja por Trimestres}
+    \label{tab:flujo_caja}
+    \small
+    \begin{tabular}{|l|r|r|r|r|}
+        \hline
+        \textbf{Categoría} & \textbf{Q1 2025} & \textbf{Q2 2025} & \textbf{Q3/Q4 2025} \\
+        \hline
+        Recursos Humanos & \$95.125.000 & \$120.458.250 & \$224.936.000 \\
+        \hline
+        Infraestructura & \$65.000.000 & \$45.000.000 & \$60.990.000 \\
+        \hline
+        I+D & \$18.200.000 & \$15.600.000 & \$20.800.000 \\
+        \hline
+        Transferencia & \$8.000.000 & \$15.000.000 & \$35.000.000 \\
+        \hline
+        Administrativo & \$25.465.000 & \$25.465.000 & \$50.930.000 \\
+        \hline
+        Contingencias & \$29.250.000 & \$29.250.000 & \$58.500.000 \\
+        \hline
+        \textbf{Total Trimestral} & \textbf{\$241.040.000} & \textbf{\$250.773.250} & \textbf{\$451.156.000} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Fuentes de Financiación}
+
+\subsubsection{Estrategia de Financiación Diversificada}
+
+\begin{table}[H]
+    \centering
+    \caption{Fuentes de Financiación Propuestas}
+    \label{tab:financiacion}
+    \small
+    \begin{tabular}{|l|r|c|}
+        \hline
+        \textbf{Fuente} & \textbf{Monto (COP)} & \textbf{\% del Total} \\
+        \hline
+        MinCiencias - Convocatoria I+D+i & \$400.000.000 & 42.4\% \\
+        \hline
+        Universidad Distrital (contrapartida) & \$150.000.000 & 15.9\% \\
+        \hline
+        Sector Privado (patrocinios) & \$200.000.000 & 21.2\% \\
+        \hline
+        MinTIC - Fondo de TI & \$100.000.000 & 10.6\% \\
+        \hline
+        Organizaciones Internacionales & \$92.969.250 & 9.9\% \\
+        \hline
+        \textbf{Total Financiación} & \textbf{\$942.969.250} & \textbf{100.0\%} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Análisis de Costo-Beneficio}
+
+\subsubsection{Retorno de Inversión Proyectado}
+
+\textbf{Beneficios Cuantificables:}
+\begin{itemize}
+    \item \textbf{Ahorro directo:} \$2.5 billones anuales por reducción de costos en licencias comerciales
+    \item \textbf{Productividad:} Incremento del 35\% en eficiencia de análisis de amenazas
+    \item \textbf{Capacitación:} Formación de 500+ profesionales en herramientas open source
+    \item \textbf{Propiedad Intelectual:} 3-5 patentes estimadas, valor \$50-100 millones cada una
+\end{itemize}
+
+\textbf{ROI Estimado:} 350\% en el primer año, 1,200\% en tres años.
+
+\subsubsection{Análisis de Sensibilidad}
+
+\begin{table}[H]
+    \centering
+    \caption{Análisis de Sensibilidad del Presupuesto}
+    \small
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        \textbf{Escenario} & \textbf{Variación} & \textbf{Presupuesto} & \textbf{Impacto} \\
+        \hline
+        Optimista & -15\% & \$801.524.000 & Entrega anticipada \\
+        \hline
+        Base & 0\% & \$942.969.250 & Plan nominal \\
+        \hline
+        Pesimista & +25\% & \$1.178.711.563 & Retrasos, re-scoping \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Sostenibilidad Financiera Post-Proyecto}
+
+\subsubsection{Modelo de Sostenibilidad}
+\begin{itemize}
+    \item \textbf{Comunidad Open Source:} Contribuciones voluntarias y patrocinios
+    \item \textbf{Servicios Profesionales:} Consultoría e implementación especializada
+    \item \textbf{Partnerships Estratégicos:} Colaboraciones con proveedores cloud
+    \item \textbf{Funding Continuo:} Grants de seguimiento y evolución tecnológica
+\end{itemize}
+
+\textbf{Costos de Mantenimiento Anuales Estimados:} \$120.000.000 COP (25% del equipo core + infraestructura mínima)

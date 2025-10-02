@@ -1,0 +1,282 @@
+\section{Cronograma de Trabajo}
+
+\subsection{Metodología de Planificación}
+
+El cronograma se desarrolla utilizando la metodología \textbf{Critical Path Method (CPM)} combinada con principios de gestión ágil de proyectos. Se implementa un enfoque iterativo con sprints de 2 semanas para el desarrollo de software y hitos trimestrales para evaluación de progreso. La planificación considera dependencias críticas, recursos limitados y ventanas de oportunidad para actividades de transferencia.
+
+\subsection{Estructura Temporal}
+
+\subsubsection{Duración Total}
+\textbf{Duración:} 12 meses (52 semanas) 
+\textbf{Esfuerzo:} 2,080 horas-persona 
+\textbf{Fases principales:} 5 fases secuenciales con solapamiento controlado
+
+\subsubsection{Fase 1: Investigación y Diseño (Meses 1-3)}identifican dependencias críticas, hitos clave, y buffers de riesgo para asegurar la entrega exitosa dentro del marco temporal establecido.
+
+\subsection{Estructura de Desglose del Trabajo (WBS)}
+
+\subsubsection{Fase 1: Investigación y Diseño (Meses 1-3)}
+\textbf{Duración:} 12 semanas \\
+\textbf{Esfuerzo:} 480 horas-persona \\
+\textbf{Entregables principales:} Arquitectura técnica, especificaciones funcionales, revisión de literatura
+
+\textbf{1.1 Investigación Preliminar (Semanas 1-4)}
+\begin{itemize}
+    \item \textbf{1.1.1} Revisión sistemática de literatura (40 horas)
+    \item \textbf{1.1.2} Análisis de herramientas comerciales existentes (32 horas)
+    \item \textbf{1.1.3} Caracterización del panorama nacional de amenazas (24 horas)
+    \item \textbf{1.1.4} Evaluación de datasets disponibles (Censys, GeoLite2) (40 horas)
+    \item \textbf{1.1.5} Definición de requerimientos funcionales y no funcionales (24 horas)
+\end{itemize}
+
+\textbf{1.2 Diseño de Arquitectura (Semanas 5-8)}
+\begin{itemize}
+    \item \textbf{1.2.1} Diseño de arquitectura de sistema (48 horas)
+    \item \textbf{1.2.2} Modelado de datos y esquemas de integración (40 horas)
+    \item \textbf{1.2.3} Diseño de APIs y interfaces (32 horas)
+    \item \textbf{1.2.4} Especificación de algoritmos de correlación (36 horas)
+    \item \textbf{1.2.5} Diseño de seguridad y compliance (24 horas)
+\end{itemize}
+
+\textbf{1.3 Prototipado Inicial (Semanas 9-12)}
+\begin{itemize}
+    \item \textbf{1.3.1} Desarrollo de proof-of-concept para consultas BigQuery (40 horas)
+    \item \textbf{1.3.2} Prototipo de integración GeoLite2 (32 horas)
+    \item \textbf{1.3.3} Validación técnica de factibilidad (24 horas)
+    \item \textbf{1.3.4} Evaluación de rendimiento preliminar (32 horas)
+    \item \textbf{1.3.5} Documentación de arquitectura (32 horas)
+\end{itemize}
+
+\subsubsection{Fase 2: Desarrollo del Backend (Meses 3-6)}
+\textbf{Duración:} 14 semanas \\
+\textbf{Esfuerzo:} 672 horas-persona \\
+\textbf{Entregables principales:} API funcional, algoritmos de correlación, integración de datos
+
+\textbf{2.1 Infraestructura y Configuración (Semanas 13-16)}
+\begin{itemize}
+    \item \textbf{2.1.1} Setup de infraestructura Google Cloud Platform (24 horas)
+    \item \textbf{2.1.2} Configuración de BigQuery y optimización de costos (32 horas)
+    \item \textbf{2.1.3} Implementación de CI/CD pipeline (40 horas)
+    \item \textbf{2.1.4} Setup de monitoreo y logging (24 horas)
+    \item \textbf{2.1.5} Configuración de seguridad y access control (32 horas)
+\end{itemize}
+
+\textbf{2.2 Desarrollo de Módulos Core (Semanas 17-22)}
+\begin{itemize}
+    \item \textbf{2.2.1} Módulo de consultas optimizadas a BigQuery (80 horas)
+    \item \textbf{2.2.2} Módulo de integración GeoLite2 (64 horas)
+    \item \textbf{2.2.3} Engine de correlación de datos (96 horas)
+    \item \textbf{2.2.4} Sistema de scoring de riesgo (72 horas)
+    \item \textbf{2.2.5} Módulo de cache y optimización (48 horas)
+\end{itemize}
+
+\textbf{2.3 APIs y Servicios (Semanas 23-26)}
+\begin{itemize}
+    \item \textbf{2.3.1} Desarrollo de REST APIs (64 horas)
+    \item \textbf{2.3.2} Implementación de GraphQL endpoint (48 horas)
+    \item \textbf{2.3.3} Servicios de autenticación y autorización (40 horas)
+    \item \textbf{2.3.4} Rate limiting y quota management (32 horas)
+    \item \textbf{2.3.5} Documentación de API (24 horas)
+\end{itemize}
+
+\subsubsection{Fase 3: Desarrollo del Frontend (Meses 5-8)}
+\textbf{Duración:} 14 semanas \\
+\textbf{Esfuerzo:} 560 horas-persona \\
+\textbf{Entregables principales:} Interfaz web, dashboards, herramientas de visualización
+
+\textbf{3.1 Diseño de UX/UI (Semanas 21-24)}
+\begin{itemize}
+    \item \textbf{3.1.1} Research de usuarios y personas (32 horas)
+    \item \textbf{3.1.2} Wireframing y mockups (40 horas)
+    \item \textbf{3.1.3} Prototipado interactivo (48 horas)
+    \item \textbf{3.1.4} User testing del prototipo (24 horas)
+    \item \textbf{3.1.5} Refinamiento de diseño (16 horas)
+\end{itemize}
+
+\textbf{3.2 Desarrollo de Interfaz (Semanas 25-30)}
+\begin{itemize}
+    \item \textbf{3.2.1} Setup del framework frontend (React/Vue) (24 horas)
+    \item \textbf{3.2.2} Desarrollo de componentes base (64 horas)
+    \item \textbf{3.2.3} Implementación de formularios de consulta (48 horas)
+    \item \textbf{3.2.4} Desarrollo de visualizaciones (D3.js/Chart.js) (80 horas)
+    \item \textbf{3.2.5} Implementación de dashboards interactivos (72 horas)
+\end{itemize}
+
+\textbf{3.3 Funcionalidades Avanzadas (Semanas 31-34)}
+\begin{itemize}
+    \item \textbf{3.3.1} Sistema de reportes exportables (40 horas)
+    \item \textbf{3.3.2} Funcionalidad de análisis masivo (48 horas)
+    \item \textbf{3.3.3} Integración con herramientas externas (32 horas)
+    \item \textbf{3.3.4} Optimización de performance frontend (24 horas)
+    \item \textbf{3.3.5} Implementación de PWA features (16 horas)
+\end{itemize}
+
+\subsubsection{Fase 4: Testing y Validación (Meses 7-10)}
+\textbf{Duración:} 16 semanas \\
+\textbf{Esfuerzo:} 640 horas-persona \\
+\textbf{Entregables principales:} Sistema validado, reportes de testing, benchmarks
+
+\textbf{4.1 Testing Técnico (Semanas 29-34)}
+\begin{itemize}
+    \item \textbf{4.1.1} Unit testing y coverage analysis (48 horas)
+    \item \textbf{4.1.2} Integration testing de APIs (56 horas)
+    \item \textbf{4.1.3} Performance testing y optimization (64 horas)
+    \item \textbf{4.1.4} Security testing y vulnerability assessment (48 horas)
+    \item \textbf{4.1.5} Load testing y scalability evaluation (40 horas)
+\end{itemize}
+
+\textbf{4.2 Validación Comparativa (Semanas 35-40)}
+\begin{itemize}
+    \item \textbf{4.2.1} Preparación de datasets de prueba (32 horas)
+    \item \textbf{4.2.2} Benchmarking contra herramientas comerciales (80 horas)
+    \item \textbf{4.2.3} Análisis estadístico de resultados (48 horas)
+    \item \textbf{4.2.4} Evaluación de precisión y cobertura (56 horas)
+    \item \textbf{4.2.5} Documentación de resultados comparativos (32 horas)
+\end{itemize}
+
+\textbf{4.3 Testing de Usuario (Semanas 41-44)}
+\begin{itemize}
+    \item \textbf{4.3.1} Reclutamiento de participantes para testing (16 horas)
+    \item \textbf{4.3.2} Usability testing sessions (48 horas)
+    \item \textbf{4.3.3} Accessibility testing (24 horas)
+    \item \textbf{4.3.4} Focus groups con diferentes perfiles (32 horas)
+    \item \textbf{4.3.5} Análisis de feedback y refinamiento (32 horas)
+\end{itemize}
+
+\subsubsection{Fase 5: Documentación y Transferencia (Meses 9-12)}
+\textbf{Duración:} 16 semanas \\
+\textbf{Esfuerzo:} 512 horas-persona \\
+\textbf{Entregables principales:} Documentación completa, guías de usuario, plan de sostenibilidad
+
+\textbf{5.1 Documentación Técnica (Semanas 37-42)}
+\begin{itemize}
+    \item \textbf{5.1.1} Manual de instalación y configuración (40 horas)
+    \item \textbf{5.1.2} Documentación de arquitectura y APIs (56 horas)
+    \item \textbf{5.1.3} Guías de desarrollo y contribución (48 horas)
+    \item \textbf{5.1.4} Documentación de seguridad y compliance (32 horas)
+    \item \textbf{5.1.5} Troubleshooting y FAQ (24 horas)
+\end{itemize}
+
+\textbf{5.2 Materiales de Usuario (Semanas 43-48)}
+\begin{itemize}
+    \item \textbf{5.2.1} Manual de usuario final (48 horas)
+    \item \textbf{5.2.2} Tutoriales interactivos y videos (56 horas)
+    \item \textbf{5.2.3} Casos de uso y best practices (40 horas)
+    \item \textbf{5.2.4} Materiales de capacitación (32 horas)
+    \item \textbf{5.2.5} Plan de onboarding para organizaciones (24 horas)
+\end{itemize}
+
+\textbf{5.3 Análisis y Diseminación (Semanas 49-52)}
+\begin{itemize}
+    \item \textbf{5.3.1} Análisis final de resultados y impacto (48 horas)
+    \item \textbf{5.3.2} Preparación de publicaciones académicas (40 horas)
+    \item \textbf{5.3.3} Presentaciones en conferencias (24 horas)
+    \item \textbf{5.3.4} Plan de sostenibilidad y evolución (32 horas)
+    \item \textbf{5.3.5} Transferencia a la comunidad (16 horas)
+\end{itemize}
+
+\subsection{Cronograma Detallado}
+
+\begin{table}[H]
+    \centering
+    \caption{Cronograma Detallado del Proyecto}
+    \label{tab:cronograma_detallado}
+    \small
+    \begin{tabular}{|l|l|c|c|c|c|}
+        \hline
+        \textbf{Fase} & \textbf{Actividades} & \textbf{T1} & \textbf{T2} & \textbf{T3} & \textbf{T4} \\
+        \hline
+        \multirow{3}{*}{1. Diseño} & 1.1 Investigación & X & & & \\
+        & 1.2 Arquitectura & X & X & & \\
+        & 1.3 Prototipo & & X & & \\
+        \hline
+        \multirow{3}{*}{2. Backend} & 2.1 Infraestructura & & X & & \\
+        & 2.2 Módulos Core & & X & X & \\
+        & 2.3 APIs & & & X & \\
+        \hline
+        \multirow{3}{*}{3. Frontend} & 3.1 UX/UI & & X & & \\
+        & 3.2 Desarrollo & & & X & \\
+        & 3.3 Funcionalidades & & & X & X \\
+        \hline
+        \multirow{3}{*}{4. Testing} & 4.1 Testing Técnico & & & X & X \\
+        & 4.2 Validación & & & & X \\
+        & 4.3 Testing Usuario & & & & X \\
+        \hline
+        \multirow{3}{*}{5. Documentación} & 5.1 Doc. Técnica & & & & X \\
+        & 5.2 Mat. Usuario & & & & X \\
+        & 5.3 Análisis Final & & & & X \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Hitos y Entregables Clave}
+
+\begin{table}[H]
+    \centering
+    \caption{Hitos Principales del Proyecto}
+    \label{tab:hitos}
+    \small
+    \begin{tabular}{|c|l|l|c|}
+        \hline
+        \textbf{Hito} & \textbf{Descripción} & \textbf{Entregables} & \textbf{Fecha} \\
+        \hline
+        H1 & Arquitectura Aprobada & Documento de arquitectura, prototipos & Mar 31 \\
+        \hline
+        H2 & Backend Funcional & APIs operativas, algoritmos implementados & Jun 30 \\
+        \hline
+        H3 & Frontend Beta & Interfaz completa, dashboards funcionales & Ago 31 \\
+        \hline
+        H4 & Validación Completada & Reportes de testing, benchmarks & Oct 31 \\
+        \hline
+        H5 & Producto Final & Sistema completo, documentación & Dic 31 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Gestión de Riesgos}
+
+\subsubsection{Matriz de Riesgos}
+
+\begin{table}[H]
+    \centering
+    \caption{Principales Riesgos del Proyecto}
+    \label{tab:riesgos}
+    \small
+    \begin{tabular}{|l|c|c|c|l|}
+        \hline
+        \textbf{Riesgo} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Nivel} & \textbf{Mitigación} \\
+        \hline
+        Cambios en APIs de fuentes & Media & Alto & Alto & Abstracciones, adaptadores \\
+        \hline
+        Limitaciones de BigQuery & Baja & Alto & Medio & Optimización, caching \\
+        \hline
+        Retrasos en desarrollo & Alta & Medio & Alto & Buffer time, metodología ágil \\
+        \hline
+        Problemas de rendimiento & Media & Alto & Alto & Testing temprano, optimización \\
+        \hline
+        Resistencia de usuarios & Media & Medio & Medio & UX research, training \\
+        \hline
+        Limitaciones presupuestarias & Baja & Alto & Medio & Contingency fund, sponsors \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Recursos y Asignaciones}
+
+\subsubsection{Equipo de Trabajo}
+
+\begin{itemize}
+    \item 	extbf{Investigador Principal:} 100\% dedicación durante 12 meses
+    \item 	extbf{Desarrollador Senior Backend:} 75\% dedicación durante 8 meses
+    \item 	extbf{Desarrollador Frontend:} 75\% dedicación durante 6 meses
+    \item 	extbf{Analista de Ciberseguridad:} 50\% dedicación durante 10 meses
+    \item 	extbf{UX/UI Designer:} 25\% dedicación durante 4 meses
+\end{itemize}
+
+\subsubsection{Infraestructura Tecnológica}
+\begin{itemize}
+    \item \textbf{Google Cloud Platform:} Compute Engine, BigQuery, Cloud Storage
+    \item \textbf{Desarrollo:} GitHub Enterprise, CI/CD pipelines, monitoring tools
+    \item \textbf{Testing:} JMeter, Selenium, security scanning tools
+    \item \textbf{Comunicación:} Slack, Zoom, project management tools
+\end{itemize}
