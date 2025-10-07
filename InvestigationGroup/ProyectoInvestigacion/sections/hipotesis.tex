@@ -1,0 +1,27 @@
+\section{Hipótesis de la Investigación}
+
+\subsection{Hipótesis Principal}
+
+Es factible desarrollar una herramienta de software que, utilizando exclusivamente las fuentes de datos gratuitas de GeoLite2 y Censys (a través de la cuota gratuita de BigQuery), puede proporcionar un perfil de información consolidado sobre una dirección IP que es útil y suficiente para un análisis de seguridad inicial.
+
+\subsection{Sub-hipótesis}
+
+\begin{enumerate}
+    \item \textbf{Viabilidad Técnica:} La integración de una base de datos local (GeoLite2) y una API remota (BigQuery para Censys) en una única aplicación (backend con Quarkus, frontend con Vue.js) es técnicamente realizable dentro del marco de un proyecto estudiantil de corta duración.
+    
+    \item \textbf{Suficiencia de Datos:} La combinación de datos de geolocalización (país, ciudad) y datos de infraestructura (puertos abiertos, servicios) es suficiente para que un analista o desarrollador pueda tomar una decisión informada preliminar sobre la naturaleza de una dirección IP.
+    
+    \item \textbf{Eficiencia del Proceso:} Una herramienta que automatiza la consulta y consolidación de estas dos fuentes de datos reducirá significativamente el tiempo y el esfuerzo manual en comparación con la consulta separada de cada fuente.
+\end{enumerate}
+
+\subsection{Variables}
+
+\begin{itemize}
+    \item \textbf{Variable Independiente:} La herramienta de software desarrollada que integra GeoLite2 y Censys.
+    \item \textbf{Variable Dependiente:} La utilidad y eficiencia del perfil de IP generado, medida en términos de:
+    \begin{itemize}
+        \item \textbf{Completitud de la información:} ¿Contiene los datos esperados de ambas fuentes?
+        \item \textbf{Tiempo de respuesta:} ¿Cuánto tarda en generar un informe?
+        \item \textbf{Facilidad de uso:} ¿La información se presenta de manera clara y comprensible?
+    \end{itemize}
+\end{itemize}

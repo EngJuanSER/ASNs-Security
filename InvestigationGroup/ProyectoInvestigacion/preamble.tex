@@ -1,34 +1,37 @@
 \usepackage[utf8]{inputenc}
-\usepackage[spanish]{babel}
+\usepackage[spanish,es-tabla]{babel}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{hyperref}
-\usepackage{float}
 \usepackage{geometry}
 \usepackage{fancyhdr}
 \usepackage{setspace}
 \usepackage{cite}
 
-% Paquetes esenciales para tablas
-\usepackage{array}
-\usepackage{tabularx}
-\usepackage{booktabs}
-\usepackage{caption}
-\usepackage{multirow}
-\usepackage{colortbl}
-\usepackage{needspace} % evita que queden títulos sin contenido en la misma página
-
-% Helper: asegura que quepan título + tabla al inicio de una subsección
-\newcommand{\SubsectionNeedsSpace}{\Needspace{16\baselineskip}}
+% Paquetes para tablas y posicionamiento (según documentación oficial)
+\usepackage{float}           % Para [H] - posición exacta
+\usepackage{placeins}        % Para \FloatBarrier
+\usepackage{array}           % Mejoras en tabular
+\usepackage{tabularx}        % Tablas con ancho variable
+\usepackage{booktabs}        % Líneas profesionales
+\usepackage{multirow}        % Celdas multi-fila
+\usepackage{colortbl}        % Colores en tablas
+\usepackage[position=bottom]{caption} % Control de captions y posición debajo
 
 % Configuración de página
 \geometry{left=3cm,right=3cm,top=3cm,bottom=3cm}
 \onehalfspacing
 
-% Ajustes para minimizar problemas con tablas
-\setlength{\emergencystretch}{3em}
+% Configuración de flotantes (según documentación oficial LaTeX)
+\setcounter{topnumber}{3}          % Máx floats arriba: 3
+\setcounter{bottomnumber}{2}       % Máx floats abajo: 2  
+\setcounter{totalnumber}{4}        % Máx floats por página: 4
+\renewcommand{\topfraction}{0.8}    % 80% página para floats arriba
+\renewcommand{\bottomfraction}{0.5} % 50% página para floats abajo
+\renewcommand{\textfraction}{0.2}   % Mín 20% texto por página
+\renewcommand{\floatpagefraction}{0.8} % 80% lleno para página float
 
 % Configuración de encabezados
 \pagestyle{fancy}
@@ -47,12 +50,9 @@
     citecolor=green
 }
 
-% Configuración de colores para tablas
-\definecolor{lightgray}{gray}{0.9}
-
 % Configuración de tablas
-\setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{6pt}         % Espacio entre columnas
+\renewcommand{\arraystretch}{1.2}    % Altura de filas
 
 % Comandos personalizados
 \newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO: #1}}}

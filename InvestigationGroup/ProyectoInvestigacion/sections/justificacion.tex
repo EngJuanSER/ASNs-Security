@@ -3,154 +3,104 @@
 \subsection{Justificación Teórica}
 
 \subsubsection{Contribución al Conocimiento Científico}
-Esta investigación contribuye significativamente al avance del conocimiento en el campo de la inteligencia de amenazas cibernéticas mediante la exploración sistemática de metodologías de integración de fuentes abiertas para análisis de seguridad IP. Los marcos teóricos existentes sobre reconocimiento pasivo y geolocalización se han desarrollado principalmente en contextos de recursos ilimitados y acceso a herramientas comerciales premium, por lo que es fundamental contrastar estos enfoques con las limitaciones reales de organizaciones con presupuestos restringidos [7].
+Esta investigación contribuye al campo de la ciberseguridad mediante el desarrollo de una herramienta práctica que integra fuentes abiertas de datos para el análisis de direcciones IP. Como proyecto académico, busca explorar la viabilidad de combinar datos públicos disponibles (GeoLite2 y Censys a través de BigQuery) para crear una solución funcional de análisis de seguridad.
 
-El estudio aborda una brecha significativa en la literatura científica relacionada con la \textbf{democratización de capacidades de ciberseguridad}. Mientras que investigaciones previas como las de Durumeric et al. (2015) y Hao et al. (2018) han explorado el uso de datasets masivos para análisis de seguridad, pocos estudios han abordado específicamente la viabilidad de implementar capacidades equivalentes utilizando exclusivamente recursos gratuitos [8][9].
+El trabajo se enfoca en la implementación práctica de técnicas ya establecidas en la literatura, adaptándolas a un contexto de recursos limitados y fuentes de datos gratuitas. Se busca validar si es posible crear una herramienta útil para análisis básico de IP utilizando únicamente tecnologías y datos de acceso libre.
 
-\subsubsection{Marcos Teóricos Emergentes}
-La investigación contribuye al desarrollo de marcos teóricos emergentes en:
+\subsubsection{Objetivos Académicos}
+El proyecto tiene como objetivo académico principal desarrollar competencias prácticas en:
 
-\textbf{Teoría de Fusión de Datos en Ciberseguridad:} Expandiendo los modelos existentes de Llinas et al. (2004) para incluir fuentes heterogéneas de inteligencia de amenazas con diferentes niveles de confiabilidad y granularidad temporal [10].
-
-\textbf{Teoría de Análisis de Riesgos Contextualizados:} Desarrollando extensiones a los frameworks de Kaplan y Garrick (1981) adaptados específicamente para amenazas cibernéticas geográficamente contextualizadas [11].
-
-\textbf{Teoría de Sistemas de Información Distribuidos para Ciberseguridad:} Contribuyendo a los modelos de Tanenbaum y Van Steen (2016) mediante la implementación de arquitecturas que integran servicios cloud externos con procesamiento local [12].
-
-\subsubsection{Hipótesis Científicas a Contrastar}
-\begin{enumerate}
-    \item \textbf{Hipótesis de Equivalencia Funcional:} Las capacidades de análisis IP obtenidas mediante integración sistemática de fuentes abiertas pueden alcanzar niveles de efectividad estadísticamente equivalentes (p > 0.05) a soluciones comerciales en detección de amenazas conocidas.
-    
-    \item \textbf{Hipótesis de Correlación Espacial:} Existe una correlación positiva significativa (r > 0.7) entre la precisión de geolocalización IP y la efectividad de detección de campañas de malware regionalmente específicas.
-    
-    \item \textbf{Hipótesis de Optimización de Recursos:} La implementación de algoritmos de consulta optimizados puede reducir los costos computacionales en un factor de 10x comparado con enfoques naive de consulta a múltiples fuentes.
-\end{enumerate}
+\begin{itemize}
+    \item \textbf{Integración de Datos:} Uso de APIs y bases de datos públicas para ciberseguridad
+    \item \textbf{Desarrollo Web:} Implementación de aplicaciones usando tecnologías modernas
+    \item \textbf{Análisis de Seguridad:} Aplicación práctica de conceptos de reconocimiento pasivo
+    \item \textbf{Investigación Aplicada:} Documentación y evaluación sistemática de resultados
+\end{itemize}
 
 \subsection{Justificación Metodológica}
 
-\subsubsection{Innovación Metodológica}
-La investigación desarrolla una metodología innovadora para la integración sistemática de múltiples fuentes abiertas de datos de ciberseguridad, estableciendo protocolos estandarizados que abordan desafíos específicos no resueltos en la literatura existente:
+\subsubsection{Enfoque Práctico}
+La metodología se basa en el desarrollo incremental de una aplicación web que integre datos de fuentes públicas confiables. Se utilizará un stack tecnológico moderno pero accesible:
 
-\textbf{Metodología de Sincronización Temporal:} Desarrollo de algoritmos para correlacionar datos de fuentes con diferentes frecuencias de actualización (Censys: semanal, GeoLite2: mensual, feeds de amenazas: tiempo real) manteniendo coherencia temporal en los análisis [13].
-
-\textbf{Framework de Evaluación de Confiabilidad:} Implementación de métricas bayesianas para asignar pesos dinámicos a diferentes fuentes basándose en su historial de precisión para tipos específicos de amenazas [14].
-
-\textbf{Metodología de Optimización de Consultas Distribuidas:} Desarrollo de algoritmos de optimización que minimizan el número de consultas necesarias a múltiples APIs manteniendo la completitud de la información [15].
-
-\subsubsection{Instrumentos Metodológicos Desarrollados}
-Los instrumentos metodológicos incluyen:
-
-\textbf{Algoritmos de Fusión de Datos Multidimensionales:}
+\textbf{Fuentes de Datos:}
 \begin{itemize}
-    \item Algoritmo de correlación espacial para integrar geolocalización con datos de red
-    \item Algoritmo de scoring de riesgo que combina múltiples indicadores
-    \item Algoritmo de detección de anomalías basado en patrones geográficos
+    \item \textbf{MaxMind GeoLite2:} Base de datos gratuita de geolocalización IP
+    \item \textbf{Censys via BigQuery:} Datos de escaneo de Internet disponibles públicamente
 \end{itemize}
 
-\textbf{Métricas de Evaluación Especializadas:}
+\textbf{Stack Tecnológico:}
 \begin{itemize}
-    \item Métrica de \textit{Coverage Efficiency}: Relación entre amplitud de análisis y recursos computacionales
-    \item Métrica de \textit{Temporal Coherence}: Consistencia de resultados a lo largo del tiempo
-    \item Métrica de \textit{Cross-Source Reliability}: Concordancia entre diferentes fuentes de datos
+    \item \textbf{Backend:} Quarkus (Java) para APIs y lógica de negocio
+    \item \textbf{Frontend:} Vue.js para interfaz de usuario
+    \item \textbf{Datos:} Google BigQuery para consultas eficientes
+    \item \textbf{Infraestructura:} Servicios cloud básicos para despliegue
 \end{itemize}
 
-\textbf{Frameworks de Validación Comparativa:}
+\subsubsection{Validación Práctica}
+La validación se realizará mediante:
 \begin{itemize}
-    \item Protocolo de evaluación ciega con datasets de referencia
-    \item Metodología de benchmarking contra soluciones comerciales
-    \item Framework de evaluación de usabilidad para diferentes perfiles de usuario
+    \item Pruebas funcionales de la aplicación desarrollada
+    \item Comparación básica con herramientas existentes
+    \item Evaluación de usabilidad con usuarios del entorno académico
+    \item Documentación de lecciones aprendidas y limitaciones encontradas
 \end{itemize}
-
-\subsubsection{Replicabilidad y Transferibilidad}
-La metodología desarrollada está diseñada para ser completamente replicable, con:
-\begin{itemize}
-    \item Documentación detallada de todos los algoritmos implementados
-    \item Código fuente abierto con comentarios exhaustivos
-    \item Datasets de prueba estandarizados para validación
-    \item Protocolos de instalación y configuración paso a paso
-\end{itemize}
-
-Esta contribución metodológica facilitará futuras investigaciones en el desarrollo de herramientas de ciberseguridad basadas en recursos abiertos, estableciendo un estándar de facto para la integración de fuentes heterogéneas.
 
 \subsection{Justificación Práctica}
 
-\subsubsection{Impacto Inmediato en el Sector}
-Los resultados de esta investigación tendrán aplicación inmediata en la mejora de capacidades de ciberseguridad de organizaciones colombianas, particularmente aquellas con limitaciones presupuestarias para adquisición de herramientas comerciales especializadas. La herramienta desarrollada proporcionará una alternativa gratuita y efectiva para análisis de seguridad IP, con impacto directo en:
+\subsubsection{Aplicabilidad en el Entorno Académico}
+La herramienta desarrollada tendrá aplicación directa en:
 
-\textbf{Sector Público:} 
+\textbf{Educación en Ciberseguridad:}
 \begin{itemize}
-    \item 156 entidades gubernamentales nivel nacional que podrán implementar capacidades avanzadas de análisis IP sin costos de licenciamiento
-    \item 1,102 municipios colombianos que tendrán acceso a herramientas de ciberseguridad previamente inaccesibles por limitaciones presupuestarias
-    \item Fortalecimiento del CERT Nacional (COLCERT) con capacidades de análisis automatizado
+    \item Material práctico para cursos de seguridad informática
+    \item Ejemplo de integración de datos para análisis de amenazas
+    \item Caso de estudio para desarrollo de aplicaciones de seguridad
 \end{itemize}
 
-\textbf{Sector Privado - PYMES:}
+\textbf{Investigación Estudiantil:}
 \begin{itemize}
-    \item 2.7 millones de micro, pequeñas y medianas empresas en Colombia según datos del DANE 2024
-    \item Reducción de costos operativos en ciberseguridad estimada en 70\%-90\% comparado con soluciones comerciales
-    \item Mejora en capacidades de respuesta a incidentes para empresas sin departamentos especializados de seguridad
+    \item Base para futuros proyectos de grado relacionados
+    \item Herramienta para análisis básico en investigaciones de seguridad
+    \item Ejemplo de implementación con recursos limitados
 \end{itemize}
 
-\textbf{Sector Académico:}
+\subsubsection{Contribución al Programa Académico}
+El proyecto contribuye al programa de estudios mediante:
+
 \begin{itemize}
-    \item 288 instituciones de educación superior que podrán incorporar herramientas reales en sus programas de ciberseguridad
-    \item Laboratorios de investigación con acceso a capacidades de análisis de nivel empresarial
-    \item Semilleros de investigación con herramientas para proyectos aplicados
+    \item \textbf{Aplicación Práctica:} Implementación real de conceptos teóricos estudiados
+    \item \textbf{Tecnologías Actuales:} Experiencia con herramientas y frameworks modernos
+    \item \textbf{Metodología de Desarrollo:} Aplicación de buenas prácticas de ingeniería de software
+    \item \textbf{Documentación Técnica:} Desarrollo de habilidades de comunicación técnica
 \end{itemize}
 
-\subsubsection{Democratización del Acceso a Tecnología}
-La investigación contribuye significativamente a la democratización del acceso a tecnologías de ciberseguridad avanzadas mediante:
+\subsubsection{Viabilidad y Alcance Realista}
+El proyecto está diseñado para ser completado exitosamente en el tiempo disponible:
 
-\textbf{Eliminación de Barreras Económicas:}
+\textbf{Recursos Disponibles:}
 \begin{itemize}
-    \item Reducción de costos de entrada de USD \$50,000 anuales (soluciones comerciales) a costos mínimos de infraestructura cloud (< USD \$100 mensuales)
-    \item Eliminación de dependencia de licencias por usuario, permitiendo escalamiento sin costos proporcionales
-    \item Reducción de costos de capacitación mediante interfaces intuitivas y documentación comprehensiva
+    \item Acceso a datasets públicos sin costo
+    \item Créditos académicos para servicios cloud
+    \item Herramientas de desarrollo gratuitas o con licencias estudiantiles
+    \item Supervisión académica y acceso a recursos universitarios
 \end{itemize}
 
-\textbf{Fortalecimiento de Capacidades Locales:}
+\textbf{Limitaciones Reconocidas:}
 \begin{itemize}
-    \item Desarrollo de expertise técnico nacional mediante código abierto y documentación detallada
-    \item Creación de una comunidad de práctica alrededor de la herramienta
-    \item Generación de oportunidades de empleo especializado en el sector nacional
+    \item Alcance limitado a fuentes de datos gratuitas
+    \item Funcionalidades básicas en la versión inicial
+    \item Evaluación limitada al entorno académico
+    \item No pretende competir con soluciones comerciales especializadas
 \end{itemize}
 
-\subsubsection{Impacto en Indicadores Nacionales}
-La implementación exitosa de la herramienta contribuirá a la mejora de indicadores nacionales de ciberseguridad:
+\subsubsection{Impacto Esperado}
+Se espera que el proyecto genere:
 
-\textbf{Índice Global de Ciberseguridad (GCI) de la ITU:}
 \begin{itemize}
-    \item Colombia ocupa actualmente la posición 87 de 194 países
-    \item La herramienta contribuirá específicamente al pilar de "Capacidades Técnicas" del índice
-    \item Meta: Mejora de 10 posiciones en el ranking global para 2027
+    \item Una herramienta funcional para análisis básico de IP
+    \item Documentación técnica que sirva como referencia para futuros estudiantes
+    \item Experiencia práctica en desarrollo de aplicaciones de ciberseguridad
+    \item Código fuente abierto que pueda ser mejorado por la comunidad académica
 \end{itemize}
 
-\textbf{Objetivos de Desarrollo Sostenible (ODS):}
-\begin{itemize}
-    \item ODS 9: Industria, Innovación e Infraestructura - Fortalecimiento de capacidades tecnológicas nacionales
-    \item ODS 16: Paz, Justicia e Instituciones Sólidas - Mejora en capacidades de seguridad nacional
-    \item ODS 17: Alianzas para lograr los Objetivos - Promoción de colaboración tecnológica
-\end{itemize}
-
-\subsubsection{Sostenibilidad y Escalabilidad}
-El proyecto está diseñado para asegurar sostenibilidad a largo plazo mediante:
-
-\textbf{Modelo de Desarrollo Abierto:}
-\begin{itemize}
-    \item Código fuente disponible bajo licencia open source
-    \item Documentación técnica comprehensiva para facilitar contribuciones externas
-    \item Arquitectura modular que permite extensiones y mejoras incrementales
-\end{itemize}
-
-\textbf{Independencia Tecnológica:}
-\begin{itemize}
-    \item Uso exclusivo de fuentes de datos gratuitas y permanentes
-    \item Arquitectura cloud-native compatible con múltiples proveedores
-    \item Diseño que minimiza dependencias de servicios comerciales específicos
-\end{itemize}
-
-\textbf{Transferencia de Conocimiento:}
-\begin{itemize}
-    \item Capacitación de equipos técnicos locales para mantenimiento y evolución
-    \item Establecimiento de alianzas con universidades para investigación continua
-    \item Creación de certificaciones técnicas específicas para la herramienta
-\end{itemize}
+El proyecto se enfoca en demostrar que es posible crear herramientas útiles de ciberseguridad usando recursos disponibles públicamente, proporcionando una alternativa educativa a las costosas soluciones comerciales.

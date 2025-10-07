@@ -1,282 +1,270 @@
 \section{Cronograma de Trabajo}
 
+\subsection{Duración y Alcance del Proyecto}
+
+\textbf{Período Total:} 8 semanas (del 10 de octubre al 1 de diciembre de 2025)\\
+\textbf{Equipo:} 2 estudiantes universitarios\\
+\textbf{Modalidad:} Desarrollo ágil con entregas incrementales
+
 \subsection{Metodología de Planificación}
 
-El cronograma se desarrolla utilizando la metodología \textbf{Critical Path Method (CPM)} combinada con principios de gestión ágil de proyectos. Se implementa un enfoque iterativo con sprints de 2 semanas para el desarrollo de software y hitos trimestrales para evaluación de progreso. La planificación considera dependencias críticas, recursos limitados y ventanas de oportunidad para actividades de transferencia.
+El cronograma se estructura utilizando sprints cortos de 1 semana para permitir entregas rápidas y ajustes continuos. Cada sprint incluye desarrollo, testing básico y documentación del progreso. Se consideran las limitaciones de tiempo académico y la curva de aprendizaje para las tecnologías seleccionadas.
 
-\subsection{Estructura Temporal}
+\subsection{Estructura de Desglose del Trabajo}
 
-\subsubsection{Duración Total}
-\textbf{Duración:} 12 meses (52 semanas) 
-\textbf{Esfuerzo:} 2,080 horas-persona 
-\textbf{Fases principales:} 5 fases secuenciales con solapamiento controlado
+\subsubsection{Semana 1: Configuración e Investigación Inicial (10-17 Octubre)}
+\textbf{Objetivos:} Establecer ambiente de desarrollo y comprender fuentes de datos
 
-\subsubsection{Fase 1: Investigación y Diseño (Meses 1-3)}identifican dependencias críticas, hitos clave, y buffers de riesgo para asegurar la entrega exitosa dentro del marco temporal establecido.
-
-\subsection{Estructura de Desglose del Trabajo (WBS)}
-
-\subsubsection{Fase 1: Investigación y Diseño (Meses 1-3)}
-\textbf{Duración:} 12 semanas \\
-\textbf{Esfuerzo:} 480 horas-persona \\
-\textbf{Entregables principales:} Arquitectura técnica, especificaciones funcionales, revisión de literatura
-
-\textbf{1.1 Investigación Preliminar (Semanas 1-4)}
+\textbf{Actividades principales:}
 \begin{itemize}
-    \item \textbf{1.1.1} Revisión sistemática de literatura (40 horas)
-    \item \textbf{1.1.2} Análisis de herramientas comerciales existentes (32 horas)
-    \item \textbf{1.1.3} Caracterización del panorama nacional de amenazas (24 horas)
-    \item \textbf{1.1.4} Evaluación de datasets disponibles (Censys, GeoLite2) (40 horas)
-    \item \textbf{1.1.5} Definición de requerimientos funcionales y no funcionales (24 horas)
+    \item Configuración de entorno de desarrollo (Git, IDEs, cuentas cloud)
+    \item Investigación de APIs de Censys y formato de datos BigQuery
+    \item Descarga e instalación de GeoLite2
+    \item Creación de prototipos de consulta básicos
+    \item Definición de arquitectura inicial del sistema
 \end{itemize}
 
-\textbf{1.2 Diseño de Arquitectura (Semanas 5-8)}
+\textbf{Entregables:}
 \begin{itemize}
-    \item \textbf{1.2.1} Diseño de arquitectura de sistema (48 horas)
-    \item \textbf{1.2.2} Modelado de datos y esquemas de integración (40 horas)
-    \item \textbf{1.2.3} Diseño de APIs y interfaces (32 horas)
-    \item \textbf{1.2.4} Especificación de algoritmos de correlación (36 horas)
-    \item \textbf{1.2.5} Diseño de seguridad y compliance (24 horas)
+    \item Repositorio Git configurado
+    \item Documentación de APIs disponibles
+    \item Prototipo funcional de consulta a GeoLite2
+    \item Diagrama de arquitectura básica
 \end{itemize}
 
-\textbf{1.3 Prototipado Inicial (Semanas 9-12)}
+\subsubsection{Semana 2: Backend Base (17-24 Octubre)}
+\textbf{Objetivos:} Implementar estructura básica del backend con Quarkus
+
+\textbf{Actividades principales:}
 \begin{itemize}
-    \item \textbf{1.3.1} Desarrollo de proof-of-concept para consultas BigQuery (40 horas)
-    \item \textbf{1.3.2} Prototipo de integración GeoLite2 (32 horas)
-    \item \textbf{1.3.3} Validación técnica de factibilidad (24 horas)
-    \item \textbf{1.3.4} Evaluación de rendimiento preliminar (32 horas)
-    \item \textbf{1.3.5} Documentación de arquitectura (32 horas)
+    \item Configuración inicial del proyecto Quarkus
+    \item Implementación de API REST básica
+    \item Integración con base de datos GeoLite2
+    \item Desarrollo de servicios de geolocalización
+    \item Testing unitario de componentes básicos
 \end{itemize}
 
-\subsubsection{Fase 2: Desarrollo del Backend (Meses 3-6)}
-\textbf{Duración:} 14 semanas \\
-\textbf{Esfuerzo:} 672 horas-persona \\
-\textbf{Entregables principales:} API funcional, algoritmos de correlación, integración de datos
-
-\textbf{2.1 Infraestructura y Configuración (Semanas 13-16)}
+\textbf{Entregables:}
 \begin{itemize}
-    \item \textbf{2.1.1} Setup de infraestructura Google Cloud Platform (24 horas)
-    \item \textbf{2.1.2} Configuración de BigQuery y optimización de costos (32 horas)
-    \item \textbf{2.1.3} Implementación de CI/CD pipeline (40 horas)
-    \item \textbf{2.1.4} Setup de monitoreo y logging (24 horas)
-    \item \textbf{2.1.5} Configuración de seguridad y access control (32 horas)
+    \item API REST funcional para geolocalización
+    \item Documentación de endpoints
+    \item Suite de tests unitarios básicos
+    \item Dockerfile para contenedorización
 \end{itemize}
 
-\textbf{2.2 Desarrollo de Módulos Core (Semanas 17-22)}
+\subsubsection{Semana 3: Integración BigQuery (24-31 Octubre)}
+\textbf{Objetivos:} Conectar con datos de Censys a través de BigQuery
+
+\textbf{Actividades principales:}
 \begin{itemize}
-    \item \textbf{2.2.1} Módulo de consultas optimizadas a BigQuery (80 horas)
-    \item \textbf{2.2.2} Módulo de integración GeoLite2 (64 horas)
-    \item \textbf{2.2.3} Engine de correlación de datos (96 horas)
-    \item \textbf{2.2.4} Sistema de scoring de riesgo (72 horas)
-    \item \textbf{2.2.5} Módulo de cache y optimización (48 horas)
+    \item Configuración de acceso a Google Cloud Platform
+    \item Implementación de cliente BigQuery
+    \item Desarrollo de consultas SQL para datos de Censys
+    \item Integración con servicios existentes de geolocalización
+    \item Implementación de cache básico para optimizar consultas
 \end{itemize}
 
-\textbf{2.3 APIs y Servicios (Semanas 23-26)}
+\textbf{Entregables:}
 \begin{itemize}
-    \item \textbf{2.3.1} Desarrollo de REST APIs (64 horas)
-    \item \textbf{2.3.2} Implementación de GraphQL endpoint (48 horas)
-    \item \textbf{2.3.3} Servicios de autenticación y autorización (40 horas)
-    \item \textbf{2.3.4} Rate limiting y quota management (32 horas)
-    \item \textbf{2.3.5} Documentación de API (24 horas)
+    \item Servicio de threat intelligence funcional
+    \item API integrada (geolocalización + threat intelligence)
+    \item Sistema de cache implementado
+    \item Documentación de consultas BigQuery
 \end{itemize}
 
-\subsubsection{Fase 3: Desarrollo del Frontend (Meses 5-8)}
-\textbf{Duración:} 14 semanas \\
-\textbf{Esfuerzo:} 560 horas-persona \\
-\textbf{Entregables principales:} Interfaz web, dashboards, herramientas de visualización
+\subsubsection{Semana 4: Frontend Inicial (31 Octubre - 7 Noviembre)}
+\textbf{Objetivos:} Desarrollar interfaz básica con Vue.js
 
-\textbf{3.1 Diseño de UX/UI (Semanas 21-24)}
+\textbf{Actividades principales:}
 \begin{itemize}
-    \item \textbf{3.1.1} Research de usuarios y personas (32 horas)
-    \item \textbf{3.1.2} Wireframing y mockups (40 horas)
-    \item \textbf{3.1.3} Prototipado interactivo (48 horas)
-    \item \textbf{3.1.4} User testing del prototipo (24 horas)
-    \item \textbf{3.1.5} Refinamiento de diseño (16 horas)
+    \item Configuración del proyecto Vue.js
+    \item Desarrollo de componentes básicos (formularios, tablas)
+    \item Implementación de cliente HTTP para APIs
+    \item Desarrollo de vistas principales (búsqueda, resultados)
+    \item Integración con mapas usando Leaflet
 \end{itemize}
 
-\textbf{3.2 Desarrollo de Interfaz (Semanas 25-30)}
+\textbf{Entregables:}
 \begin{itemize}
-    \item \textbf{3.2.1} Setup del framework frontend (React/Vue) (24 horas)
-    \item \textbf{3.2.2} Desarrollo de componentes base (64 horas)
-    \item \textbf{3.2.3} Implementación de formularios de consulta (48 horas)
-    \item \textbf{3.2.4} Desarrollo de visualizaciones (D3.js/Chart.js) (80 horas)
-    \item \textbf{3.2.5} Implementación de dashboards interactivos (72 horas)
+    \item Aplicación web funcional básica
+    \item Formulario de búsqueda de IP
+    \item Visualización de resultados en tabla y mapa
+    \item Conexión funcional con backend
 \end{itemize}
 
-\textbf{3.3 Funcionalidades Avanzadas (Semanas 31-34)}
+\subsubsection{Semana 5: Funcionalidades Avanzadas (7-14 Noviembre)}
+\textbf{Objetivos:} Mejorar funcionalidades y experiencia de usuario
+
+\textbf{Actividades principales:}
 \begin{itemize}
-    \item \textbf{3.3.1} Sistema de reportes exportables (40 horas)
-    \item \textbf{3.3.2} Funcionalidad de análisis masivo (48 horas)
-    \item \textbf{3.3.3} Integración con herramientas externas (32 horas)
-    \item \textbf{3.3.4} Optimización de performance frontend (24 horas)
-    \item \textbf{3.3.5} Implementación de PWA features (16 horas)
+    \item Implementación de búsqueda por lotes (múltiples IPs)
+    \item Desarrollo de funcionalidad de exportación (JSON, CSV)
+    \item Mejora de visualizaciones (gráficos, mapas interactivos)
+    \item Implementación de historial de búsquedas (local storage)
+    \item Optimización de rendimiento frontend
 \end{itemize}
 
-\subsubsection{Fase 4: Testing y Validación (Meses 7-10)}
-\textbf{Duración:} 16 semanas \\
-\textbf{Esfuerzo:} 640 horas-persona \\
-\textbf{Entregables principales:} Sistema validado, reportes de testing, benchmarks
-
-\textbf{4.1 Testing Técnico (Semanas 29-34)}
+\textbf{Entregables:}
 \begin{itemize}
-    \item \textbf{4.1.1} Unit testing y coverage analysis (48 horas)
-    \item \textbf{4.1.2} Integration testing de APIs (56 horas)
-    \item \textbf{4.1.3} Performance testing y optimization (64 horas)
-    \item \textbf{4.1.4} Security testing y vulnerability assessment (48 horas)
-    \item \textbf{4.1.5} Load testing y scalability evaluation (40 horas)
+    \item Búsqueda masiva implementada
+    \item Exportación de datos funcional
+    \item Visualizaciones mejoradas
+    \item Interfaz más intuitiva y responsiva
 \end{itemize}
 
-\textbf{4.2 Validación Comparativa (Semanas 35-40)}
+\subsubsection{Semana 6: Testing y Optimización (14-21 Noviembre)}
+\textbf{Objetivos:} Validar funcionalidad y optimizar rendimiento
+
+\textbf{Actividades principales:}
 \begin{itemize}
-    \item \textbf{4.2.1} Preparación de datasets de prueba (32 horas)
-    \item \textbf{4.2.2} Benchmarking contra herramientas comerciales (80 horas)
-    \item \textbf{4.2.3} Análisis estadístico de resultados (48 horas)
-    \item \textbf{4.2.4} Evaluación de precisión y cobertura (56 horas)
-    \item \textbf{4.2.5} Documentación de resultados comparativos (32 horas)
+    \item Testing funcional completo de la aplicación
+    \item Pruebas de rendimiento con múltiples consultas
+    \item Testing de usabilidad con usuarios del entorno académico
+    \item Optimización de consultas y cache
+    \item Corrección de bugs identificados
 \end{itemize}
 
-\textbf{4.3 Testing de Usuario (Semanas 41-44)}
+\textbf{Entregables:}
 \begin{itemize}
-    \item \textbf{4.3.1} Reclutamiento de participantes para testing (16 horas)
-    \item \textbf{4.3.2} Usability testing sessions (48 horas)
-    \item \textbf{4.3.3} Accessibility testing (24 horas)
-    \item \textbf{4.3.4} Focus groups con diferentes perfiles (32 horas)
-    \item \textbf{4.3.5} Análisis de feedback y refinamiento (32 horas)
+    \item Suite completa de tests
+    \item Reporte de testing de rendimiento
+    \item Feedback de usuarios registrado
+    \item Sistema optimizado y libre de bugs críticos
 \end{itemize}
 
-\subsubsection{Fase 5: Documentación y Transferencia (Meses 9-12)}
-\textbf{Duración:} 16 semanas \\
-\textbf{Esfuerzo:} 512 horas-persona \\
-\textbf{Entregables principales:} Documentación completa, guías de usuario, plan de sostenibilidad
+\subsubsection{Semana 7: Comparación y Validación (21-28 Noviembre)}
+\textbf{Objetivos:} Validar resultados contra herramientas existentes
 
-\textbf{5.1 Documentación Técnica (Semanas 37-42)}
+\textbf{Actividades principales:}
 \begin{itemize}
-    \item \textbf{5.1.1} Manual de instalación y configuración (40 horas)
-    \item \textbf{5.1.2} Documentación de arquitectura y APIs (56 horas)
-    \item \textbf{5.1.3} Guías de desarrollo y contribución (48 horas)
-    \item \textbf{5.1.4} Documentación de seguridad y compliance (32 horas)
-    \item \textbf{5.1.5} Troubleshooting y FAQ (24 horas)
+    \item Comparación de resultados con herramientas públicas disponibles
+    \item Análisis de precisión de geolocalización
+    \item Evaluación de cobertura de threat intelligence
+    \item Documentación de limitaciones encontradas
+    \item Preparación de datos para presentación final
 \end{itemize}
 
-\textbf{5.2 Materiales de Usuario (Semanas 43-48)}
+\textbf{Entregables:}
 \begin{itemize}
-    \item \textbf{5.2.1} Manual de usuario final (48 horas)
-    \item \textbf{5.2.2} Tutoriales interactivos y videos (56 horas)
-    \item \textbf{5.2.3} Casos de uso y best practices (40 horas)
-    \item \textbf{5.2.4} Materiales de capacitación (32 horas)
-    \item \textbf{5.2.5} Plan de onboarding para organizaciones (24 horas)
+    \item Reporte de comparación con herramientas existentes
+    \item Análisis de precisión y limitaciones
+    \item Dataset de validación documentado
+    \item Métricas de rendimiento consolidadas
 \end{itemize}
 
-\textbf{5.3 Análisis y Diseminación (Semanas 49-52)}
+\subsubsection{Semana 8: Documentación y Entrega (28 Noviembre - 1 Diciembre)}
+\textbf{Objetivos:} Completar documentación y preparar entrega final
+
+\textbf{Actividades principales:}
 \begin{itemize}
-    \item \textbf{5.3.1} Análisis final de resultados y impacto (48 horas)
-    \item \textbf{5.3.2} Preparación de publicaciones académicas (40 horas)
-    \item \textbf{5.3.3} Presentaciones en conferencias (24 horas)
-    \item \textbf{5.3.4} Plan de sostenibilidad y evolución (32 horas)
-    \item \textbf{5.3.5} Transferencia a la comunidad (16 horas)
+    \item Completar documentación técnica del código
+    \item Elaborar manual de usuario
+    \item Preparar guía de instalación y configuración
+    \item Creación de presentación final
+    \item Deployment en ambiente de producción (si es posible)
 \end{itemize}
 
-\subsection{Cronograma Detallado}
+\textbf{Entregables:}
+\begin{itemize}
+    \item Documentación técnica completa
+    \item Manual de usuario
+    \item Guía de instalación
+    \item Presentación final del proyecto
+    \item Código fuente en repositorio público
+\end{itemize}
+
+\subsection{Cronograma Visual}
 
 \begin{table}[H]
     \centering
-    \caption{Cronograma Detallado del Proyecto}
-    \label{tab:cronograma_detallado}
     \small
-    \begin{tabular}{|l|l|c|c|c|c|}
+    \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
         \hline
-        \textbf{Fase} & \textbf{Actividades} & \textbf{T1} & \textbf{T2} & \textbf{T3} & \textbf{T4} \\
+        \textbf{Actividad} & \textbf{S1} & \textbf{S2} & \textbf{S3} & \textbf{S4} & \textbf{S5} & \textbf{S6} & \textbf{S7} & \textbf{S8} \\
         \hline
-        \multirow{3}{*}{1. Diseño} & 1.1 Investigación & X & & & \\
-        & 1.2 Arquitectura & X & X & & \\
-        & 1.3 Prototipo & & X & & \\
+        Configuración inicial & X & & & & & & & \\
         \hline
-        \multirow{3}{*}{2. Backend} & 2.1 Infraestructura & & X & & \\
-        & 2.2 Módulos Core & & X & X & \\
-        & 2.3 APIs & & & X & \\
+        Backend desarrollo & & X & X & & & & & \\
         \hline
-        \multirow{3}{*}{3. Frontend} & 3.1 UX/UI & & X & & \\
-        & 3.2 Desarrollo & & & X & \\
-        & 3.3 Funcionalidades & & & X & X \\
+        Frontend desarrollo & & & & X & X & & & \\
         \hline
-        \multirow{3}{*}{4. Testing} & 4.1 Testing Técnico & & & X & X \\
-        & 4.2 Validación & & & & X \\
-        & 4.3 Testing Usuario & & & & X \\
+        Testing y optimización & & & & & & X & & \\
         \hline
-        \multirow{3}{*}{5. Documentación} & 5.1 Doc. Técnica & & & & X \\
-        & 5.2 Mat. Usuario & & & & X \\
-        & 5.3 Análisis Final & & & & X \\
+        Validación y comparación & & & & & & & X & \\
+        \hline
+        Documentación final & & & & & & & & X \\
         \hline
     \end{tabular}
+    \caption{Cronograma Semanal del Proyecto}
+    \label{tab:cronograma_semanal}
 \end{table}
-
-\subsection{Hitos y Entregables Clave}
 
 \begin{table}[H]
     \centering
-    \caption{Hitos Principales del Proyecto}
-    \label{tab:hitos}
     \small
     \begin{tabular}{|c|l|l|c|}
         \hline
         \textbf{Hito} & \textbf{Descripción} & \textbf{Entregables} & \textbf{Fecha} \\
         \hline
-        H1 & Arquitectura Aprobada & Documento de arquitectura, prototipos & Mar 31 \\
+        H1 & Configuración Completa & Ambiente de desarrollo, prototipos & Oct 17 \\
         \hline
-        H2 & Backend Funcional & APIs operativas, algoritmos implementados & Jun 30 \\
+        H2 & Backend Funcional & APIs operativas, integración datos & Oct 31 \\
         \hline
-        H3 & Frontend Beta & Interfaz completa, dashboards funcionales & Ago 31 \\
+        H3 & Aplicación Completa & Frontend integrado, funcionalidades básicas & Nov 14 \\
         \hline
-        H4 & Validación Completada & Reportes de testing, benchmarks & Oct 31 \\
+        H4 & Sistema Validado & Testing completo, optimizaciones & Nov 21 \\
         \hline
-        H5 & Producto Final & Sistema completo, documentación & Dic 31 \\
+        H5 & Proyecto Finalizado & Documentación, entrega final & Dic 1 \\
         \hline
     \end{tabular}
+    \caption{Hitos Principales del Proyecto}
+    \label{tab:hitos}
 \end{table}
-
-\subsection{Gestión de Riesgos}
-
-\subsubsection{Matriz de Riesgos}
 
 \begin{table}[H]
     \centering
-    \caption{Principales Riesgos del Proyecto}
-    \label{tab:riesgos}
     \small
-    \begin{tabular}{|l|c|c|c|l|}
+    \begin{tabular}{|l|c|c|l|}
         \hline
-        \textbf{Riesgo} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Nivel} & \textbf{Mitigación} \\
+        \textbf{Riesgo} & \textbf{Probabilidad} & \textbf{Impacto} & \textbf{Mitigación} \\
         \hline
-        Cambios en APIs de fuentes & Media & Alto & Alto & Abstracciones, adaptadores \\
+        Dificultades con BigQuery & Media & Alto & Tutoriales, soporte académico \\
         \hline
-        Limitaciones de BigQuery & Baja & Alto & Medio & Optimización, caching \\
+        Problemas de rendimiento & Alta & Medio & Testing temprano, optimización \\
         \hline
-        Retrasos en desarrollo & Alta & Medio & Alto & Buffer time, metodología ágil \\
+        Complejidad de Vue.js & Media & Medio & Documentación, ejemplos simples \\
         \hline
-        Problemas de rendimiento & Media & Alto & Alto & Testing temprano, optimización \\
+        Limitaciones de datos gratuitos & Baja & Alto & Fuentes alternativas, scope adjustment \\
         \hline
-        Resistencia de usuarios & Media & Medio & Medio & UX research, training \\
-        \hline
-        Limitaciones presupuestarias & Baja & Alto & Medio & Contingency fund, sponsors \\
+        Retrasos por carga académica & Alta & Medio & Planificación flexible, buffer time \\
         \hline
     \end{tabular}
+    \caption{Matriz de Riesgos del Proyecto}
+    \label{tab:riesgos}
 \end{table}
 
-\subsection{Recursos y Asignaciones}
+\subsection{Recursos y Herramientas}
 
 \subsubsection{Equipo de Trabajo}
-
 \begin{itemize}
-    \item 	extbf{Investigador Principal:} 100\% dedicación durante 12 meses
-    \item 	extbf{Desarrollador Senior Backend:} 75\% dedicación durante 8 meses
-    \item 	extbf{Desarrollador Frontend:} 75\% dedicación durante 6 meses
-    \item 	extbf{Analista de Ciberseguridad:} 50\% dedicación durante 10 meses
-    \item 	extbf{UX/UI Designer:} 25\% dedicación durante 4 meses
+    \item \textbf{Estudiante 1:} Enfoque en backend y integración de datos
+    \item \textbf{Estudiante 2:} Enfoque en frontend y experiencia de usuario
+    \item \textbf{Colaboración:} Testing, documentación y validación conjunta
 \end{itemize}
 
 \subsubsection{Infraestructura Tecnológica}
 \begin{itemize}
-    \item \textbf{Google Cloud Platform:} Compute Engine, BigQuery, Cloud Storage
-    \item \textbf{Desarrollo:} GitHub Enterprise, CI/CD pipelines, monitoring tools
-    \item \textbf{Testing:} JMeter, Selenium, security scanning tools
-    \item \textbf{Comunicación:} Slack, Zoom, project management tools
+    \item \textbf{Desarrollo:} Computadoras personales con IDEs gratuitos
+    \item \textbf{Cloud Services:} Google Cloud Platform (créditos académicos)
+    \item \textbf{Repositorio:} GitHub (cuenta gratuita)
+    \item \textbf{Comunicación:} Discord, WhatsApp, reuniones presenciales
+    \item \textbf{Documentación:} Google Docs, LaTeX para documentos formales
+\end{itemize}
+
+\subsubsection{Herramientas de Software}
+\begin{itemize}
+    \item \textbf{Backend:} Quarkus, Java 17, PostgreSQL
+    \item \textbf{Frontend:} Vue.js 3, Vuetify, Leaflet.js
+    \item \textbf{Testing:} JUnit, Jest, Postman
+    \item \textbf{Deployment:} Docker, Google Cloud Run
 \end{itemize}

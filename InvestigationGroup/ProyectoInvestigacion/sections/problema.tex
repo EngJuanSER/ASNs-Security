@@ -16,29 +16,46 @@ Este proyecto se enmarca dentro de la línea de investigación en \textbf{Inteli
     \item \textbf{Disciplina:} Inteligencia de Amenazas y Análisis de Vulnerabilidades
 \end{itemize}
 
-\section{El Problema de Investigación}
+\section{Planteamiento del Problema}
 
-\subsection{Planteamiento del Problema}
+\subsection{Contexto del Problema}
 
-\subsubsection{Situación Actual (Diagnóstico)}
-En el contexto actual de amenazas cibernéticas sofisticadas, la evaluación de la legitimidad y seguridad de direcciones IP se ha convertido en una actividad fundamental para profesionales de ciberseguridad en Colombia. Según el reporte del Computer Emergency Response Team de Colombia (COLCERT), el país registró 36.000 millones de intentos de ciberataques en 2024, ubicándose como el cuarto país en América Latina con mayor exposición a amenazas cibernéticas [1].
+En el día a día de la ciberseguridad y el desarrollo de software, es común necesitar información detallada sobre una dirección IP. Un analista puede querer saber su ubicación geográfica, si está en una lista negra, qué puertos tiene abiertos o a qué organización pertenece.
 
-El análisis detallado de la situación revela múltiples problemáticas interconectadas:
+Actualmente, esta información se encuentra dispersa en múltiples fuentes de datos, tanto gratuitas como de pago. Por ejemplo:
+\begin{itemize}
+    \item 	\textbf{Geolocalización:} Se obtiene de bases de datos como GeoLite2 de MaxMind.
+    \item 	\textbf{Información de Infraestructura:} Se consulta en servicios de escaneo de Internet como Censys o Shodan.
+    \item 	\textbf{Listas de Reputación:} Se verifica en plataformas como AbuseIPDB o listas de bloqueo (blocklists).
+\end{itemize}
 
-\textbf{Fragmentación de la Información de Seguridad:}
-Las organizaciones colombianas dependen de múltiples plataformas especializadas como VirusTotal, Shodan, AbuseIPDB, y servicios comerciales como IBM X-Force y ThreatConnect para obtener información sobre direcciones IP sospechosas. Esta fragmentación genera inconsistencias en los análisis, requiere múltiples subscripciones costosas, y consume tiempo significativo en la correlación manual de datos [2].
+\subsection{Definición del Problema Principal}
 
-\textbf{Limitaciones Económicas para Acceso a Herramientas Comerciales:}
-Un estudio realizado por la Cámara Colombiana de Informática y Telecomunicaciones (CCIT) en 2024 reveló que el 73\% de las PYMES colombianas consideran prohibitivos los costos de herramientas especializadas de ciberseguridad, con precios que oscilan entre USD \$5,000 y \$50,000 anuales para soluciones empresariales [3].
+El problema central es la \textbf{fragmentación de la información}. Un desarrollador o analista que necesita un perfil completo de una dirección IP debe realizar las siguientes acciones manualmente:
+\begin{enumerate}
+    \item Consultar la API o base de datos de geolocalización.
+    \item Consultar la API de un servicio como Censys para obtener datos de puertos y servicios.
+    \item Consultar una o más APIs de listas de reputación.
+    \item Consolidar y correlacionar toda esta información a mano para poder tomar una decisión.
+\end{enumerate}
 
-\textbf{Dependencia de APIs Comerciales con Restricciones:}
-Los servicios gratuitos de análisis IP imponen limitaciones severas: VirusTotal permite 4 consultas por minuto para usuarios gratuitos, Shodan limita a 100 consultas mensuales, y AbuseIPDB restringe a 1,000 consultas diarias. Estas limitaciones hacen impracticable el análisis masivo requerido en contextos empresariales [4].
+Este proceso manual es \textbf{ineficiente, lento y propenso a errores}. Limita la capacidad de realizar análisis rápidos y automatizados, especialmente cuando se necesita evaluar un gran número de direcciones IP. Aunque existen herramientas comerciales que resuelven este problema, sus costos son a menudo prohibitivos para estudiantes, desarrolladores independientes o pequeños equipos.
 
-\textbf{Carencia de Capacidades Técnicas Locales:}
-El déficit de profesionales especializados en desarrollo de herramientas de ciberseguridad en Colombia es evidente. Según MinTIC, existe una brecha de 68,000 profesionales en ciberseguridad a nivel nacional, lo que limita las capacidades para desarrollar soluciones tecnológicas autóctonas [5].
+\subsection{Pregunta de Investigación}
 
-\textbf{Ausencia de Estándares Nacionales:}
-Colombia carece de marcos estandarizados para la integración de fuentes abiertas en análisis de ciberseguridad, lo que resulta en implementaciones ad-hoc inconsistentes entre organizaciones [6].
+¿Es posible diseñar y desarrollar una herramienta de software que integre y unifique datos de fuentes abiertas y gratuitas (específicamente GeoLite2 y Censys a través de BigQuery) para presentar un diagnóstico de seguridad consolidado de una dirección IP, de manera eficiente y accesible?
+
+\subsection{Justificación de la Investigación}
+
+La creación de esta herramienta aborda directamente la ineficiencia del proceso actual. Al automatizar la recolección y presentación de datos, el proyecto ofrece una solución práctica que:
+\begin{itemize}
+    \item \textbf{Ahorra tiempo:} Reduce drásticamente el tiempo necesario para investigar una IP.
+    \item \textbf{Centraliza la información:} Ofrece un "panel único" con los datos más relevantes.
+    \item \textbf{Es accesible:} Al basarse en fuentes gratuitas (GeoLite2 y las cuotas gratuitas de BigQuery), la solución es económicamente viable para un público amplio.
+    \item \textbf{Tiene un propósito educativo:} Sirve como un excelente caso de estudio sobre cómo integrar diferentes APIs y fuentes de datos en una aplicación de ciberseguridad funcional.
+\end{itemize}
+
+Este proyecto, aunque de alcance limitado a dos fuentes principales, sienta las bases para una herramienta más completa y demuestra la viabilidad de construir soluciones de ciberseguridad efectivas sin depender exclusivamente de costosas licencias comerciales.
 
 \subsubsection{Análisis de Causas}
 Las causas identificadas mediante análisis de Ishikawa incluyen:
@@ -107,38 +124,4 @@ Para evitar este escenario negativo, es fundamental desarrollar una solución te
     \item \textbf{Proporcione interfaces intuitivas} que democraticen el acceso a capacidades avanzadas de análisis IP.
     \item \textbf{Establezca metodologías reproducibles} que puedan ser adoptadas por organizaciones con diferentes niveles de madurez tecnológica.
     \item \textbf{Genere capacidades técnicas locales} mediante documentación detallada y código abierto que facilite la transferencia de conocimiento.
-\end{enumerate}
-
-\subsection{Formulación del Problema}
-¿Cómo desarrollar e implementar una herramienta de diagnóstico unificado que integre eficientemente el análisis de seguridad y geolocalización de direcciones IP utilizando exclusivamente fuentes abiertas, para fortalecer las capacidades de inteligencia de amenazas cibernéticas en organizaciones colombianas, considerando las limitaciones presupuestarias, técnicas y operacionales del contexto nacional?
-
-\subsection{Sistematización del Problema}
-
-\subsubsection{Preguntas Técnicas}
-\begin{enumerate}
-    \item ¿Qué características técnicas debe poseer una herramienta unificada de análisis de seguridad IP para maximizar la utilidad de fuentes abiertas disponibles como Censys BigQuery y GeoLite2?
-    \item ¿Cómo integrar efectivamente los conjuntos de datos de Censys en BigQuery con la base de datos GeoLite2 de MaxMind para generar análisis correlacionados?
-    \item ¿Qué algoritmos de machine learning son más efectivos para la clasificación automatizada de amenazas basada en patrones de comportamiento de IP?
-    \item ¿Cómo optimizar las consultas SQL en BigQuery para minimizar costos de procesamiento manteniendo tiempos de respuesta aceptables?
-\end{enumerate}
-
-\subsubsection{Preguntas Metodológicas}
-\begin{enumerate}
-    \item ¿Qué metodologías de presentación de resultados garantizan la reproducibilidad y comprensión de análisis de seguridad IP por parte de usuarios con diferentes niveles técnicos?
-    \item ¿Cómo establecer métricas de evaluación que permitan comparar objetivamente la efectividad de la herramienta desarrollada con soluciones comerciales?
-    \item ¿Qué protocolos de validación son necesarios para asegurar la precisión y confiabilidad de los resultados obtenidos?
-\end{enumerate}
-
-\subsubsection{Preguntas Contextuales}
-\begin{enumerate}
-    \item ¿Cuáles son las limitaciones inherentes del uso exclusivo de fuentes gratuitas en comparación con servicios comerciales en el contexto de amenazas específicas a Colombia?
-    \item ¿Cómo adaptar la herramienta a las particularidades del panorama de amenazas cibernéticas colombiano?
-    \item ¿Qué estrategias de implementación son más efectivas para facilitar la adopción de la herramienta en organizaciones con diferentes niveles de madurez tecnológica?
-\end{enumerate}
-
-\subsubsection{Preguntas de Evaluación}
-\begin{enumerate}
-    \item ¿Cómo validar la efectividad y precisión de la herramienta desarrollada en contextos reales de ciberseguridad colombiana?
-    \item ¿Qué indicadores de impacto permiten medir la contribución de la herramienta al fortalecimiento de capacidades nacionales de ciberseguridad?
-    \item ¿Cómo asegurar la sostenibilidad y evolución continua de la herramienta desarrollada?
 \end{enumerate}
