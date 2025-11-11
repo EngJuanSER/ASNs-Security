@@ -1,0 +1,136 @@
+package com.diagseg.analysis.service;
+
+import com.diagseg.analysis.dto.*;
+import com.diagseg.analysis.validation.InputValidator;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+import java.util.List;
+
+@ApplicationScoped
+public class AnalysisService {
+
+    @Inject
+    InputValidator inputValidator;
+
+    @Inject
+    GeolocationService geolocationService;
+
+    @Inject
+    ReputationService reputationService;
+
+    @Inject
+    SecurityScoringService securityScoringService;
+
+    @Inject
+    RecommendationService recommendationService;
+
+    public AnalysisResult analyze(AnalysisRequest request) {
+        // 1. Validar entrada
+        inputValidator.validate(request);
+
+        long start = System.currentTimeMillis();
+
+        // 2. Servicios de ejemplo (por ahora mock) ----------------------
+
+        ServiceDto dns = new ServiceDto();
+        dns.port = 53;
+        dns.protocol = Protocol.UDP;
+        dns.service = "dns";
+        dns.version = "Google Public DNS";
+        dns.banner = "DNS Server";
+        dns.vulnerabilities = List.of();
+        dns.riskLevel = RiskLevel.LOW;
+
+        ServiceDto https = new ServiceDto();
+        https.port = 443;
+        https.protocol = Protocol.TCP;
+        https.service = "https";
+        https.version = "nginx/1.18.0";
+        https.banner = "Server: nginx/1.18.0";
+        https.vulnerabilities = List.of("CVE-2021-23017");
+        https.riskLevel = RiskLevel.MEDIUM;
+
+        List<ServiceDto> services = List.of(dns, https);
+
+        // 3. Vulnerabilidades de ejemplo (por ahora mock) ---------------
+
+        VulnerabilityDto vuln = new VulnerabilityDto();
+        vuln.id = "CVE-2021-23017";
+        vuln.title = "nginx resolver DNS response";
+        vuln.severity = VulnerabilitySeverity.MEDIUM;
+        vuln.cvss = 5.6;
+        vuln.description = "A security issue in nginx resolver was identified, " +
+                "which might allow an attacker who is able to forge UDP packets from the DNS server";
+        vuln.solution = "Update nginx to version 1.20.1 or later";
+        vuln.references = List.of(
+                "https://nvd.nist.gov/vuln/detail/CVE-2021-23017",
+                "https://nginx.org/en/security_advisories.html"
+        );
+
+        List<VulnerabilityDto> vulnerabilities = List.of(vuln);
+
+        // 4. Geolocalización (ahora vía GeolocationService) --------------
+
+        GeolocationDto geo = geolocationService.resolve(request.query);
+
+        // 5. Reputación (ahora vía ReputationService) --------------------
+
+        List<ReputationSourceDto> reputation =
+                reputationService.buildReputation(services, vulnerabilities);
+
+        int reputationScore = reputation.isEmpty() ? 100 : reputation.get(0).score;
+
+        // 6. Calcular “serviceScore” basado en riesgo de servicios -------
+
+        int serviceScore = 100;
+        long highRiskServices = services.stream()
+                .filter(s -> s.riskLevel == RiskLevel.HIGH)
+                .count();
+        long mediumRiskServices = services.stream()
+                .filter(s -> s.riskLevel == RiskLevel.MEDIUM)
+                .count();
+
+        // Penalizaciones simples (puedes refinar después según el doc)
+        serviceScore -= Math.min(40, highRiskServices * 10);
+        serviceScore -= Math.min(20, mediumRiskServices * 5);
+        if (serviceScore < 0) serviceScore = 0;
+
+        // 7. Score global y riskLevel (vía SecurityScoringService) -------
+
+        int securityScore = securityScoringService.calculateScore(services, vulnerabilities);
+        RiskLevel riskLevel = securityScoringService.classifyRisk(securityScore);
+
+        long now = System.currentTimeMillis();
+        long duration = now - start;
+
+        // 8. Recomendaciones (ahora vía RecommendationService) -----------
+
+        List<RecommendationDto> recommendations =
+                recommendationService.generateRecommendations(services, vulnerabilities, securityScore);
+
+        // 9. Metadatos ---------------------------------------------------
+
+        AnalysisMetadataDto metadata = new AnalysisMetadataDto();
+        metadata.scanDuration = duration;
+        metadata.sourcesUsed = List.of("censys", "geolite2");
+        metadata.cached = false;
+
+        // 10. Resultado final -------------------------------------------
+
+        AnalysisResult result = new AnalysisResult();
+        result.ip = request.query;
+        result.type = request.type;
+        result.securityScore = securityScore;
+        result.riskLevel = riskLevel;
+        result.timestamp = now;
+        result.services = services;
+        result.geolocation = geo;
+        result.reputation = reputation;
+        result.vulnerabilities = vulnerabilities;
+        result.recommendations = recommendations;
+        result.metadata = metadata;
+
+        return result;
+    }
+}

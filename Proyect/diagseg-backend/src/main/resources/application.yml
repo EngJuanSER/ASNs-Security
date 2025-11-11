@@ -1,0 +1,26 @@
+quarkus:
+  http:
+    cors:
+      # 🔓 activar el filtro CORS
+      enabled: true
+
+      # Orígenes permitidos (tu frontend)
+      origins: "http://localhost:5173"
+
+      # Métodos permitidos
+      methods: "GET,PUT,POST,DELETE,OPTIONS"
+
+      # Headers permitidos desde el front
+      headers: "origin,accept,authorization,content-type,x-requested-with"
+
+      # Headers expuestos al front (opcional)
+      exposed-headers: "Access-Control-Allow-Origin,Authorization,Content-Disposition"
+
+      # Tiempo que el navegador puede cachear el preflight
+      access-control-max-age: "24H"
+
+      # Permitir credenciales (cookies, auth, etc.)
+      access-control-allow-credentials: true
+
+greeting:
+  message: "hello"

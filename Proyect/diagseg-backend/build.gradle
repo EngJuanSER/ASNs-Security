@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id 'io.quarkus'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation 'io.quarkus:quarkus-hibernate-validator'
+    implementation 'io.quarkus:quarkus-rest-jackson'
+    implementation 'io.quarkus:quarkus-config-yaml'
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-rest'
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
+}
+
+group = 'com.diagseg'
+version = '1.0.0-SNAPSHOT'
+
+java {
+    // 🔒 Fuerza el uso de Java 21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+    // Mantiene el flag abierto para compatibilidad
+    jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
+}
+

@@ -78,10 +78,18 @@ let marker: L.Marker | null = null
 const initializeMap = () => {
   if (!mapContainer.value || !props.geolocation) return
 
+  // 🚫 Si el mapa ya está creado, no lo vuelvas a inicializar
+  if (map) {
+    return
+    // O si prefieres recrearlo desde cero:
+    // map.remove()
+    // map = null
+  }
+
   try {
     // Create map
     map = L.map(mapContainer.value).setView(
-      [props.geolocation.latitude, props.geolocation.longitude], 
+      [props.geolocation.latitude, props.geolocation.longitude],
       10
     )
 
@@ -91,7 +99,6 @@ const initializeMap = () => {
       maxZoom: 19
     }).addTo(map)
 
-    // Create custom marker content
     const markerContent = `
       <div class="custom-marker">
         <div class="marker-content">
@@ -102,24 +109,22 @@ const initializeMap = () => {
       </div>
     `
 
-    // Add marker
     marker = L.marker([props.geolocation.latitude, props.geolocation.longitude])
       .addTo(map)
       .bindPopup(markerContent)
       .openPopup()
 
-    // Add circle to show approximate area
     L.circle([props.geolocation.latitude, props.geolocation.longitude], {
       color: '#667eea',
       fillColor: '#667eea',
       fillOpacity: 0.1,
-      radius: 50000 // 50km radius
+      radius: 50000
     }).addTo(map)
-
   } catch (error) {
     console.error('Error initializing map:', error)
   }
 }
+
 
 const updateMap = () => {
   if (!map || !props.geolocation) return
