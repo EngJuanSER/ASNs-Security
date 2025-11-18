@@ -1,3 +1,9 @@
+#keys
+keys/
+
+# .mmdb
+*.mmdb
+
 # Gradle
 .gradle/
 build/

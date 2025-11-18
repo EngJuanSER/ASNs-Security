@@ -22,5 +22,5 @@ quarkus:
       # Permitir credenciales (cookies, auth, etc.)
       access-control-allow-credentials: true
 
-greeting:
-  message: "hello"
+geolite2:
+  city-db: "geo/GeoLite2-City.mmdb"

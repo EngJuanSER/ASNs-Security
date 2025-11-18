@@ -1,6 +1,7 @@
 package com.diagseg.analysis;
 
 import com.diagseg.analysis.dto.*;
+import com.diagseg.analysis.service.GeolocationService;
 import com.diagseg.analysis.validation.InputValidator;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -19,6 +20,9 @@ public class AnalysisResource {
 
     @Inject
     InputValidator inputValidator;
+
+    @Inject
+    GeolocationService geolocationService;
 
     @POST
     @Path("/analyze")
@@ -57,17 +61,7 @@ public class AnalysisResource {
 
         result.services = List.of(dnsService, httpsService);
 
-        GeolocationDto geo = new GeolocationDto();
-        geo.country = "United States";
-        geo.countryCode = "US";
-        geo.region = "California";
-        geo.city = "Mountain View";
-        geo.latitude = 37.4056;
-        geo.longitude = -122.0775;
-        geo.timezone = "America/Los_Angeles";
-        geo.isp = "Google LLC";
-        geo.asn = "AS15169";
-        geo.org = "Google LLC";
+        GeolocationDto geo = geolocationService.resolve(request.query);
         result.geolocation = geo;
 
         ReputationSourceDto rep = new ReputationSourceDto();
