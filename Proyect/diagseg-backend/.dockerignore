@@ -5,42 +5,17 @@
 !build/quarkus-app/*
 
 
-# Build outputs (se generan durante el build)
-build/
-target/
-.gradle/
+# Permitir todo lo necesario para el build
+!Proyect/
 
-# IDE files
+# Excluir solo lo innecesario
+.git/
+.github/
+*.md
+!README.md
 .idea/
 .vscode/
 *.iml
-*.ipr
-*.iws
-
-# Git
-.git/
-.gitignore
-.gitattributes
-
-# Logs
 *.log
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Env files
-.env
-.env.*
-!.env.example
-
-# Test files
-**/test/
-**/*Test.java
-
-# Documentation
-*.md
-!README.md
-
-# CI/CD
-.github/

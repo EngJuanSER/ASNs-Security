@@ -1,36 +1,35 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Copiar wrapper de Gradle (paths RELATIVOS)
-COPY gradle gradle
-COPY gradlew .
-COPY gradle.properties .
-COPY settings.gradle.kts .
-COPY build.gradle.kts .
+# Copiar con rutas COMPLETAS desde la raíz del repo
+COPY Proyect/diagseg-backend/gradle gradle
+COPY Proyect/diagseg-backend/gradlew .
+COPY Proyect/diagseg-backend/gradle.properties .
+COPY Proyect/diagseg-backend/settings.gradle.kts .
+COPY Proyect/diagseg-backend/build.gradle.kts .
 
-# Dar permisos de ejecución
+# Dar permisos
 RUN chmod +x gradlew
 
 # Copiar código fuente
-COPY src src
+COPY Proyect/diagseg-backend/src src
 
-# Build del proyecto
+# Build
 RUN ./gradlew build -x test --no-daemon
 
-# Imagen de runtime
+# Runtime
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Instalar nmap
 RUN apk add --no-cache nmap curl
 
-# Copiar el JAR compilado
+# Copiar JAR
 COPY --from=build /app/build/quarkus-app/lib/ ./lib/
 COPY --from=build /app/build/quarkus-app/*.jar ./
 COPY --from=build /app/build/quarkus-app/app/ ./app/
 COPY --from=build /app/build/quarkus-app/quarkus/ ./quarkus/
 
-# Copiar base de datos GeoLite2
+# Copiar GeoLite2
 COPY --from=build /app/src/main/resources/geo ./geo/
 
 EXPOSE 8080
