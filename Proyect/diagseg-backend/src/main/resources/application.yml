@@ -5,7 +5,8 @@ quarkus:
       enabled: true
 
       # Orígenes permitidos (tu frontend)
-      origins: "http://localhost:5173"
+      # Usa variable de entorno CORS_ORIGINS, por defecto localhost:5173 para desarrollo
+      origins: "${CORS_ORIGINS:http://localhost:5173}"
 
       # Métodos permitidos
       methods: "GET,PUT,POST,DELETE,OPTIONS"
@@ -21,6 +22,9 @@ quarkus:
 
       # Permitir credenciales (cookies, auth, etc.)
       access-control-allow-credentials: true
+    
+    # Puerto del servidor - usa variable PORT (Railway/Render) o 8080 por defecto
+    port: ${PORT:8080}
 
 # Configuración de GeoLite2 para geolocalización IP
 geolite2:

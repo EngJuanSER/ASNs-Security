@@ -1,0 +1,21 @@
+# Configuración específica para PRODUCCIÓN
+# Este archivo sobrescribe valores de application.yml cuando se ejecuta con perfil 'prod'
+# Uso: java -Dquarkus.profile=prod -jar quarkus-run.jar
+
+quarkus:
+  http:
+    cors:
+      origins: "${CORS_ORIGINS:https://tudominio.com}"
+    
+    # Puerto del servidor (Railway/Render usan variable PORT)
+    port: ${PORT:8080}
+
+# Nmap en producción (asegúrate que nmap esté instalado en el servidor)
+nmap:
+  timeout: 90  # Mayor timeout en producción
+  
+# NVD API con mayor cache en producción
+nvd:
+  cache-ttl-minutes: 120  # 2 horas de cache
+  timeout-seconds: 45
+
