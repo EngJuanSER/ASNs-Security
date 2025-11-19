@@ -26,8 +26,11 @@ COPY --from=build /app/build/quarkus-app/*.jar ./
 COPY --from=build /app/build/quarkus-app/app/ ./app/
 COPY --from=build /app/build/quarkus-app/quarkus/ ./quarkus/
 
-RUN mkdir -p geo
-# COPY --from=build /app/src/main/resources/geo ./geo/
+RUN mkdir -p geo && \
+    echo "Descargando GeoLite2-City.mmdb..." && \
+    curl -L "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-City.mmdb" \
+         -o geo/GeoLite2-City.mmdb && \
+    ls -lh geo/GeoLite2-City.mmdb
 
 EXPOSE 8080
 
