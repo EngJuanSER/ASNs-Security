@@ -96,6 +96,7 @@ public class NmapService {
                 "nmap",
                 "-sT",  // TCP connect scan (sin raw sockets)
                 "-sV",
+                "-Pn",
                 "-p", defaultPorts,
                 "--open",
                 "-T4",

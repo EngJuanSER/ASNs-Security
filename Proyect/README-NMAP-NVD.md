@@ -358,5 +358,5 @@ curl -X POST http://localhost:8080/api/analysis/analyze \
 ---
 
 **Última actualización**: Noviembre 2025
-**Autor**: EngJuanSER
+**Autores**: EngJuanSER y NicoG2023
 **Proyecto**: DiagSEG - ASNs Security Analysis

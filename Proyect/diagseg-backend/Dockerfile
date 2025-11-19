@@ -19,18 +19,22 @@ RUN apk add --no-cache curl && \
 
 RUN ./gradlew build -x test --no-daemon
 
+# -------- Runtime --------
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Ejecutar como root para nmap
-USER root
+# Instalar dependencias como root
+RUN apk add --no-cache nmap nmap-scripts curl \
+    && addgroup -S app && adduser -S app -G app
 
-RUN apk add --no-cache nmap nmap-scripts curl
-
+# Copiar artefactos de Quarkus
 COPY --from=build /app/build/quarkus-app/lib/ ./lib/
 COPY --from=build /app/build/quarkus-app/*.jar ./
 COPY --from=build /app/build/quarkus-app/app/ ./app/
 COPY --from=build /app/build/quarkus-app/quarkus/ ./quarkus/
+
+# Cambiar a usuario no privilegiado para ejecutar la app (y Nmap con -sT)
+USER app
 
 EXPOSE 8080
 
