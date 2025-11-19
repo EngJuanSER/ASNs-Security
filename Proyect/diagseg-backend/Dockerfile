@@ -19,7 +19,7 @@ RUN ./gradlew build -x test --no-daemon
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-RUN apk add --no-cache nmap curl
+RUN apk add --no-cache nmap nmap-scripts curl
 
 COPY --from=build /app/build/quarkus-app/lib/ ./lib/
 COPY --from=build /app/build/quarkus-app/*.jar ./
