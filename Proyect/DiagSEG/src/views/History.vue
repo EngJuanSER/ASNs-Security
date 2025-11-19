@@ -441,17 +441,22 @@ const refreshHistory = async () => {
 }
 
 const clearAllHistory = async () => {
-  if (!confirm('¿Estás seguro de que quieres eliminar todo el historial? Esta acción no se puede deshacer.')) {
+  if (!confirm('¿Estás seguro de que quieres eliminar TODO el historial Y el caché de análisis? Esta acción no se puede deshacer.')) {
     return
   }
   
   try {
+    // Limpiar historial de estadísticas
     await statisticsService.cleanOldHistory(0) // Eliminar todo
+    
+    // Limpiar TAMBIÉN el caché de análisis
+    await cacheService.clear()
+    
     await loadStatistics()
-    alert('Historial eliminado exitosamente')
+    alert('Historial y caché eliminados exitosamente')
   } catch (error) {
-    console.error('Error limpiando historial:', error)
-    alert('Error al limpiar el historial')
+    console.error('Error limpiando historial y caché:', error)
+    alert('Error al limpiar el historial y caché')
   }
 }
 
