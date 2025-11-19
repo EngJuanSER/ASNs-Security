@@ -418,15 +418,26 @@ const loadAnalysis = async (analysis: AnalysisHistoryEntry) => {
 }
 
 const deleteAnalysis = async (analysisId: string) => {
-  if (!confirm('¿Estás seguro de que quieres eliminar este análisis del historial?')) {
+  if (!confirm('¿Estás seguro de que quieres eliminar este análisis del historial Y del caché?')) {
     return
   }
   
   try {
+    // Obtener el análisis antes de eliminarlo para saber qué query eliminar del caché
+    const history = await statisticsService.getAnalysisHistory()
+    const analysis = history.find(a => a.id === analysisId)
+    
+    // Eliminar del historial
     const deleted = await statisticsService.deleteAnalysis(analysisId)
+    
+    // Si se eliminó y tenemos la query, también eliminar del caché
+    if (deleted && analysis) {
+      await cacheService.remove(analysis.query)
+    }
+    
     if (deleted) {
       await loadStatistics()
-      alert('Análisis eliminado exitosamente')
+      alert('Análisis y caché eliminados exitosamente')
     } else {
       alert('No se pudo eliminar el análisis')
     }

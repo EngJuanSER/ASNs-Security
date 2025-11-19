@@ -86,6 +86,7 @@ public class NmapService {
     private boolean executeNmap(String target, String outputPath) {
         try {
             // Construir comando Nmap
+            // -sT: TCP connect scan (no requiere permisos de root, compatible con Railway)
             // -sV: detección de versiones
             // -p: puertos a escanear
             // --open: solo puertos abiertos
@@ -93,6 +94,7 @@ public class NmapService {
             // -T4: timing template (más rápido pero detectable)
             String[] command = {
                 "nmap",
+                "-sT",  // TCP connect scan (sin raw sockets)
                 "-sV",
                 "-p", defaultPorts,
                 "--open",
