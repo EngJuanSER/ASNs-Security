@@ -162,7 +162,7 @@ export interface DNSAnalysis {
  */
 export interface CompleteAnalysisResult extends AnalysisResult {
   // Análisis adicionales disponibles cuando se conecte al backend
-  vulnerabilities?: VulnerabilityAnalysis
+  vulnerabilitiesAnalysis?: VulnerabilityAnalysis
   sslCertificate?: SSLCertificateAnalysis
   dnsAnalysis?: DNSAnalysis
   

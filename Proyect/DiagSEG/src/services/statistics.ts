@@ -90,6 +90,21 @@ class StatisticsService {
    */
   async recordAnalysis(query: string, result: AnalysisResult, fromCache: boolean = false): Promise<void> {
     try {
+      // Obtener historial existente
+      const history = await this.getAnalysisHistory() || []
+      
+      // Buscar si ya existe un análisis reciente para esta query (últimos 5 minutos)
+      const fiveMinutesAgo = Date.now() - (5 * 60 * 1000)
+      const existingIndex = history.findIndex(
+        entry => entry.query === query && entry.timestamp > fiveMinutesAgo
+      )
+      
+      // Si existe una entrada reciente y viene del caché, NO crear duplicado
+      if (existingIndex !== -1 && fromCache) {
+        console.log(`Análisis de "${query}" ya existe en historial reciente, evitando duplicado`)
+        return
+      }
+      
       const entry: AnalysisHistoryEntry = {
         id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         query,
@@ -101,12 +116,16 @@ class StatisticsService {
         status: this.getStatusFromScore(result.securityScore),
         fromCache
       }
-
-      // Obtener historial existente
-      const history = await this.getAnalysisHistory() || []
       
-      // Añadir nueva entrada al principio
-      history.unshift(entry)
+      // Si existe una entrada reciente pero NO viene del caché (nuevo análisis real)
+      // Actualizar la entrada existente en lugar de duplicar
+      if (existingIndex !== -1 && !fromCache) {
+        console.log(`Actualizando análisis existente de "${query}"`)
+        history[existingIndex] = entry
+      } else {
+        // Añadir nueva entrada al principio
+        history.unshift(entry)
+      }
       
       // Mantener solo los últimos 1000 análisis
       const trimmedHistory = history.slice(0, 1000)

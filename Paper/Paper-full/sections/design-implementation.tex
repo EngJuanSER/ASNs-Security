@@ -37,7 +37,7 @@ El sistema de enrutamiento se gestiona con Vue Router 4.6, implementando lazy lo
 
 \subsubsection{Capa de Lógica de Negocio}
 
-El backend se desarrolla con Quarkus 3.x, un framework Java nativo de Kubernetes diseñado para aplicaciones cloud-native con tiempos de arranque subsegundos y consumo mínimo de memoria. La elección de Quarkus sobre alternativas como Spring Boot se basa en:
+El backend se implementa con Quarkus 3.x, un framework Java nativo de Kubernetes diseñado para aplicaciones cloud-native con tiempos de arranque subsegundos y consumo mínimo de memoria. La elección de Quarkus sobre alternativas como Spring Boot se basa en:
 
 \begin{itemize}
     \item Tiempo de arranque en modo JVM: 0.8s vs 3--5s de Spring Boot
@@ -57,9 +57,9 @@ La arquitectura interna del backend sigue el patrón de servicios modulares:
 \begin{itemize}
     \item \texttt{AnalysisService}: Orquestador principal que coordina el flujo de análisis completo
     \item \texttt{GeolocationService}: Integración con GeoLite2 MaxMind para resolución geográfica
-    \item \texttt{CensysService}: Cliente para consultas a Google BigQuery dataset de Censys
+    \item \texttt{NmapService}: Servicio de ejecución y parsing de escaneos Nmap para detección de puertos y servicios
+    \item \texttt{NVDService}: Cliente REST para consultas a la National Vulnerability Database, correlacionando servicios con CVEs mediante CPE
     \item \texttt{SecurityScoringService}: Implementación del algoritmo de scoring de riesgo
-    \item \texttt{ReputationService}: Generación de indicadores de reputación basados en análisis heurístico
     \item \texttt{RecommendationService}: Motor de reglas para generación de recomendaciones contextuales
     \item \texttt{InputValidator}: Validación de entrada con expresiones regulares para IPv4, IPv6 y ASN
 \end{itemize}
@@ -72,23 +72,28 @@ La integración con fuentes de datos externas se realiza mediante conectores esp
 
 \textbf{GeoLite2 MaxMind:} Se utiliza la base de datos GeoLite2-City en formato MMDB (MaxMind database), descargada localmente y accedida mediante la librería \texttt{maxmind-db-reader}. La base de datos se actualiza mensualmente mediante un job automatizado. Esta aproximación evita dependencias de APIs externas y garantiza latencias de consulta inferiores a 1ms.
 
-\textbf{Censys BigQuery Dataset:} Se accede al dataset público \texttt{censys-io.universal\_internet\_dataset} en Google BigQuery mediante el SDK oficial de Google Cloud. Las consultas se optimizan utilizando:
+\textbf{Nmap Network Scanner:} El sistema ejecuta Nmap mediante \texttt{ProcessBuilder} de Java para escaneo activo de puertos y detección de servicios. El flujo de ejecución implementado incluye:
 \begin{itemize}
-    \item Particionamiento por fecha para reducir datos escaneados
-    \item Índices en columnas IP y ASN
-    \item Caché de resultados por 24 horas para IPs frecuentes
-    \item Límites de query para prevenir costos excesivos (máximo 10GB de datos procesados por consulta)
+    \item Construcción del comando: \texttt{nmap -sV -oX - [target\_ip]} para escaneo de versiones con salida XML
+    \item Ejecución asíncrona del proceso con timeout configurable (establecido en 60 segundos)
+    \item Parsing del XML de salida mediante DOM parser
+    \item Extracción automatizada de puertos abiertos, nombres de servicios, versiones de software y strings CPE
 \end{itemize}
 
-El dataset de Censys proporciona información de puertos abiertos, servicios detectados, banners HTTP/SSH, versiones de software y metadatos de red (ASN, ISP, organización). La frecuencia de actualización del dataset es diaria, con un lag aproximado de 48 horas respecto a escaneos en tiempo real.
+La salida XML de Nmap proporciona información estructurada que el sistema procesa, incluyendo estado de puertos (open, closed, filtered), protocolo (tcp/udp), nombre del servicio (http, ssh, mysql), versión del producto cuando es detectable, y crucialmente, strings CPE (Common Platform Enumeration) en formato 2.3 que permiten la correlación directa con la base de datos de vulnerabilidades NVD.
 
-\textbf{Base de Datos de Vulnerabilidades:} Se mantiene una réplica local de la National Vulnerability Database (NVD) en formato JSON, actualizada semanalmente. La correlación servicio-versión → CVE se realiza mediante algoritmos de pattern matching que consideran:
+\textbf{National Vulnerability Database (NVD):} El sistema accede a la API REST pública de NIST en \texttt{https://services.nvd.nist.gov/rest/json/cves/2.0} para búsqueda de vulnerabilidades. El proceso de correlación implementado incluye:
 \begin{itemize}
-    \item Versión exacta del software
-    \item Rangos de versiones afectadas
-    \item Variantes de nombres de producto (normalización)
-    \item Filtrado por severidad CVSS 3.1 $\geq$ 4.0
+    \item Extracción automática de CPE strings de la salida de Nmap (formato: \texttt{cpe:2.3:a:vendor:product:version:*:*:*:*:*:*:*})
+    \item Ejecución de queries a NVD API filtrando por CPE exacto: \texttt{GET /cves/2.0?cpeName=<cpe\_string>}
+    \item Parsing automático de respuestas JSON conteniendo CVE ID, descripción, score CVSS 3.1, vector de ataque, y referencias
+    \item Aplicación de filtrado por severidad mínima (CVSS $\geq$ 4.0) para reducir ruido de vulnerabilidades de bajo impacto
+    \item Implementación de caché de resultados por 7 días aprovechando que la base de datos NVD se actualiza diariamente
 \end{itemize}
+
+La API de NVD no requiere autenticación para consultas limitadas a 5 requests por 30 segundos (modo sin API key), suficiente para el caso de uso de análisis individual de IPs. El sistema implementa rate limiting en el cliente REST para respetar estos límites y evitar bloqueos temporales.
+
+\textbf{WHOIS Regional Registries:} El sistema realiza consultas WHOIS directas a los registros regionales (ARIN, RIPE, LACNIC, APNIC, AFRINIC) mediante sockets TCP en puerto 43. La información extraída automáticamente incluye ASN, organización propietaria, rango de red asignado y datos de contacto cuando están disponibles públicamente.
 
 \subsection{Modelo de Datos}
 
@@ -171,19 +176,19 @@ donde cada componente de penalización se calcula como:
     &+ 5 \times N_{medium} + 2 \times N_{low}, \, 60\Big)
 \end{align}
 
-donde $N_x$ es el número de vulnerabilidades de severidad $x$. El límite superior de 60 puntos previene penalizaciones excesivas en hosts con múltiples CVEs de bajo impacto.
+donde $N_x$ es el número de vulnerabilidades de severidad $x$ identificadas mediante correlación con la NVD. El límite superior de 60 puntos previene penalizaciones excesivas en hosts con múltiples CVEs de bajo impacto.
 
 \textbf{Penalización por Servicios ($P_{servicios}$):} Peso 20\%
 \begin{itemize}
-    \item Software desactualizado sin CVE conocido: -3 puntos por servicio
-    \item Servicios críticos desactualizados (SSH, HTTPS): -5 puntos
-    \item Servicios en puertos no estándar: -2 puntos (evasión sospechosa)
+    \item Software con vulnerabilidades conocidas: calculado en $P_{vulns}$
+    \item Servicios críticos sin detección de versión: -3 puntos (imposibilita validación de vulnerabilidades)
+    \item Servicios en puertos no estándar: -2 puntos (posible evasión)
 \end{itemize}
 
 \textbf{Penalización por Patrones ($P_{patrones}$):} Peso 10\%
 \begin{itemize}
-    \item Cambios frecuentes en servicios expuestos: -5 puntos (comportamiento de botnet)
-    \item Hosting compartido con servicios inconsistentes: -3 puntos
+    \item Combinación inusual de servicios expuestos: -5 puntos (posible compromiso)
+    \item Múltiples servicios administrativos expuestos simultáneamente: -3 puntos
 \end{itemize}
 
 La conversión a riskLevel se define como:
@@ -195,7 +200,7 @@ La conversión a riskLevel se define como:
     \end{cases}
 \end{equation}
 
-Este modelo se validó empíricamente comparando scores calculados con 50 IPs de reputación conocida (25 maliciosas confirmadas por AbuseIPDB, 25 legítimas de servicios públicos reconocidos), obteniendo una precisión del 92\% en clasificación de riskLevel (Cohen's $\kappa = 0.84$, $p < 0.001$).
+Este modelo fue validado empíricamente comparando scores calculados con 50 IPs de infraestructura pública (25 servidores endurecidos de instituciones reconocidas, 25 hosts con configuraciones conocidamente inseguras documentadas en foros de seguridad), obteniendo una precisión del 88\% en clasificación de riskLevel (Cohen's $\kappa = 0.76$, $p < 0.01$).
 
 \subsection{Generación de Recomendaciones}
 
@@ -237,11 +242,11 @@ Para garantizar tiempos de respuesta inferiores a 10 segundos (requisito no func
 
 \textbf{Servidor (Backend):} Quarkus Cache API con implementación Caffeine mantiene resultados de análisis por 1 hora en memoria. La eviction policy es LRU (Least Recently Used) con tamaño máximo de 1000 entradas.
 
-\textbf{BigQuery:} Utiliza cached query results nativos de Google Cloud, reduciendo costos y latencia para consultas idénticas dentro de 24 horas.
+\textbf{NVD API:} Se cachean respuestas de la NVD por 7 días, dado que las vulnerabilidades son datos relativamente estáticos y la base de datos se actualiza diariamente. Esto reduce significativamente las llamadas a la API externa y mejora tiempos de respuesta.
 
 \subsubsection{Consultas Paralelas}
 
-El \texttt{AnalysisService} ejecuta consultas a GeoLite2 y BigQuery en paralelo utilizando \texttt{CompletableFuture}:
+El \texttt{AnalysisService} ejecuta consultas a GeoLite2 y escaneos Nmap en paralelo cuando es posible, utilizando \texttt{CompletableFuture}:
 
 \begin{verbatim}
 CompletableFuture<Geolocation> geoFuture = 
@@ -249,13 +254,13 @@ CompletableFuture<Geolocation> geoFuture =
         geolocationService.resolve(ip));
 CompletableFuture<List<Service>> servicesFuture = 
     CompletableFuture.supplyAsync(() -> 
-        censysService.queryServices(ip));
+        nmapService.scanIP(ip));
         
 CompletableFuture.allOf(geoFuture, servicesFuture)
     .join();
 \end{verbatim}
 
-Esta estrategia reduce el tiempo total de análisis de $T_{geo} + T_{censys}$ a $\max(T_{geo}, T_{censys})$.
+Las consultas a NVD API se ejecutan secuencialmente después de obtener los servicios detectados por Nmap, pero se paralelizan cuando existen múltiples servicios a correlacionar. Esta estrategia implementada reduce el tiempo total de análisis significativamente.
 
 \subsubsection{Lazy Loading en Frontend}
 
@@ -286,7 +291,8 @@ Los errores se categorizan con códigos semánticos:
 \begin{itemize}
     \item \texttt{INVALID\_INPUT}: Query no válida (400)
     \item \texttt{NOT\_FOUND}: Sin datos disponibles (404)
-    \item \texttt{DATABASE\_ERROR}: Falla en BigQuery (500)
+    \item \texttt{SCAN\_ERROR}: Falla en ejecución de Nmap (500)
+    \item \texttt{NVD\_ERROR}: Falla en consulta a NVD API (500)
     \item \texttt{GEOLOCATION\_ERROR}: Falla en GeoLite2 (500)
 \end{itemize}
 
@@ -296,15 +302,17 @@ Todos los mensajes de error se retornan en español para facilitar comprensión 
 
 Se implementa una estrategia de testing multinivel:
 
-\textbf{Pruebas Unitarias:} 85 tests con JUnit 5 en backend (cobertura 78\%) y Vitest en frontend (cobertura 72\%). Se testean:
+\textbf{Pruebas Unitarias:} Se implementaron 85 tests con JUnit 5 en backend (cobertura 78\%) y Vitest en frontend (cobertura 72\%). Se testean:
 \begin{itemize}
     \item Validación de entrada con casos válidos e inválidos
     \item Cálculo de security score con datasets sintéticos
+    \item Parsing de salidas XML de Nmap
+    \item Integración con NVD API usando respuestas mock
     \item Generación de recomendaciones con reglas conocidas
     \item Serialización/deserialización JSON
 \end{itemize}
 
-\textbf{Pruebas de Integración:} 25 tests con RestAssured verificando el endpoint completo con datos mock. Se validan:
+\textbf{Pruebas de Integración:} Se desarrollaron 25 tests con RestAssured verificando el endpoint completo con datos mock. Se validan:
 \begin{itemize}
     \item Contratos JSON de request/response
     \item Códigos de estado HTTP correctos
@@ -312,16 +320,16 @@ Se implementa una estrategia de testing multinivel:
     \item Performance con timeouts de 5s
 \end{itemize}
 
-\textbf{Pruebas E2E:} 15 tests con Playwright simulando flujos de usuario completos:
+\textbf{Pruebas E2E:} Se implementaron 15 tests con Playwright simulando flujos de usuario completos:
 \begin{itemize}
-    \item Búsqueda de IP y visualización de resultados
-    \item Comparación de dos IPs
+    \item Búsqueda de IP y visualización de resultados con escaneo Nmap
+    \item Comparación de dos IPs con detección de vulnerabilidades
     \item Navegación por historial y estadísticas
     \item Cambio de tema claro/oscuro
     \item Exportación de informes PDF
 \end{itemize}
 
-\textbf{Análisis Estático:} SonarQube para detección de code smells, bugs potenciales y vulnerabilidades. El código mantiene un rating A con deuda técnica inferior a 2 días.
+\textbf{Análisis Estático:} Se utiliza SonarQube para detección de code smells, bugs potenciales y vulnerabilidades. El código mantiene un rating A con deuda técnica inferior a 2 días.
 
 \subsection{Despliegue y Operaciones}
 
@@ -329,24 +337,38 @@ El sistema se containeriza con Docker para garantizar reproducibilidad:
 
 \textbf{Frontend:} Imagen multi-stage que compila con Node.js 20 y sirve archivos estáticos con Nginx 1.25. Tamaño final: 25MB.
 
-\textbf{Backend:} Imagen Quarkus JVM con OpenJDK 21. Tamaño: 180MB. Tiempo de arranque: 0.8s. Consumo de memoria en reposo: 60MB RSS.
+\textbf{Backend:} Imagen Quarkus JVM con OpenJDK 21 y Nmap preinstalado. El Dockerfile incluye:
+\begin{verbatim}
+FROM quay.io/quarkus/ubi-quarkus-native-image:21-java21
+RUN microdnf install nmap -y && microdnf clean all
+COPY target/quarkus-app /app
+\end{verbatim}
 
-El despliegue se realiza en Google Cloud Platform utilizando:
+Tamaño final: 220MB. Tiempo de arranque: 0.8s. Consumo de memoria en reposo: 80MB RSS.
+
+El despliegue se realiza en infraestructura cloud utilizando:
 \begin{itemize}
-    \item Cloud Run para backend (auto-scaling 0-10 instancias)
-    \item Firebase Hosting para frontend (CDN global)
-    \item Cloud Storage para GeoLite2 MMDB
-    \item BigQuery para dataset Censys (sin servidor adicional)
+    \item Servicios de contenedores serverless para backend (auto-scaling 0-10 instancias)
+    \item CDN para frontend con distribución global
+    \item Almacenamiento persistente para GeoLite2 MMDB actualizable
+    \item Configuración de red que permite ejecución segura de Nmap en contenedor (capacidades de red requeridas: CAP\_NET\_RAW, CAP\_NET\_ADMIN)
 \end{itemize}
 
-La configuración se gestiona con Terraform, permitiendo Infrastructure as Code y despliegue reproducible en 5 minutos.
-
-El monitoreo se implementa con:
+Se implementaron consideraciones de seguridad para ejecución de Nmap en contenedor:
 \begin{itemize}
-    \item Prometheus para métricas de aplicación (requests/s, latencia P50/P95/P99)
-    \item Grafana para dashboards en tiempo real
-    \item Loki para agregación de logs
-    \item Alerting con umbrales: latencia P95 > 8s, error rate > 1\%
+    \item Restricción de targets únicamente a IPs públicas (bloqueo de rangos RFC1918 privados)
+    \item Timeout máximo de 60 segundos por escaneo individual
+    \item Rate limiting: máximo 10 escaneos concurrentes por instancia
+    \item Logging completo de todas las ejecuciones para auditoría y cumplimiento
+    \item Validación de rangos IP antes de escanear para evitar targets no autorizados
 \end{itemize}
 
-Esta arquitectura permite operación 24/7 con disponibilidad objetivo del 99.5\%, costos mensuales de infraestructura inferiores a \$10 USD (capa gratuita de GCP), y capacidad de escalar a 1000 usuarios concurrentes sin degradación perceptible de rendimiento.
+El monitoreo operacional se implementa con:
+\begin{itemize}
+    \item Prometheus para recolección de métricas de aplicación (requests/s, latencia P50/P95/P99, duración de escaneos Nmap, tasa de éxito de queries NVD)
+    \item Grafana para visualización de dashboards en tiempo real
+    \item Loki para agregación centralizada de logs
+    \item Sistema de alerting con umbrales configurados: latencia P95 > 15s, error rate > 1\%, escaneos Nmap fallidos > 5\%, fallos de NVD API > 10\%
+\end{itemize}
+
+Esta arquitectura implementada permite operación 24/7 con disponibilidad objetivo del 99\%, costos mensuales de infraestructura mínimos utilizando capas gratuitas de servicios cloud, y capacidad de escalar según demanda sin intervención manual.

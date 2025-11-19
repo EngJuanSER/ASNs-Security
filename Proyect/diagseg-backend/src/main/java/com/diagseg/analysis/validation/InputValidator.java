@@ -36,6 +36,11 @@ public class InputValidator {
         "^AS[0-9]{1,10}$"
     );
 
+    // Regex Dominio (básico pero funcional)
+    private static final Pattern DOMAIN_PATTERN = Pattern.compile(
+        "^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?(\\.[a-zA-Z]{2,})+$"
+    );
+
     public void validate(AnalysisRequest request) {
         if (request == null) {
             throw new InvalidInputException("La solicitud no puede ser nula");
@@ -61,6 +66,12 @@ public class InputValidator {
             if (!IPV6_PATTERN.matcher(q).matches()) {
                 throw new InvalidInputException(
                     "La dirección IPv6 '" + q + "' no es válida"
+                );
+            }
+        } else if (request.type == TargetType.DOMAIN) {
+            if (!DOMAIN_PATTERN.matcher(q).matches()) {
+                throw new InvalidInputException(
+                    "El dominio '" + q + "' no es válido. Formato esperado: ejemplo.com"
                 );
             }
         } else if (request.type == TargetType.ASN) {

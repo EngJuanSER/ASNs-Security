@@ -254,9 +254,14 @@ if (searchQuery.value) {
   color: var(--color-error);
 }
 
-.validation-success::before {
-  content: '✓';
-  font-weight: bold;
+.suggestions li.valid::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #10b981;
+  margin-right: 0.5rem;
 }
 
 .validation-error::before {

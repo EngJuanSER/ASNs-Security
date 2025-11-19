@@ -3,9 +3,9 @@
 \subsection{Justificación Teórica}
 
 \subsubsection{Contribución al Conocimiento Científico}
-Esta investigación contribuye al campo de la ciberseguridad mediante el desarrollo de una herramienta práctica que integra fuentes abiertas de datos para el análisis de direcciones IP. Como proyecto académico, busca explorar la viabilidad de combinar datos públicos disponibles (GeoLite2 y Censys a través de BigQuery) para crear una solución funcional de análisis de seguridad.
+Esta investigación contribuye al campo de la ciberseguridad mediante el desarrollo de una herramienta práctica que integra fuentes abiertas de datos para el análisis de direcciones IP. Como proyecto académico, busca explorar la viabilidad de combinar datos públicos disponibles (GeoLite2, Nmap y NVD) para crear una solución funcional de análisis de seguridad.
 
-El trabajo se enfoca en la implementación práctica de técnicas ya establecidas en la literatura, adaptándolas a un contexto de recursos limitados y fuentes de datos gratuitas. Se busca validar si es posible crear una herramienta útil para análisis básico de IP utilizando únicamente tecnologías y datos de acceso libre.
+El trabajo se enfoca en la implementación práctica de técnicas ya establecidas en la literatura~\cite{alghamdi2024reconnaissance, ferrag2019deep}, adaptándolas a un contexto de recursos limitados y fuentes de datos gratuitas. Se busca validar si es posible crear una herramienta útil para análisis integral de IP utilizando únicamente tecnologías y datos de acceso libre.
 
 \subsubsection{Objetivos Académicos}
 El proyecto tiene como objetivo académico principal desarrollar competencias prácticas en:
@@ -24,15 +24,16 @@ La metodología se basa en el desarrollo incremental de una aplicación web que 
 
 \textbf{Fuentes de Datos:}
 \begin{itemize}
-    \item \textbf{MaxMind GeoLite2:} Base de datos gratuita de geolocalización IP
-    \item \textbf{Censys via BigQuery:} Datos de escaneo de Internet disponibles públicamente
+    \item \textbf{MaxMind GeoLite2:} Base de datos gratuita de geolocalización IP, validada en estudios académicos~\cite{schopman2021validating}
+    \item \textbf{Nmap:} Herramienta de código abierto para escaneo de red y detección de servicios~\cite{lyon2009nmap, pittman2023comparative}
+    \item \textbf{NVD API:} API pública de NIST para consulta de vulnerabilidades (CVEs)
 \end{itemize}
 
 \textbf{Stack Tecnológico:}
 \begin{itemize}
     \item \textbf{Backend:} Quarkus (Java) para APIs y lógica de negocio
     \item \textbf{Frontend:} Vue.js para interfaz de usuario
-    \item \textbf{Datos:} Google BigQuery para consultas eficientes
+    \item \textbf{Escaneo:} Nmap integrado en backend para detección de servicios
     \item \textbf{Infraestructura:} Servicios cloud básicos para despliegue
 \end{itemize}
 
@@ -80,7 +81,7 @@ El proyecto está diseñado para ser completado exitosamente en el tiempo dispon
 \textbf{Recursos Disponibles:}
 \begin{itemize}
     \item Acceso a datasets públicos sin costo
-    \item Créditos académicos para servicios cloud
+    \item Herramientas de código abierto (Nmap, NVD API)
     \item Herramientas de desarrollo gratuitas o con licencias estudiantiles
     \item Supervisión académica y acceso a recursos universitarios
 \end{itemize}

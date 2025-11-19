@@ -16,7 +16,7 @@ El estudio implementa un \textbf{diseño de investigación aplicada} con enfoque
 \subsection{Método de Investigación}
 
 \subsubsection{Metodología de Desarrollo}
-Se utilizará una metodología ágil adaptada al contexto académico:
+Se utilizará una metodología ágil adaptada al contexto académico, siguiendo principios de desarrollo iterativo ampliamente utilizados en proyectos de investigación aplicada~\cite{ferrag2019deep}:
 
 \textbf{Desarrollo Iterativo:}
 \begin{itemize}
@@ -39,12 +39,22 @@ Se utilizará una metodología ágil adaptada al contexto académico:
 
 \textbf{Datasets Técnicos:}
 \begin{enumerate}
-    \item \textbf{Censys via BigQuery:}
+    \item \textbf{Nmap (Network Mapper):}
     \begin{itemize}
-        \item Datos de escaneo de Internet actualizados semanalmente
-        \item Información de puertos, servicios y certificados
-        \item Acceso a través de consultas SQL estándar
-        \item Quota gratuita de 1TB mensual para consultas
+        \item Herramienta de escaneo de red de código abierto~\cite{lyon2009nmap}
+        \item Detección de servicios activos y versiones de software
+        \item Identificación de sistemas operativos mediante fingerprinting
+        \item Salida en formato XML para procesamiento automatizado
+        \item Validada como herramienta estándar en estudios comparativos~\cite{pittman2023comparative}
+    \end{itemize}
+    
+    \item \textbf{NVD API (National Vulnerability Database):}
+    \begin{itemize}
+        \item API REST pública de NIST para consulta de CVEs
+        \item Búsqueda por CPE (Common Platform Enumeration)
+        \item Información detallada de severidad mediante CVSS v3
+        \item Sin límites de rate ni requerimientos de autenticación
+        \item Utilizada en investigaciones de inteligencia de amenazas~\cite{lin2023correlation}
     \end{itemize}
     
     \item \textbf{MaxMind GeoLite2:}
@@ -53,6 +63,7 @@ Se utilizará una metodología ágil adaptada al contexto académico:
         \item Actualizaciones mensuales automáticas
         \item Cobertura global con precisión variable por región
         \item Licencia gratuita para uso académico
+        \item Precisión validada en contextos académicos~\cite{schopman2021validating}
     \end{itemize}
 \end{enumerate}
 
@@ -60,9 +71,10 @@ Se utilizará una metodología ágil adaptada al contexto académico:
 
 \textbf{Integración Automatizada:}
 \begin{itemize}
-    \item \textbf{APIs REST:} Consultas programáticas a servicios externos
-    \item \textbf{SQL Queries:} Extracción eficiente de datos desde BigQuery
-    \item \textbf{File Processing:} Lectura local de bases de datos MMDB
+    \item \textbf{Process Execution:} Ejecución de Nmap desde Java mediante ProcessBuilder
+    \item \textbf{XML Parsing:} Procesamiento de output XML de Nmap con JAXB o DOM
+    \item \textbf{REST APIs:} Consultas programáticas a NVD API para obtener CVEs
+    \item \textbf{File Processing:} Lectura local de bases de datos MMDB de GeoLite2
     \item \textbf{Caching:} Almacenamiento temporal para optimizar rendimiento
 \end{itemize}
 
@@ -82,7 +94,8 @@ Se utilizará una metodología ágil adaptada al contexto académico:
 \begin{itemize}
     \item \textbf{API Gateway:} Punto de entrada único para solicitudes
     \item \textbf{Servicio de Geolocalización:} Integración con GeoLite2
-    \item \textbf{Servicio de Threat Intelligence:} Consultas a BigQuery/Censys
+    \item \textbf{Servicio de Escaneo:} Ejecución y parsing de Nmap
+    \item \textbf{Servicio de Vulnerabilidades:} Consultas a NVD API por CPE
     \item \textbf{Servicio de Correlación:} Combinación de datos de múltiples fuentes
     \item \textbf{Cache Service:} Almacenamiento temporal de resultados frecuentes
 \end{itemize}
@@ -100,12 +113,13 @@ Se utilizará una metodología ágil adaptada al contexto académico:
 \begin{enumerate}
     \item \textbf{Entrada:} Usuario ingresa dirección IP a analizar
     \item \textbf{Validación:} Sistema verifica formato y validez de la IP
-    \item \textbf{Consulta Paralela:}
+    \item \textbf{Procesamiento Paralelo:}
     \begin{itemize}
-        \item Geolocalización via GeoLite2
-        \item Threat intelligence via Censys/BigQuery
+        \item Geolocalización via GeoLite2 (local)
+        \item Escaneo de servicios via Nmap (activo)
     \end{itemize}
-    \item \textbf{Correlación:} Integración de resultados de múltiples fuentes
+    \item \textbf{Análisis de Vulnerabilidades:} Consulta NVD API con CPEs de servicios detectados
+    \item \textbf{Correlación:} Integración de resultados con scoring de seguridad
     \item \textbf{Presentación:} Visualización unificada en interfaz web
 \end{enumerate}
 
@@ -132,8 +146,8 @@ Se utilizará una metodología ágil adaptada al contexto académico:
 
 \textbf{Infraestructura y Despliegue:}
 \begin{itemize}
-    \item Cloud Platform: Google Cloud Platform
-    \item Contenedores: Docker para empaquetado
+    \item Cloud Platform: Servicio de hosting básico
+    \item Contenedores: Docker con Nmap preinstalado
     \item CI/CD: GitHub Actions
     \item Monitoreo: Logs básicos y métricas de rendimiento
 \end{itemize}
@@ -171,7 +185,7 @@ Se utilizará una metodología ágil adaptada al contexto académico:
     \item Pruebas de carga con múltiples consultas simultáneas
     \item Medición de tiempos de respuesta
     \item Evaluación de uso de memoria y CPU
-    \item Testing de límites de quota de APIs externas
+    \item Testing de tiempos de ejecución de Nmap
 \end{itemize}
 
 \subsubsection{Validación de Resultados}
@@ -179,7 +193,8 @@ Se utilizará una metodología ágil adaptada al contexto académico:
 \textbf{Comparación con Herramientas Existentes:}
 \begin{itemize}
     \item Verificación de geolocalización contra servicios conocidos
-    \item Comparación de threat intelligence con fuentes públicas
+    \item Comparación de detección de servicios con Nmap directo
+    \item Validación de CVEs contra base de datos NVD oficial
     \item Evaluación de precisión y cobertura de datos
 \end{itemize}
 
@@ -195,15 +210,17 @@ Se utilizará una metodología ágil adaptada al contexto académico:
 \subsubsection{Uso Responsable de Datos}
 \begin{itemize}
     \item Uso exclusivo de datos públicos y gratuitos
-    \item Respeto a términos de servicio de proveedores
+    \item Escaneos responsables con targets autorizados
     \item No almacenamiento persistente de consultas de usuarios
     \item Implementación de rate limiting para evitar abuso
 \end{itemize}
 
 \subsubsection{Limitaciones Técnicas Reconocidas}
 \begin{itemize}
-    \item Dependencia de disponibilidad de servicios externos
+    \item Tiempo de ejecución de escaneos Nmap según red objetivo
+    \item Dependencia de disponibilidad de NVD API
     \item Precisión limitada por calidad de fuentes de datos
     \item Capacidad de procesamiento limitada a recursos académicos
     \item Cobertura geográfica variable según la fuente
 \end{itemize}
+

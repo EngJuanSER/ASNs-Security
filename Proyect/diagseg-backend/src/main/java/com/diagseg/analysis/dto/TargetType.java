@@ -10,6 +10,9 @@ public enum TargetType {
     @JsonProperty("ipv6")
     IPV6,
 
+    @JsonProperty("domain")
+    DOMAIN,
+
     @JsonProperty("asn")
     ASN
 }

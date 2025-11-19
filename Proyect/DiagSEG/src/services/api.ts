@@ -23,6 +23,7 @@ export interface GeolocationData {
   isp: string
   asn: string
   asnOrg: string
+  org?: string // Alias de asnOrg para compatibilidad
 }
 
 export interface ServiceInfo {
@@ -48,8 +49,26 @@ export interface SecurityRecommendation {
   action?: string
 }
 
+export interface Vulnerability {
+  id: string
+  title: string
+  severity: 'low' | 'medium' | 'high' | 'critical'
+  cvss: number
+  description: string
+  solution: string
+  references: string[]
+}
+
+export interface AnalysisMetadata {
+  scanDuration: number
+  sourcesUsed: string[]
+  cached: boolean
+  warnings?: string[]
+}
+
 export interface AnalysisResult {
   ip: string
+  domain?: string // Dominio original si fue resuelto desde dominio
   type: 'ipv4' | 'ipv6' | 'domain'
   securityScore: number
   timestamp: number
@@ -63,13 +82,19 @@ export interface AnalysisResult {
   // Reputation
   reputation: ReputationData[]
   
+  // Vulnerabilities
+  vulnerabilities: Vulnerability[]
+  
   // Recommendations
   recommendations: SecurityRecommendation[]
+  
+  // Metadata
+  metadata?: AnalysisMetadata
 }
 
 // ==== Tipos que devuelve el backend real (Quarkus) ====
 
-type BackendTargetType = 'ipv4' | 'ipv6' | 'asn'
+type BackendTargetType = 'ipv4' | 'ipv6' | 'domain' | 'asn'
 type BackendRiskLevel = 'low' | 'medium' | 'high'
 type BackendProtocol = 'tcp' | 'udp'
 
@@ -138,6 +163,7 @@ interface BackendAnalysisMetadata {
 
 interface BackendAnalysisResult {
   ip: string
+  domain?: string // Dominio original si fue resuelto
   type: BackendTargetType
   securityScore: number
   riskLevel: BackendRiskLevel
@@ -210,19 +236,43 @@ function mapBackendRecommendation(rec: BackendRecommendation): SecurityRecommend
   }
 }
 
+function mapBackendVulnerability(vuln: BackendVulnerability): Vulnerability {
+  return {
+    id: vuln.id,
+    title: vuln.title,
+    severity: vuln.severity,
+    cvss: vuln.cvss,
+    description: vuln.description,
+    solution: vuln.solution,
+    references: vuln.references
+  }
+}
+
 function mapBackendAnalysisResult(
   backend: BackendAnalysisResult
 ): AnalysisResult {
+  // Mapear el tipo correctamente
+  let mappedType: 'ipv4' | 'ipv6' | 'domain'
+  if (backend.type === 'domain') {
+    mappedType = 'domain'
+  } else if (backend.type === 'ipv6') {
+    mappedType = 'ipv6'
+  } else {
+    mappedType = 'ipv4'
+  }
+
   return {
     ip: backend.ip,
-    // Tu modelo: 'ipv4' | 'ipv6' | 'domain'
-    type: backend.type === 'ipv4' ? 'ipv4' : 'ipv6',
+    domain: backend.domain, // Incluir dominio si existe
+    type: mappedType,
     securityScore: backend.securityScore,
     timestamp: backend.timestamp,
     geolocation: mapBackendToGeolocation(backend.geolocation),
     services: backend.services.map(mapBackendService),
     reputation: backend.reputation.map(mapBackendReputation),
-    recommendations: backend.recommendations.map(mapBackendRecommendation)
+    vulnerabilities: backend.vulnerabilities.map(mapBackendVulnerability),
+    recommendations: backend.recommendations.map(mapBackendRecommendation),
+    metadata: backend.metadata
   }
 }
 
@@ -464,7 +514,6 @@ export class MockDataService {
 }
 
 // Main Analysis Service
-// Main Analysis Service
 export class AnalysisService extends BaseApiService {
   async analyzeIP(query: string): Promise<ApiResponse<AnalysisResult>> {
     const startTime = Date.now()
@@ -475,47 +524,12 @@ export class AnalysisService extends BaseApiService {
         throw new ApiError('INVALID_INPUT', 'Formato de IP o dominio inválido')
       }
 
-      // 👉 Si es dominio, seguimos usando MOCK como antes
-      if (queryType === 'domain') {
-        await delay(500)
-
-        const resolvedIP = '8.8.8.8' // resolución mock por ahora
-
-        const geolocation = MockDataService.generateGeolocation(resolvedIP)
-        const services = MockDataService.generateServices(resolvedIP)
-        const reputation = MockDataService.generateReputation(resolvedIP)
-        const recommendations = MockDataService.generateRecommendations(resolvedIP)
-
-        const securityScore = MockDataService.calculateSecurityScore({
-          reputation,
-          services,
-          geolocation
-        })
-
-        const result: AnalysisResult = {
-          ip: resolvedIP,
-          type: queryType,
-          securityScore,
-          timestamp: Date.now(),
-          geolocation,
-          services,
-          reputation,
-          recommendations
-        }
-
-        return {
-          success: true,
-          data: result,
-          timestamp: Date.now() - startTime
-        }
-      }
-
-      // 👉 Si es IP v4/v6, llamamos al backend real
+      // Llamar al backend real para IPs y DOMINIOS
       await delay(300) // opcional, solo para UX de loading
 
       const payload = {
         query: query.trim(),
-        type: queryType // 'ipv4' | 'ipv6' – coincide con el backend
+        type: queryType // 'ipv4' | 'ipv6' | 'domain'
       }
 
       const response = await fetch(`${API_BASE_URL}/analysis/analyze`, {

@@ -30,45 +30,37 @@ class CacheService {
   async get(query: string): Promise<AnalysisResult | null> {
     try {
       const cacheKey = this.generateCacheKey(query)
+      
       const cached = await this.store.getItem<{
         data: AnalysisResult
         timestamp: number
-        ttl: number
       }>(cacheKey)
 
       if (!cached) {
         return null
       }
 
-      // Verificar si el caché ha expirado (TTL configurable, por defecto 30 minutos)
-      const now = Date.now()
-      if (now > cached.timestamp + cached.ttl) {
-        await this.remove(query)
-        return null
-      }
-
       return cached.data
     } catch (error) {
-      console.warn('Error al leer del caché:', error)
+      console.warn('[CACHE] Error al leer del caché:', error)
       return null
     }
   }
 
   /**
-   * Guardar resultado en el caché
+   * Guardar resultado en el caché (sin límite de tiempo)
    */
-  async set(query: string, data: AnalysisResult, ttlMinutes: number = 30): Promise<void> {
+  async set(query: string, data: AnalysisResult): Promise<void> {
     try {
       const cacheKey = this.generateCacheKey(query)
       const cacheEntry = {
         data,
-        timestamp: Date.now(),
-        ttl: ttlMinutes * 60 * 1000 // Convertir minutos a milisegundos
+        timestamp: Date.now()
       }
 
       await this.store.setItem(cacheKey, cacheEntry)
     } catch (error) {
-      console.warn('Error al guardar en caché:', error)
+      console.warn('[CACHE] Error al guardar en caché:', error)
     }
   }
 
@@ -166,40 +158,9 @@ class CacheService {
       return []
     }
   }
-
-  /**
-   * Limpiar entradas expiradas del caché
-   */
-  async cleanExpired(): Promise<number> {
-    try {
-      const keys = await this.store.keys()
-      let cleaned = 0
-      const now = Date.now()
-
-      for (const key of keys) {
-        const item = await this.store.getItem<{
-          timestamp: number
-          ttl: number
-        }>(key)
-
-        if (item && now > item.timestamp + item.ttl) {
-          await this.store.removeItem(key)
-          cleaned++
-        }
-      }
-
-      return cleaned
-    } catch (error) {
-      console.warn('Error al limpiar caché expirado:', error)
-      return 0
-    }
-  }
 }
 
 // Instancia singleton del servicio de caché
 export const cacheService = new CacheService()
-
-// Limpiar caché expirado al cargar la aplicación
-cacheService.cleanExpired()
 
 export default cacheService

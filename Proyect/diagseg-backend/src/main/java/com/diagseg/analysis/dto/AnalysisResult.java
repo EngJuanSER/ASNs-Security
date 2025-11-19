@@ -7,6 +7,7 @@ public class AnalysisResult {
 
     public String ip;
     public TargetType type;
+    public String domain; // Dominio original (si se resolvió desde dominio)
     public int securityScore;
     public RiskLevel riskLevel;
     public long timestamp;

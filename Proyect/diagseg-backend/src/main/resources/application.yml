@@ -22,5 +22,32 @@ quarkus:
       # Permitir credenciales (cookies, auth, etc.)
       access-control-allow-credentials: true
 
+# Configuración de GeoLite2 para geolocalización IP
 geolite2:
   city-db: "geo/GeoLite2-City.mmdb"
+
+# Configuración de Nmap para escaneo de servicios
+nmap:
+  # Timeout en segundos para ejecución de Nmap
+  timeout: 60
+  
+  # Puertos a escanear por defecto (separados por comas)
+  ports: "22,80,443,8080,3306,5432,6379,27017,21,23,25,53,110,143,445,3389"
+  
+  # Directorio temporal para archivos XML
+  temp-dir: "/tmp"
+
+# Configuración de NVD (National Vulnerability Database) API
+nvd:
+  # API Key opcional (mejora rate limits de 5 req/30s a 50 req/30s)
+  # Obtener en: https://nvd.nist.gov/developers/request-an-api-key
+  api-key: ""
+  
+  # Timeout en segundos para requests a NVD API
+  timeout-seconds: 30
+  
+  # Máximo de resultados por página
+  results-per-page: 20
+  
+  # TTL del cache en minutos
+  cache-ttl-minutes: 60

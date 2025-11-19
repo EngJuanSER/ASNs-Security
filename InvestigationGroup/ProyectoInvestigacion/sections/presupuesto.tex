@@ -2,7 +2,23 @@
 
 \subsection{Contexto del Presupuesto}
 
-Este presupuesto está diseñado para un proyecto académico desarrollado por dos estudiantes universitarios durante un período de 8 semanas. Se enfoca en recursos realmente necesarios y aprovecha herramientas gratuitas y créditos académicos disponibles.
+Este presupuesto está diseñado para un proyecto académico desarrollado por dos estudiantes universitarios durante un período de 8 se\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|c|l|}
+        \hline
+        \textbf{Riesgo} & \textbf{Probabilidad} & \textbf{Mitigación} \\
+        \hline
+        Tiempo excesivo de escaneos Nmap & Media & Timeouts configurables, scope limitado \\
+        \hline
+        Necesidad de recursos adicionales & Baja & Todas las herramientas son gratuitas \\
+        \hline
+        Costos no previstos & Baja & Buffer de \$100.000 COP \\
+        \hline
+    \end{tabular}
+    \caption{Riesgos Financieros}
+    \label{tab:riesgos_financieros}
+\end{table}en recursos realmente necesarios y aprovecha herramientas gratuitas y créditos académicos disponibles.
 
 \subsection{Filosofía de Costos}
 
@@ -25,11 +41,13 @@ El proyecto se basa en el principio de \textbf{desarrollo económico} utilizando
         \hline
         \textbf{Servicio} & \textbf{Descripción} & \textbf{Costo} \\
         \hline
-        Google Cloud Platform & Créditos académicos (\$300 USD) & \$0 \\
+        Hosting básico & Servicio de hosting con créditos estudiantiles & \$0 \\
         \hline
-        BigQuery (Censys data) & Consultas dentro de quota gratuita (1TB/mes) & \$0 \\
+        Nmap & Herramienta de código abierto (gratuita) & \$0 \\
         \hline
-        Compute Engine & Instancia básica para desarrollo (2 meses) & \$0 \\
+        NVD API & API pública de NIST (sin costo, sin API key) & \$0 \\
+        \hline
+        GeoLite2 & Base de datos gratuita de MaxMind & \$0 \\
         \hline
         Cloud Storage & Almacenamiento de datos y backups & \$0 \\
         \hline
@@ -169,17 +187,17 @@ El proyecto se basa en el principio de \textbf{desarrollo económico} utilizando
     \small
     \begin{tabular}{|l|r|r|}
         \hline
-        \textbf{Opción} & \textbf{Costo Mensual} & \textbf{Costo 2 Meses} \\
+        	extbf{Opción} & 	extbf{Costo Mensual} & 	extbf{Costo 2 Meses} 
         \hline
-        Nuestro proyecto & \$0 -- \$50.000 & \$0 -- \$100.000 \\
+        Nuestro proyecto & \$0 -- \$50.000 & \$0 -- \$100.000 
         \hline
-        VirusTotal Enterprise & \$2.000.000 & \$4.000.000 \\
+        Nessus Professional & \$2.500.000 & \$5.000.000 
         \hline
-        Shodan Enterprise & \$1.500.000 & \$3.000.000 \\
+        Shodan Enterprise & \$1.500.000 & \$3.000.000 
         \hline
-        MaxMind GeoIP2 Precision & \$800.000 & \$1.600.000 \\
+        MaxMind GeoIP2 Precision & \$800.000 & \$1.600.000 
         \hline
-        \textbf{Ahorro estimado} & & \textbf{\$8.500.000} \\
+        	extbf{Ahorro estimado} & & 	extbf{\$9.500.000} 
         \hline
     \end{tabular}
     \caption{Comparación de Costos}

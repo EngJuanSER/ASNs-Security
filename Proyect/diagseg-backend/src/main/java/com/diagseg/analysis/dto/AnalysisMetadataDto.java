@@ -8,4 +8,5 @@ public class AnalysisMetadataDto {
     public long scanDuration;
     public List<String> sourcesUsed;
     public boolean cached;
+    public List<String> warnings; // Mensajes de advertencia no críticos
 }

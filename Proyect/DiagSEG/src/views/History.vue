@@ -233,7 +233,7 @@ const riskChartOptions = computed(() => {
           color: textColor,
           font: {
             size: 13,
-            weight: '600'
+            weight: 600 as const
           }
         }
       },
@@ -305,7 +305,7 @@ const timelineChartOptions = computed(() => {
           color: secondaryColor,
           font: {
             size: 12,
-            weight: '500'
+            weight: 500 as const
           }
         }
       },
@@ -319,7 +319,7 @@ const timelineChartOptions = computed(() => {
           color: textColor,
           font: {
             size: 13,
-            weight: '600'
+            weight: 600 as const
           }
         },
         grid: {
@@ -329,7 +329,7 @@ const timelineChartOptions = computed(() => {
           color: secondaryColor,
           font: {
             size: 12,
-            weight: '500'
+            weight: 500 as const
           }
         }
       },
@@ -343,7 +343,7 @@ const timelineChartOptions = computed(() => {
           color: textColor,
           font: {
             size: 13,
-            weight: '600'
+            weight: 600 as const
           }
         },
         grid: {
@@ -353,21 +353,22 @@ const timelineChartOptions = computed(() => {
           color: secondaryColor,
           font: {
             size: 12,
-            weight: '500'
+            weight: 500 as const
           }
         }
       }
     },
     plugins: {
       legend: {
+        position: 'bottom' as const,
         labels: {
+          padding: 20,
+          usePointStyle: true,
           color: textColor,
           font: {
             size: 13,
-            weight: '600'
-          },
-          usePointStyle: true,
-          padding: 15
+            weight: 600 as const
+          }
         }
       },
       tooltip: {
@@ -397,13 +398,13 @@ const loadStatistics = async () => {
 
 const loadAnalysis = async (analysis: AnalysisHistoryEntry) => {
   try {
-    // Simplemente redirigir a la página de análisis con el query
-    // La página de análisis manejará si existe en caché o no
+    // Redirigir a la página de análisis SIN parámetro reload
+    // Esto permite que use el caché si existe
     router.push({
       path: '/analysis',
       query: { 
-        q: analysis.query,
-        reload: 'true' // Parámetro para indicar que viene del historial
+        q: analysis.query
+        // NO incluir reload=true para que use caché
       }
     })
   } catch (error) {

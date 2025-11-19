@@ -17,7 +17,11 @@
           :style="{ animationDelay: `${index * 100}ms` }"
         >
           <div class="feature-icon-wrapper">
-            <div class="feature-icon">{{ feature.icon }}</div>
+            <div class="feature-icon">
+              <svg v-if="feature.iconSvg" width="32" height="32" viewBox="0 0 24 24" fill="white">
+                <path :d="feature.iconSvg"/>
+              </svg>
+            </div>
           </div>
           
           <div class="feature-content">
@@ -27,7 +31,9 @@
             <div class="feature-details">
               <ul class="feature-list">
                 <li v-for="detail in feature.details" :key="detail" class="feature-item">
-                  <span class="check-icon">✓</span>
+                  <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                  </svg>
                   {{ detail }}
                 </li>
               </ul>
@@ -46,6 +52,8 @@
 <script setup lang="ts">
 interface Feature {
   id: string
+  icon: string
+  iconSvg: string
   title: string
   description: string
   details: string[]
@@ -56,6 +64,8 @@ interface Feature {
 const features: Feature[] = [
   {
     id: 'analysis',
+    icon: 'search',
+    iconSvg: 'M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z',
     title: 'Análisis Completo',
     description: 'Información consolidada de múltiples fuentes de datos gratuitas para un diagnóstico integral.',
     details: [
@@ -67,6 +77,8 @@ const features: Feature[] = [
   },
   {
     id: 'scoring',
+    icon: 'chart',
+    iconSvg: 'M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z',
     title: 'Score de Riesgo',
     description: 'Evaluación automática del nivel de amenaza con modelo ponderado basado en múltiples factores.',
     details: [
@@ -78,6 +90,8 @@ const features: Feature[] = [
   },
   {
     id: 'geolocation',
+    icon: 'globe',
+    iconSvg: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z',
     title: 'Geolocalización',
     description: 'Ubicación geográfica precisa usando base de datos GeoLite2 local sin límites de uso.',
     details: [
@@ -89,6 +103,8 @@ const features: Feature[] = [
   },
   {
     id: 'reports',
+    icon: 'document',
+    iconSvg: 'M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z',
     title: 'Informes Detallados',
     description: 'Exporta resultados completos en múltiples formatos para análisis posterior.',
     details: [
@@ -100,6 +116,8 @@ const features: Feature[] = [
   },
   {
     id: 'performance',
+    icon: 'bolt',
+    iconSvg: 'M7 2v11h3v9l7-12h-4l4-8z',
     title: 'Alto Rendimiento',
     description: 'Respuesta rápida y eficiente con arquitectura optimizada para consultas concurrentes.',
     details: [
@@ -111,6 +129,8 @@ const features: Feature[] = [
   },
   {
     id: 'opensource',
+    icon: 'code',
+    iconSvg: 'M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z',
     title: 'Código Abierto',
     description: 'Proyecto completamente abierto con licencia MIT para garantizar transparencia y colaboración.',
     details: [
@@ -255,6 +275,11 @@ const features: Feature[] = [
   position: relative;
   z-index: 1;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  color: white;
+}
+
+.feature-icon svg {
+  display: block;
 }
 
 .feature-content {

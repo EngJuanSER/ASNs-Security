@@ -3,7 +3,14 @@
 \subsection{Duración y Alcance del Proyecto}
 
 \textbf{Período Total:} 8 semanas (del 10 de octubre al 1 de diciembre de 2025)\\
-\textbf{Equipo:} 2 estudiantes universitarios\\
+\textbf{Equipo:} 2 estudiantes \subsubsection{Infraestructura Tecnológica}
+\begin{itemize}
+    \item \textbf{Desarrollo:} Computadoras personales con IDEs gratuitos
+    \item \textbf{Herramientas:} Nmap instalado localmente para desarrollo y testing
+    \item \textbf{Repositorio:} GitHub (cuenta gratuita)
+    \item \textbf{Comunicación:} Discord, WhatsApp, reuniones presenciales
+    \item \textbf{Documentación:} Google Docs, LaTeX para documentos formales
+\end{itemize}tarios\\
 \textbf{Modalidad:} Desarrollo ágil con entregas incrementales
 
 \subsection{Metodología de Planificación}
@@ -17,10 +24,11 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
 
 \textbf{Actividades principales:}
 \begin{itemize}
-    \item Configuración de entorno de desarrollo (Git, IDEs, cuentas cloud)
-    \item Investigación de APIs de Censys y formato de datos BigQuery
+    \item Configuración de entorno de desarrollo (Git, IDEs)
+    \item Investigación de Nmap y formato de output XML
+    \item Investigación de NVD API y formato de respuestas
     \item Descarga e instalación de GeoLite2
-    \item Creación de prototipos de consulta básicos
+    \item Creación de prototipos de escaneo con Nmap
     \item Definición de arquitectura inicial del sistema
 \end{itemize}
 
@@ -36,14 +44,15 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
     \item Testing unitario de componentes básicos
 \end{itemize}
 
-\subsubsection{Semana 3: Integración BigQuery (24-31 Octubre)}
-\textbf{Objetivos:} Conectar con datos de Censys a través de BigQuery
+\subsubsection{Semana 3: Integración Nmap y NVD (24-31 Octubre)}
+\textbf{Objetivos:} Conectar escaneo de servicios con análisis de vulnerabilidades
 
 \textbf{Actividades principales:}
 \begin{itemize}
-    \item Configuración de acceso a Google Cloud Platform
-    \item Implementación de cliente BigQuery
-    \item Desarrollo de consultas SQL para datos de Censys
+    \item Implementación de servicio de ejecución de Nmap con ProcessBuilder
+    \item Desarrollo de parser XML para output de Nmap
+    \item Implementación de cliente REST para NVD API
+    \item Desarrollo de lógica de correlación CPE para búsqueda de CVEs
     \item Integración con servicios existentes de geolocalización
     \item Implementación de cache básico para optimizar consultas
 \end{itemize}
@@ -89,9 +98,10 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
 
 \textbf{Actividades principales:}
 \begin{itemize}
-    \item Comparación de resultados con herramientas públicas disponibles
+    \item Comparación de resultados con Nmap directo y NVD manual
     \item Análisis de precisión de geolocalización
-    \item Evaluación de cobertura de threat intelligence
+    \item Evaluación de cobertura de vulnerabilidades detectadas
+    \item Validación de scoring de seguridad
     \item Documentación de limitaciones encontradas
     \item Preparación de datos para presentación final
 \end{itemize}
@@ -159,17 +169,17 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
 \begin{table}[H]
     \centering
     \small
-    \begin{tabular}{|l|c|c|l|}
+    \begin{tabular}{|p{4cm}|c|c|p{5cm}|}
         \hline
-        \textbf{Riesgo} & \textbf{Probabilidad} & \textbf{Impacto} & \textbf{Mitigación} \\
+        \textbf{Riesgo} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Mitigación} \\
         \hline
-        Dificultades con BigQuery & Media & Alto & Tutoriales, soporte académico \\
+        Tiempo de ejecución de Nmap & Media & Alto & Timeouts configurables, scope limitado \\
         \hline
         Problemas de rendimiento & Alta & Medio & Testing temprano, optimización \\
         \hline
         Complejidad de Vue.js & Media & Medio & Documentación, ejemplos simples \\
         \hline
-        Limitaciones de datos gratuitos & Baja & Alto & Fuentes alternativas, scope adjustment \\
+        Rate limiting de NVD API & Baja & Medio & Cache agresivo, búsquedas optimizadas \\
         \hline
         Retrasos por carga académica & Alta & Medio & Planificación flexible, buffer time \\
         \hline
@@ -190,7 +200,6 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
 \subsubsection{Infraestructura Tecnológica}
 \begin{itemize}
     \item \textbf{Desarrollo:} Computadoras personales con IDEs gratuitos
-    \item \textbf{Cloud Services:} Google Cloud Platform (créditos académicos)
     \item \textbf{Repositorio:} GitHub (cuenta gratuita)
     \item \textbf{Comunicación:} Discord, WhatsApp, reuniones presenciales
     \item \textbf{Documentación:} Google Docs, LaTeX para documentos formales
@@ -199,7 +208,8 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
 \subsubsection{Herramientas de Software}
 \begin{itemize}
     \item \textbf{Backend:} Quarkus, Java 21, PostgreSQL
+    \item \textbf{Escaneo y Análisis:} Nmap, NVD API REST client
     \item \textbf{Frontend:} Vue.js 3, Vuetify, Leaflet.js
     \item \textbf{Testing:} JUnit, Jest, Postman
-    \item \textbf{Deployment:} Docker, Google Cloud Run
+    \item \textbf{Deployment:} Docker (con Nmap preinstalado), servicios de hosting básicos
 \end{itemize}

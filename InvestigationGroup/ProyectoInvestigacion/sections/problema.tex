@@ -7,7 +7,7 @@
 "Diagnóstico de Seguridad IP con Fuentes Abiertas en Colombia"
 
 \subsection{Línea de Investigación}
-Este proyecto se enmarca dentro de la línea de investigación en \textbf{Inteligencia de Amenazas Cibernéticas}, específicamente en el área de \textbf{Análisis Automatizado de Infraestructuras de Red} y \textbf{Desarrollo de Herramientas de Ciberseguridad Basadas en Fuentes Abiertas}.
+Este proyecto se enmarca dentro de la línea de investigación en \textbf{Inteligencia de Amenazas Cibernéticas}~\cite{lin2023correlation}, específicamente en el área de \textbf{Análisis Automatizado de Infraestructuras de Red} y \textbf{Desarrollo de Herramientas de Ciberseguridad Basadas en Fuentes Abiertas}~\cite{alghamdi2024reconnaissance}.
 
 \subsection{Área del Conocimiento}
 \begin{itemize}
@@ -22,11 +22,11 @@ Este proyecto se enmarca dentro de la línea de investigación en \textbf{Inteli
 
 En el día a día de la ciberseguridad y el desarrollo de software, es común necesitar información detallada sobre una dirección IP. Un analista puede querer saber su ubicación geográfica, si está en una lista negra, qué puertos tiene abiertos o a qué organización pertenece.
 
-Actualmente, esta información se encuentra dispersa en múltiples fuentes de datos, tanto gratuitas como de pago. Por ejemplo:
+Actualmente, esta información se encuentra dispersa en múltiples fuentes de datos, tanto gratuitas como de pago. Alghamdi~\cite{alghamdi2024reconnaissance} identifica esta fragmentación como una de las principales amenazas en el reconocimiento cibernético. Por ejemplo:
 \begin{itemize}
-    \item 	\textbf{Geolocalización:} Se obtiene de bases de datos como GeoLite2 de MaxMind.
-    \item 	\textbf{Información de Infraestructura:} Se consulta en servicios de escaneo de Internet como Censys o Shodan.
-    \item 	\textbf{Listas de Reputación:} Se verifica en plataformas como AbuseIPDB o listas de bloqueo (blocklists).
+    \item 	\textbf{Geolocalización:} Se obtiene de bases de datos como GeoLite2 de MaxMind~\cite{schopman2021validating}.
+    \item 	\textbf{Información de Infraestructura:} Se obtiene mediante herramientas de escaneo de red como Nmap~\cite{pittman2023comparative} o servicios como Shodan.
+    \item 	\textbf{Vulnerabilidades:} Se consulta en bases de datos de vulnerabilidades como National Vulnerability Database (NVD) de NIST.
 \end{itemize}
 
 \subsection{Definición del Problema Principal}
@@ -34,8 +34,8 @@ Actualmente, esta información se encuentra dispersa en múltiples fuentes de da
 El problema central es la \textbf{fragmentación de la información}. Un desarrollador o analista que necesita un perfil completo de una dirección IP debe realizar las siguientes acciones manualmente:
 \begin{enumerate}
     \item Consultar la API o base de datos de geolocalización.
-    \item Consultar la API de un servicio como Censys para obtener datos de puertos y servicios.
-    \item Consultar una o más APIs de listas de reputación.
+    \item Ejecutar herramientas de escaneo de red como Nmap para obtener datos de puertos y servicios.
+    \item Consultar APIs de vulnerabilidades como NVD para identificar CVEs asociados a los servicios detectados.
     \item Consolidar y correlacionar toda esta información a mano para poder tomar una decisión.
 \end{enumerate}
 
@@ -43,7 +43,7 @@ Este proceso manual es \textbf{ineficiente, lento y propenso a errores}. Limita 
 
 \subsection{Pregunta de Investigación}
 
-¿Es posible diseñar y desarrollar una herramienta de software que integre y unifique datos de fuentes abiertas y gratuitas (específicamente GeoLite2 y Censys a través de BigQuery) para presentar un diagnóstico de seguridad consolidado de una dirección IP, de manera eficiente y accesible?
+¿Es posible diseñar y desarrollar una herramienta de software que integre y unifique datos de fuentes abiertas y gratuitas (específicamente GeoLite2, Nmap para escaneo de red y NVD para vulnerabilidades) para presentar un diagnóstico de seguridad consolidado de una dirección IP, de manera eficiente y accesible?
 
 \subsection{Justificación de la Investigación}
 
@@ -51,11 +51,11 @@ La creación de esta herramienta aborda directamente la ineficiencia del proceso
 \begin{itemize}
     \item \textbf{Ahorra tiempo:} Reduce drásticamente el tiempo necesario para investigar una IP.
     \item \textbf{Centraliza la información:} Ofrece un "panel único" con los datos más relevantes.
-    \item \textbf{Es accesible:} Al basarse en fuentes gratuitas (GeoLite2 y las cuotas gratuitas de BigQuery), la solución es económicamente viable para un público amplio.
-    \item \textbf{Tiene un propósito educativo:} Sirve como un excelente caso de estudio sobre cómo integrar diferentes APIs y fuentes de datos en una aplicación de ciberseguridad funcional.
+    \item \textbf{Es accesible:} Al basarse en fuentes gratuitas (GeoLite2, Nmap y NVD API), la solución es económicamente viable para un público amplio.
+    \item \textbf{Tiene un propósito educativo:} Sirve como un excelente caso de estudio sobre cómo integrar diferentes APIs y herramientas de escaneo en una aplicación de ciberseguridad funcional.
 \end{itemize}
 
-Este proyecto, aunque de alcance limitado a dos fuentes principales, sienta las bases para una herramienta más completa y demuestra la viabilidad de construir soluciones de ciberseguridad efectivas sin depender exclusivamente de costosas licencias comerciales.
+Este proyecto, aunque de alcance limitado a tres fuentes principales (geolocalización, escaneo de red y vulnerabilidades), sienta las bases para una herramienta más completa y demuestra la viabilidad de construir soluciones de ciberseguridad efectivas sin depender exclusivamente de costosas licencias comerciales.
 
 \subsubsection{Análisis de Causas}
 Con el fin de comprender de forma estructurada las raíces del problema identificado ---la \textit{fragmentación de la información de inteligencia sobre IPs en el contexto colombiano}--- se aplicó la metodología de Ishikawa (o diagrama de causa-efecto). Esta herramienta permitió clasificar las causas en cuatro grandes categorías: tecnológicas, económicas, humanas y regulatorias, lo cual facilita una visualización clara de los factores que convergen en el problema central.
@@ -126,8 +126,8 @@ Si persiste esta situación, se proyectan las siguientes consecuencias para el p
 Para evitar este escenario negativo, es fundamental desarrollar una solución tecnológica que:
 
 \begin{enumerate}
-    \item \textbf{Integre fuentes abiertas gratuitas} como Censys (disponible en Google BigQuery) y MaxMind GeoLite2 para proporcionar análisis comprehensivos sin costos de licenciamiento.
-    \item \textbf{Implemente algoritmos de correlación avanzados} que combinen reconocimiento pasivo con geolocalización para generar evaluaciones de riesgo contextualizadas.
+    \item \textbf{Integre fuentes abiertas gratuitas} como Nmap para escaneo de servicios, NVD para análisis de vulnerabilidades y MaxMind GeoLite2 para geolocalización, proporcionando análisis comprehensivos sin costos de licenciamiento.
+    \item \textbf{Implemente algoritmos de correlación avanzados} que combinen detección activa de servicios con análisis de vulnerabilidades para generar evaluaciones de riesgo contextualizadas.
     \item \textbf{Proporcione interfaces intuitivas} que democraticen el acceso a capacidades avanzadas de análisis IP.
     \item \textbf{Establezca metodologías reproducibles} que puedan ser adoptadas por organizaciones con diferentes niveles de madurez tecnológica.
     \item \textbf{Genere capacidades técnicas locales} mediante documentación detallada y código abierto que facilite la transferencia de conocimiento.

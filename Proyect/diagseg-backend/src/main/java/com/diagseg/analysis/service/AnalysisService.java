@@ -1,20 +1,34 @@
 package com.diagseg.analysis.service;
 
 import com.diagseg.analysis.dto.*;
+import com.diagseg.analysis.exception.ServiceException;
 import com.diagseg.analysis.validation.InputValidator;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
 public class AnalysisService {
+
+    private static final Logger LOG = Logger.getLogger(AnalysisService.class);
 
     @Inject
     InputValidator inputValidator;
 
     @Inject
     GeolocationService geolocationService;
+
+    @Inject
+    ASNService asnService;
+
+    @Inject
+    NmapService nmapService;
+
+    @Inject
+    NVDService nvdService;
 
     @Inject
     ReputationService reputationService;
@@ -25,101 +39,189 @@ public class AnalysisService {
     @Inject
     RecommendationService recommendationService;
 
+    @Inject
+    DnsResolverService dnsResolverService;
+
     public AnalysisResult analyze(AnalysisRequest request) {
         // 1. Validar entrada
         inputValidator.validate(request);
 
         long start = System.currentTimeMillis();
+        
+        List<String> warnings = new ArrayList<>();
+        List<String> partialFailures = new ArrayList<>();
 
-        // 2. Servicios de ejemplo (por ahora mock) ----------------------
+        // 1.5. Si es un dominio, resolverlo a IP
+        String targetIp = request.query;
+        String originalDomain = null;
+        
+        if (request.type == TargetType.DOMAIN) {
+            LOG.infof("Tipo DOMAIN detectado, resolviendo '%s' a IP", request.query);
+            originalDomain = request.query;
+            try {
+                targetIp = dnsResolverService.resolveDomain(request.query);
+                LOG.infof("Dominio '%s' resuelto a IP: %s", originalDomain, targetIp);
+            } catch (ServiceException e) {
+                LOG.errorf(e, "Error al resolver dominio '%s'", request.query);
+                throw e; // Re-lanzar error crítico
+            }
+        }
 
-        ServiceDto dns = new ServiceDto();
-        dns.port = 53;
-        dns.protocol = Protocol.UDP;
-        dns.service = "dns";
-        dns.version = "Google Public DNS";
-        dns.banner = "DNS Server";
-        dns.vulnerabilities = List.of();
-        dns.riskLevel = RiskLevel.LOW;
+        LOG.infof("Iniciando análisis para target: %s (IP: %s)", request.query, targetIp);
 
-        ServiceDto https = new ServiceDto();
-        https.port = 443;
-        https.protocol = Protocol.TCP;
-        https.service = "https";
-        https.version = "nginx/1.18.0";
-        https.banner = "Server: nginx/1.18.0";
-        https.vulnerabilities = List.of("CVE-2021-23017");
-        https.riskLevel = RiskLevel.MEDIUM;
+        // 2. Escaneo de servicios con Nmap (REAL) - CRÍTICO
+        List<ServiceDto> services;
+        try {
+            services = nmapService.scanTarget(targetIp);
+            LOG.infof("Escaneo Nmap completado: %d servicios encontrados", services.size());
+        } catch (ServiceException e) {
+            // Si Nmap falla, es un error crítico que debe propagarse
+            LOG.errorf(e, "Error crítico en escaneo Nmap");
+            throw e;
+        }
 
-        List<ServiceDto> services = List.of(dns, https);
+        // 3. Obtener vulnerabilidades desde NVD para cada servicio (REAL) - NO CRÍTICO
+        List<VulnerabilityDto> allVulnerabilities = new ArrayList<>();
+        boolean nvdPartialFailure = false;
 
-        // 3. Vulnerabilidades de ejemplo (por ahora mock) ---------------
+        for (ServiceDto service : services) {
+            try {
+                // Construir CPE para el servicio
+                String cpe = nmapService.extractCpeForService(service.service, service.version);
 
-        VulnerabilityDto vuln = new VulnerabilityDto();
-        vuln.id = "CVE-2021-23017";
-        vuln.title = "nginx resolver DNS response";
-        vuln.severity = VulnerabilitySeverity.MEDIUM;
-        vuln.cvss = 5.6;
-        vuln.description = "A security issue in nginx resolver was identified, " +
-                "which might allow an attacker who is able to forge UDP packets from the DNS server";
-        vuln.solution = "Update nginx to version 1.20.1 or later";
-        vuln.references = List.of(
-                "https://nvd.nist.gov/vuln/detail/CVE-2021-23017",
-                "https://nginx.org/en/security_advisories.html"
-        );
+                if (cpe != null && !cpe.isBlank()) {
+                    // Consultar NVD con el CPE
+                    List<VulnerabilityDto> vulns = nvdService.searchByCpe(cpe);
 
-        List<VulnerabilityDto> vulnerabilities = List.of(vuln);
+                    // Asociar CVE IDs al servicio
+                    for (VulnerabilityDto vuln : vulns) {
+                        if (!service.vulnerabilities.contains(vuln.id)) {
+                            service.vulnerabilities.add(vuln.id);
+                        }
+                        
+                        // Agregar a lista global si no está duplicado
+                        boolean exists = allVulnerabilities.stream()
+                                .anyMatch(v -> v.id.equals(vuln.id));
+                        if (!exists) {
+                            allVulnerabilities.add(vuln);
+                        }
+                    }
 
-        // 4. Geolocalización (ahora vía GeolocationService) --------------
+                    // Actualizar risk level del servicio basado en vulnerabilidades
+                    if (!vulns.isEmpty()) {
+                        double maxCvss = vulns.stream()
+                                .mapToDouble(v -> v.cvss)
+                                .max()
+                                .orElse(0.0);
 
-        GeolocationDto geo = geolocationService.resolve(request.query);
+                        if (maxCvss >= 9.0) {
+                            service.riskLevel = RiskLevel.HIGH;
+                        } else if (maxCvss >= 7.0) {
+                            service.riskLevel = RiskLevel.MEDIUM;
+                        } else if (maxCvss >= 4.0 && service.riskLevel == RiskLevel.LOW) {
+                            service.riskLevel = RiskLevel.MEDIUM;
+                        }
+                    }
+                }
+            } catch (ServiceException e) {
+                // Si NVD falla (rate limit, timeout, etc), registrar pero continuar
+                LOG.warnf(e, "Error consultando NVD para servicio %s:%d - continuando sin vulnerabilidades", 
+                    service.service, service.port);
+                nvdPartialFailure = true;
+                partialFailures.add(String.format("Consulta de vulnerabilidades: %s", e.getUserMessage()));
+                
+                // No re-lanzar, permitir que el análisis continúe
+            } catch (Exception e) {
+                LOG.errorf(e, "Error inesperado procesando vulnerabilidades para servicio %s", service.service);
+                // Continuar sin vulnerabilidades para este servicio
+            }
+        }
 
-        // 5. Reputación (ahora vía ReputationService) --------------------
+        if (nvdPartialFailure) {
+            warnings.add("Algunas vulnerabilidades pueden no estar completas debido a limitaciones del servicio NVD");
+        }
 
+        // 4. Geolocalización con GeoLite2 (REAL) - NO CRÍTICO (usa fallback si falla)
+        GeolocationDto geo;
+        try {
+            geo = geolocationService.resolve(targetIp);
+            // Si todos los valores son "Unknown", agregar warning
+            if ("Unknown".equals(geo.country) && "Unknown".equals(geo.city)) {
+                warnings.add("No se pudo obtener geolocalización precisa - base de datos GeoLite2 no disponible");
+            }
+        } catch (Exception e) {
+            LOG.errorf(e, "Error en geolocalización, usando fallback");
+            warnings.add("Error obteniendo geolocalización: " + e.getMessage());
+            // Crear geo con valores por defecto
+            geo = new GeolocationDto();
+            geo.country = "Unknown";
+            geo.countryCode = "--";
+            geo.region = "Unknown";
+            geo.city = "Unknown";
+            geo.latitude = 0.0;
+            geo.longitude = 0.0;
+            geo.timezone = "UTC";
+            geo.isp = "Unknown";
+            geo.asn = "Unknown";
+            geo.org = "Unknown";
+        }
+
+        // 5. Obtener información de ASN/ISP (REAL) - NO CRÍTICO
+        try {
+            ASNService.ASNInfo asnInfo = asnService.getASNInfo(targetIp);
+            geo.asn = asnInfo.asn;
+            geo.org = asnInfo.asnOrg;
+            geo.isp = asnInfo.isp;
+        } catch (ServiceException e) {
+            LOG.warnf(e, "Error obteniendo ASN info - usando valores por defecto");
+            warnings.add("Información de red (ASN/ISP) puede estar incompleta: " + e.getUserMessage());
+            geo.asn = "Unknown";
+            geo.org = "Unknown";
+            geo.isp = "Unknown";
+        } catch (Exception e) {
+            LOG.warnf(e, "Error inesperado obteniendo ASN info");
+            geo.asn = "Unknown";
+            geo.org = "Unknown";
+            geo.isp = "Unknown";
+        }
+
+        // 6. Reputación (basada en servicios y vulnerabilidades encontradas)
         List<ReputationSourceDto> reputation =
-                reputationService.buildReputation(services, vulnerabilities);
+                reputationService.buildReputation(services, allVulnerabilities);
 
-        int reputationScore = reputation.isEmpty() ? 100 : reputation.get(0).score;
-
-        // 6. Calcular “serviceScore” basado en riesgo de servicios -------
-
-        int serviceScore = 100;
-        long highRiskServices = services.stream()
-                .filter(s -> s.riskLevel == RiskLevel.HIGH)
-                .count();
-        long mediumRiskServices = services.stream()
-                .filter(s -> s.riskLevel == RiskLevel.MEDIUM)
-                .count();
-
-        // Penalizaciones simples (puedes refinar después según el doc)
-        serviceScore -= Math.min(40, highRiskServices * 10);
-        serviceScore -= Math.min(20, mediumRiskServices * 5);
-        if (serviceScore < 0) serviceScore = 0;
-
-        // 7. Score global y riskLevel (vía SecurityScoringService) -------
-
-        int securityScore = securityScoringService.calculateScore(services, vulnerabilities);
+        // 7. Calcular score global y riskLevel
+        int securityScore = securityScoringService.calculateScore(services, allVulnerabilities);
         RiskLevel riskLevel = securityScoringService.classifyRisk(securityScore);
 
         long now = System.currentTimeMillis();
         long duration = now - start;
 
-        // 8. Recomendaciones (ahora vía RecommendationService) -----------
-
+        // 8. Generar recomendaciones
         List<RecommendationDto> recommendations =
-                recommendationService.generateRecommendations(services, vulnerabilities, securityScore);
+                recommendationService.generateRecommendations(services, allVulnerabilities, securityScore);
 
-        // 9. Metadatos ---------------------------------------------------
-
+        // 9. Metadatos actualizados
         AnalysisMetadataDto metadata = new AnalysisMetadataDto();
         metadata.scanDuration = duration;
-        metadata.sourcesUsed = List.of("censys", "geolite2");
+        
+        // Si se resolvió un dominio, incluir "dns" en las fuentes
+        List<String> sources = new ArrayList<>();
+        if (originalDomain != null) {
+            sources.add("dns");
+        }
+        sources.addAll(List.of("nmap", "nvd", "geolite2", "ipapi"));
+        metadata.sourcesUsed = sources;
         metadata.cached = false;
+        
+        // Agregar warnings si existen
+        if (!warnings.isEmpty()) {
+            metadata.warnings = warnings;
+        }
 
-        // 10. Resultado final -------------------------------------------
-
+        // 10. Resultado final
         AnalysisResult result = new AnalysisResult();
-        result.ip = request.query;
+        result.ip = targetIp; // IP resuelta (o la IP original si no era dominio)
+        result.domain = originalDomain; // Dominio original (null si era IP directamente)
         result.type = request.type;
         result.securityScore = securityScore;
         result.riskLevel = riskLevel;
@@ -127,9 +229,13 @@ public class AnalysisService {
         result.services = services;
         result.geolocation = geo;
         result.reputation = reputation;
-        result.vulnerabilities = vulnerabilities;
+        result.vulnerabilities = allVulnerabilities;
         result.recommendations = recommendations;
         result.metadata = metadata;
+
+        String logTarget = originalDomain != null ? originalDomain + " (" + targetIp + ")" : targetIp;
+        LOG.infof("Análisis completado para %s en %d ms. Score: %d, Servicios: %d, Vulnerabilidades: %d, Warnings: %d",
+            logTarget, duration, securityScore, services.size(), allVulnerabilities.size(), warnings.size());
 
         return result;
     }

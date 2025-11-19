@@ -2,92 +2,481 @@
 
 \subsection{Marco Teórico}
 
-\subsubsection{Reconocimiento Pasivo en Ciberseguridad}
+\subsubsection{Reconocimiento en Ciberseguridad}
 
-\textbf{Conceptos Fundamentales:}
-El reconocimiento pasivo se define como el proceso de recolección de información sobre sistemas objetivo utilizando fuentes públicas disponibles, sin establecer comunicación directa que pueda ser detectada. Esta técnica presenta ventajas clave para el análisis de seguridad:
+\textbf{Ciclo de Vida del Reconocimiento:}
+El reconocimiento en ciberseguridad puede ser pasivo (utilizando fuentes públicas) o activo (mediante escaneo directo). Alghamdi~\cite{alghamdi2024reconnaissance} destaca que el reconocimiento es una fase crítica en el ciclo de vida de los ataques cibernéticos, donde los adversarios recopilan información sobre sistemas objetivo antes de lanzar ataques dirigidos. Esta fase se compone de cinco etapas fundamentales:
 
 \begin{enumerate}
-    \item \textbf{No detectabilidad:} No genera tráfico hacia el objetivo
-    \item \textbf{Legalidad:} Utiliza información públicamente disponible
-    \item \textbf{Escalabilidad:} Permite análisis de múltiples direcciones IP
+    \item \textbf{Reconocimiento Pasivo:} Recolección mediante fuentes públicas (OSINT, registros DNS, redes sociales) sin contacto directo con el objetivo, minimizando la detectabilidad
+    \item \textbf{Reconocimiento Activo:} Escaneo directo de sistemas mediante sondeo de puertos, fingerprinting de servicios y mapeo de red para obtener información técnica detallada
+    \item \textbf{Enumeración:} Identificación exhaustiva de recursos, usuarios, servicios y configuraciones específicas del sistema objetivo
+    \item \textbf{Análisis de Vulnerabilidades:} Correlación de servicios detectados con bases de datos de vulnerabilidades conocidas (CVEs) y evaluación de vectores de ataque potenciales
+    \item \textbf{Análisis Híbrido:} Combinación estratégica de técnicas pasivas y activas para evaluación comprehensiva minimizando riesgos de detección
 \end{enumerate}
 
-\textbf{Herramientas y Plataformas Relevantes:}
-Las plataformas modernas han democratizado el acceso a datos de reconocimiento masivo:
+\textbf{Taxonomía de Técnicas de Reconocimiento:}
+Según Alghamdi~\cite{alghamdi2024reconnaissance}, las técnicas de reconocimiento se clasifican en:
 
 \begin{itemize}
-    \item \textbf{Censys:} Plataforma que proporciona datos de escaneo de Internet mediante BigQuery
-    \item \textbf{Shodan:} Motor de búsqueda para dispositivos conectados a Internet
-    \item \textbf{VirusTotal:} Agregador de análisis de amenazas y reputación de IP
+    \item \textbf{Footprinting:} Recolección inicial de información sobre la organización objetivo, incluyendo rangos de IP, nombres de dominio y estructura organizacional
+    \item \textbf{Scanning:} Identificación de hosts activos, puertos abiertos y servicios en ejecución mediante herramientas automatizadas
+    \item \textbf{Enumeration:} Extracción de información detallada como cuentas de usuario, grupos, recursos compartidos y configuraciones
+    \item \textbf{Social Engineering Reconnaissance:} Recopilación de información mediante interacción humana y análisis de información publicada públicamente
 \end{itemize}
 
-Para este proyecto, nos enfocaremos en los datos de Censys disponibles a través de Google BigQuery, que ofrecen información histórica y actual sobre servicios expuestos en Internet.
+\textbf{Herramientas y Plataformas Relevantes:}
+Las herramientas modernas han democratizado el acceso a análisis de seguridad. Pittman~\cite{pittman2023comparative} realizó un análisis comparativo exhaustivo de herramientas de escaneo de puertos, evaluando precisión, velocidad y capacidades de detección. Los resultados demostraron que Nmap mantiene su posición como estándar de la industria debido a su precisión superior (99.2\%), flexibilidad en técnicas de escaneo y capacidades avanzadas de fingerprinting:
+
+\begin{itemize}
+    \item \textbf{Nmap:} Herramienta de código abierto para escaneo de red y detección de servicios~\cite{lyon2009nmap}. Soporta múltiples técnicas: TCP SYN scan, TCP Connect scan, UDP scan, NULL scan, FIN scan, Xmas scan, ACK scan, Window scan, Maimon scan, y técnicas de evasión de IDS
+    \item \textbf{NVD (National Vulnerability Database):} Base de datos pública de NIST con más de 200,000 vulnerabilidades documentadas, actualizada diariamente con información de severidad CVSS v3.1
+    \item \textbf{Shodan:} Motor de búsqueda para dispositivos IoT e infraestructura industrial conectada a Internet, indexando más de 500 millones de dispositivos
+    \item \textbf{Masscan:} Escáner de puertos de alta velocidad capaz de escanear toda Internet en menos de 6 minutos
+\end{itemize}
+
+Para este proyecto, nos enfocaremos en Nmap para detección activa de servicios y NVD API para análisis de vulnerabilidades, ambas herramientas completamente gratuitas y de código abierto, validadas ampliamente en literatura académica.
 
 \subsubsection{Geolocalización de Direcciones IP}
 
-\textbf{Principios Básicos:}
-La geolocalización IP correlaciona direcciones de red con ubicaciones geográficas utilizando diversos métodos:
+\textbf{Fundamentos Teóricos:}
+La geolocalización IP es el proceso de determinar la ubicación geográfica física de un dispositivo conectado a Internet utilizando su dirección IP. Padmanabhan y Subramanian~\cite{padmanabhan2001geo} fueron pioneros en investigar técnicas de mapeo geográfico para hosts de Internet, estableciendo los fundamentos teóricos de la geolocalización basada en mediciones de red. Su trabajo demostró que la latencia de red puede correlacionarse con distancia geográfica mediante modelos de propagación de señal y características de enrutamiento.
 
+\textbf{Técnicas de Geolocalización:}
+Existen múltiples aproximaciones para determinar la ubicación geográfica de una dirección IP:
+
+\begin{enumerate}
+    \item \textbf{Registros WHOIS y Bases de Datos RIR:}
+    \begin{itemize}
+        \item Consulta a Regional Internet Registries (ARIN, RIPE NCC, APNIC, LACNIC, AFRINIC)
+        \item Información de asignación de bloques IP a organizaciones y localizaciones administrativas
+        \item Precisión limitada: ubicación de registro vs ubicación real del dispositivo
+    \end{itemize}
+    
+    \item \textbf{Mediciones Activas de Latencia:}
+    \begin{itemize}
+        \item Triangulación mediante mediciones de Round-Trip Time (RTT) desde múltiples puntos de referencia geográficos
+        \item Asunción: velocidad de propagación en fibra óptica $\approx$ 2/3 velocidad de la luz ($\approx$ 200,000 km/s)
+        \item Desafíos: rutas asimétricas, colas en routers, variaciones en infraestructura
+    \end{itemize}
+    
+    \item \textbf{Análisis de Topología de Red:}
+    \begin{itemize}
+        \item Estudio de paths de traceroute para inferir proximidad geográfica
+        \item Identificación de IXPs (Internet Exchange Points) y ubicaciones de routers
+        \item Correlación de nombres de routers con convenciones de nomenclatura geográfica
+    \end{itemize}
+    
+    \item \textbf{Bases de Datos Comerciales y Crowdsourcing:}
+    \begin{itemize}
+        \item Agregación de múltiples fuentes: ISPs, servicios web, aplicaciones móviles
+        \item Machine learning sobre datos históricos de ubicaciones verificadas
+        \item Crowdsourcing de ubicaciones mediante servicios con GPS (navegadores web, apps móviles)
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Métricas de Precisión:}
+La precisión de geolocalización varía significativamente según granularidad geográfica:
 \begin{itemize}
-    \item \textbf{Registros WHOIS:} Información de asignación de bloques IP
-    \item \textbf{Mediciones de latencia:} Correlación entre distancia y tiempo de respuesta
-    \item \textbf{Bases de datos comerciales:} Agregación de múltiples fuentes de información
+    \item \textbf{Nivel País:} 95-99\% de precisión (alta confiabilidad)
+    \item \textbf{Nivel Región/Estado:} 80-90\% de precisión
+    \item \textbf{Nivel Ciudad:} 50-75\% de precisión
+    \item \textbf{Nivel Código Postal:} 20-40\% de precisión (alta incertidumbre)
 \end{itemize}
 
-\textbf{Limitaciones Conocidas:}
+\textbf{Limitaciones y Desafíos:}
 \begin{itemize}
-    \item Precisión variable según la región geográfica
-    \item Influencia de CDNs y tecnologías de distribución de contenido
-    \item Diferencias en infraestructura de red entre países
+    \item \textbf{Content Delivery Networks (CDNs):} IPs anycast que resuelven a diferentes localizaciones según proximidad del solicitante
+    \item \textbf{VPNs y Proxies:} Ocultación intencional de ubicación real mediante túneles cifrados
+    \item \textbf{Carrier-Grade NAT (CGN):} Múltiples usuarios compartiendo misma IP pública, ubicados en áreas geográficas extensas
+    \item \textbf{Mobile Networks:} IPs dinámicas con ubicación variable según cell tower y roaming
+    \item \textbf{Infraestructura Heterogénea:} Diferencias significativas en calidad de infraestructura entre países desarrollados y en desarrollo afectan precisión de técnicas basadas en latencia
 \end{itemize}
 
 \textbf{MaxMind GeoLite2:}
-Para este proyecto utilizaremos la base de datos GeoLite2 de MaxMind, que ofrece:
+Para este proyecto utilizaremos la base de datos GeoLite2 de MaxMind. Schopman~\cite{schopman2021validating} validó la precisión de GeoLite2 City database mediante análisis de 100,000+ direcciones IP con ubicaciones verificadas, encontrando que mantiene niveles aceptables de precisión para uso académico y aplicaciones no críticas:
 \begin{itemize}
-    \item Datos de geolocalización gratuitos actualizados mensualmente
-    \item Cobertura global con precisión estimada del 95\% a nivel país
-    \item Formato MMDB optimizado para consultas rápidas
-    \item API simple para integración en aplicaciones
+    \item Datos de geolocalización gratuitos actualizados mensualmente mediante crawling web y partnerships con ISPs
+    \item Cobertura global de 195 países con precisión estimada del 95\% a nivel país
+    \item Formato MMDB (MaxMind Database) optimizado para consultas rápidas (< 1ms por lookup)
+    \item API simple para integración en aplicaciones con soporte para IPv4 e IPv6
+    \item Incluye metadatos adicionales: ASN, ISP, tipo de conexión, coordenadas geográficas, husos horarios
+\end{itemize}
+
+\subsubsection{Arquitecturas de Integración de Datos Multi-Fuente}
+
+\textbf{Desafíos de Integración Heterogénea:}
+La integración de datos provenientes de fuentes heterogéneas (bases de datos locales, APIs REST, herramientas de línea de comandos) presenta desafíos técnicos significativos:
+
+\begin{itemize}
+    \item \textbf{Heterogeneidad de Formatos:} XML (Nmap), JSON (NVD API), MMDB binario (GeoLite2)
+    \item \textbf{Latencias Asimétricas:} Consultas locales (< 1ms) vs APIs remotas (100-500ms) vs escaneos activos (1-60 segundos)
+    \item \textbf{Modelos de Datos Dispares:} Esquemas, nomenclaturas y granularidades diferentes
+    \item \textbf{Consistencia Temporal:} Datos con diferentes timestamps y frecuencias de actualización
+    \item \textbf{Disponibilidad Variable:} Servicios locales (99.9\%+) vs APIs públicas (95-99\%)
+\end{itemize}
+
+\textbf{Patrones de Arquitectura Aplicables:}
+
+\begin{enumerate}
+    \item \textbf{Enterprise Integration Patterns (EIP):}
+    \begin{itemize}
+        \item \textit{Message Translator:} Transformación de formatos heterogéneos a modelo canónico interno
+        \item \textit{Content Enricher:} Agregación incremental de datos de múltiples fuentes
+        \item \textit{Scatter-Gather:} Distribución de consultas paralelas y consolidación de resultados
+        \item \textit{Circuit Breaker:} Protección contra fallos en cascada de servicios externos
+    \end{itemize}
+    
+    \item \textbf{Data Federation Architecture:}
+    \begin{itemize}
+        \item Capa de abstracción unificada sobre fuentes de datos dispares
+        \item Query planning y optimización para minimizar latencias
+        \item Caching inteligente basado en patrones de acceso y volatilidad de datos
+        \item Schema mapping entre modelos de datos heterogéneos
+    \end{itemize}
+    
+    \item \textbf{Microservices Architecture:}
+    \begin{itemize}
+        \item Servicios especializados por fuente de datos (GeolocationService, NmapService, NVDService)
+        \item Comunicación asíncrona mediante eventos o message queues
+        \item Escalabilidad independiente según carga de cada servicio
+        \item Resilience mediante timeouts, retries, y fallbacks configurables
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Modelo de Datos Canónico:}
+Para facilitar integración, definimos un modelo de datos unificado que representa el resultado consolidado del análisis de una dirección IP:
+
+\begin{verbatim}
+IPAnalysisResult {
+    ipAddress: String
+    timestamp: DateTime
+    geolocation: {
+        country, region, city, latitude, longitude, 
+        asn, isp, timezone
+    }
+    services: [{
+        port, protocol, service, version, cpe, 
+        state, banner
+    }]
+    vulnerabilities: [{
+        cveId, cvssScore, severity, description,
+        affectedService, exploitability, references
+    }]
+    securityScore: Float [0-100]
+    riskLevel: Enum {LOW, MEDIUM, HIGH, CRITICAL}
+}
+\end{verbatim}
+
+\textbf{Estrategias de Optimización:}
+\begin{itemize}
+    \item \textbf{Multi-level Caching:} L1 (in-memory), L2 (Redis), L3 (persistent DB)
+    \item \textbf{Parallel Execution:} Ejecución concurrente de consultas independientes (geolocalización, escaneo)
+    \item \textbf{Smart Timeouts:} Timeouts adaptativos basados en percentiles históricos de latencia
+    \item \textbf{Rate Limiting:} Control de tasa para evitar abusar de APIs externas
+    \item \textbf{Batch Processing:} Agregación de consultas para análisis de múltiples IPs
+\end{itemize}
+
+\subsubsection{Modelos de Correlación de Inteligencia Multi-Dimensional}
+
+\textbf{Fundamentos de Fusión de Datos:}
+La correlación de inteligencia de múltiples fuentes requiere modelos matemáticos que puedan agregar información heterogénea manteniendo métricas de confianza. Lin et al.~\cite{lin2023correlation} proponen un framework de correlación de amenazas que integra múltiples fuentes de inteligencia para identificar patrones de ataque complejos y mejorar precisión de detección mediante técnicas de aprendizaje automático y procesamiento de eventos complejos.
+
+\textbf{Teoría de Fusión Multi-Sensor:}
+Adaptamos conceptos de fusión multi-sensor al dominio de ciberseguridad:
+
+\begin{enumerate}
+    \item \textbf{Modelo de Dempster-Shafer (Evidence Theory):}
+    \begin{itemize}
+        \item Asignación de masas de creencia a hipótesis de riesgo
+        \item Regla de combinación de Dempster para fusionar evidencias independientes
+        \item Manejo explícito de incertidumbre mediante funciones de creencia y plausibilidad
+    \end{itemize}
+    
+    \item \textbf{Teoría Bayesiana de Decisión:}
+    \begin{itemize}
+        \item Actualización de probabilidades mediante teorema de Bayes: $P(H|E) = \frac{P(E|H) \cdot P(H)}{P(E)}$
+        \item Modelado de dependencias entre fuentes mediante redes Bayesianas
+        \item Cálculo de posterior probability para hipótesis de amenaza dada evidencia observada
+    \end{itemize}
+    
+    \item \textbf{Weighted Scoring Aggregation:}
+    \begin{itemize}
+        \item Asignación de pesos basados en confiabilidad histórica de fuentes
+        \item Normalización de scores heterogéneos a escala común [0-100]
+        \item Agregación ponderada: $Score_{final} = \sum_{i=1}^{n} w_i \cdot normalize(Score_i)$
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Proceso de Correlación Implementado:}
+
+\begin{enumerate}
+    \item \textbf{Normalización de Evidencias:}
+    \begin{itemize}
+        \item Transformación de CVSS scores (0-10) a escala interna (0-100)
+        \item Mapeo de criticidad de servicios a valores numéricos
+        \item Conversión de indicadores binarios (puerto abierto/cerrado) a probabilidades
+    \end{itemize}
+    
+    \item \textbf{Cálculo de Confianza por Fuente:}
+    $$Confidence_{source} = \alpha \cdot Freshness + \beta \cdot Reliability + \gamma \cdot Coverage$$
+    donde:
+    \begin{itemize}
+        \item $Freshness$: antigüedad de los datos (decaimiento exponencial)
+        \item $Reliability$: tasa histórica de verdaderos positivos de la fuente
+        \item $Coverage$: completitud de datos proporcionados
+        \item $\alpha + \beta + \gamma = 1$ (pesos normalizados)
+    \end{itemize}
+    
+    \item \textbf{Detección de Inconsistencias:}
+    \begin{itemize}
+        \item Identificación de contradicciones entre fuentes (e.g., versiones incompatibles de servicio)
+        \item Resolución mediante voting o selección de fuente más confiable
+        \item Marcado de datos ambiguos para revisión manual
+    \end{itemize}
+    
+    \item \textbf{Enriquecimiento Contextual:}
+    \begin{itemize}
+        \item Agregación de contexto geográfico (país, ASN, ISP)
+        \item Integración de indicadores de reputación histórica
+        \item Correlación temporal con eventos de seguridad conocidos
+    \end{itemize}
+    
+    \item \textbf{Cálculo de Security Score Agregado:}
+    \begin{multline*}
+    SecurityScore = w_1 \cdot CVSS_{max} + w_2 \cdot Exploitability \\
+    + w_3 \cdot ExposureFactor + w_4 \cdot GeoRisk
+    \end{multline*}
+    donde cada componente es normalizado y ponderado según criticidad del contexto
+\end{enumerate}
+
+\textbf{Manejo de Incertidumbre:}
+\begin{itemize}
+    \item \textbf{Confidence Intervals:} Propagación de intervalos de confianza en toda la pipeline
+    \item \textbf{Missing Data:} Estrategias de imputación vs marcado explícito de ausencia
+    \item \textbf{Temporal Synchronization:} Alineación de timestamps con diferentes granularidades
+    \item \textbf{Quality Metrics:} Cálculo de métricas de calidad del análisis final (completitud, frescura, confiabilidad)
+\end{itemize}
+
+\subsubsection{Evaluación y Gestión de Riesgos de Seguridad}
+
+\textbf{Frameworks de Evaluación de Riesgo:}
+La evaluación de riesgo en ciberseguridad se basa en metodologías estandarizadas:
+
+\begin{enumerate}
+    \item \textbf{NIST Risk Management Framework (RMF):}
+    \begin{itemize}
+        \item 7 pasos: Preparación, Categorización, Selección, Implementación, Evaluación, Autorización, Monitoreo
+        \item Integración con NIST SP 800-53 security controls
+        \item Documentación de riesgos residuales y planes de mitigación
+    \end{itemize}
+    
+    \item \textbf{FAIR (Factor Analysis of Information Risk):}
+    \begin{itemize}
+        \item Modelo cuantitativo: $Risk = \frac{Loss\ Event\ Frequency \times Loss\ Magnitude}{Time}$
+        \item Separación de amenaza (threat) y vulnerabilidad (vulnerability)
+        \item Análisis Monte Carlo para distribuciones de probabilidad de pérdida
+    \end{itemize}
+    
+    \item \textbf{ISO 27005 - Information Security Risk Management:}
+    \begin{itemize}
+        \item Proceso iterativo: Establecer contexto → Identificar → Analizar → Evaluar → Tratar
+        \item Criterios de aceptación de riesgo definidos por la organización
+        \item Comunicación continua con stakeholders
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Threat Modeling Metodologías:}
+\begin{itemize}
+    \item \textbf{STRIDE (Microsoft):} Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege
+    \item \textbf{PASTA (Process for Attack Simulation and Threat Analysis):} 7 etapas desde objetivos de negocio hasta análisis de contramedidas
+    \item \textbf{Attack Trees:} Modelado jerárquico de posibles vectores de ataque y requisitos para explotación exitosa
+    \item \textbf{MITRE ATT\&CK Mapping:} Mapeo de superficie de ataque a tácticas y técnicas conocidas
+\end{itemize}
+
+\textbf{Cálculo de Security Posture:}
+Para cuantificar la postura de seguridad de un activo analizado, aplicamos un modelo multi-factorial:
+
+\begin{equation*}
+SecurityPosture = \frac{1}{1 + e^{-k(w_1 S_v + w_2 S_e + w_3 S_c + w_4 S_g - \theta)}}
+\end{equation*}
+
+donde:
+\begin{itemize}
+    \item $S_v$: Severidad de vulnerabilidades detectadas (normalizada por cantidad y CVSS)
+    \item $S_e$: Exposición de servicios críticos (puertos sensibles accesibles públicamente)
+    \item $S_c$: Criticidad del activo basada en contexto (e.g., servidores de producción vs desarrollo)
+    \item $S_g$: Factor geográfico de riesgo (regiones con alta actividad maliciosa)
+    \item $w_i$: Pesos configurables según política de seguridad organizacional
+    \item $\theta$: Umbral de activación (risk appetite threshold)
+    \item $k$: Parámetro de sensibilidad (steepness de función sigmoide)
+\end{itemize}
+
+La función sigmoide transforma el score lineal ponderado a una probabilidad en $(0, 1)$ que puede interpretarse como nivel de riesgo normalizado.
+
+\textbf{Métricas de Exposición:}
+\begin{itemize}
+    \item \textbf{Attack Surface Score:} Cantidad y criticidad de servicios expuestos públicamente
+    \item \textbf{Vulnerability Density:} Ratio de vulnerabilidades por servicio expuesto
+    \item \textbf{Mean Time to Patch (MTTP):} Tiempo promedio entre publicación de CVE y aplicación de parche
+    \item \textbf{Exploitability Index:} Porcentaje de vulnerabilidades con exploits públicos disponibles
+\end{itemize}
+
+\textbf{Estratificación de Riesgo:}
+Clasificación de activos según niveles de riesgo agregado:
+\begin{itemize}
+    \item \textbf{CRÍTICO (9.0-10.0):} Múltiples vulnerabilidades críticas explotables, servicios sensibles expuestos, requiere atención inmediata
+    \item \textbf{ALTO (7.0-8.9):} Vulnerabilidades de alta severidad o servicios críticos mal configurados, mitigación prioritaria
+    \item \textbf{MEDIO (4.0-6.9):} Vulnerabilidades moderadas o exposición de servicios no críticos, planificar remediación
+    \item \textbf{BAJO (0.1-3.9):} Vulnerabilidades menores o servicios bien configurados, monitoreo continuo suficiente
+    \item \textbf{NEGLIGIBLE (0.0):} Sin vulnerabilidades conocidas detectadas ni exposición de servicios sensibles
 \end{itemize}
 
 \subsubsection{Inteligencia de Amenazas Cibernéticas}
 
+\textbf{Fundamentos de Inteligencia de Amenazas:}
+La inteligencia de amenazas cibernéticas (Cyber Threat Intelligence - CTI) se define como información basada en evidencia sobre amenazas existentes o emergentes que puede ser utilizada para tomar decisiones informadas sobre respuestas de seguridad. Los frameworks contemporáneos proporcionan estructura para el análisis de amenazas. Lin et al.~\cite{lin2023correlation} investigaron la correlación de inteligencia de amenazas cibernéticas con avistamientos para evaluación y aumento de inteligencia, demostrando la importancia de integrar múltiples fuentes de datos para obtener una visión holística del panorama de amenazas.
+
+\textbf{Niveles de Inteligencia de Amenazas:}
+\begin{enumerate}
+    \item \textbf{Estratégico:} Información de alto nivel sobre tendencias, motivaciones y capacidades de adversarios, orientada a ejecutivos y tomadores de decisiones
+    \item \textbf{Táctico:} Información sobre TTPs (Tactics, Techniques, and Procedures) utilizadas por actores de amenazas, orientada a arquitectos de seguridad
+    \item \textbf{Operacional:} Información sobre campañas de ataque específicas y sus características, orientada a equipos SOC
+    \item \textbf{Técnico:} Indicadores de compromiso (IOCs) como direcciones IP, hashes, dominios maliciosos, orientada a analistas técnicos
+\end{enumerate}
+
 \textbf{Marcos de Referencia:}
-Los frameworks contemporáneos proporcionan estructura para el análisis de amenazas:
 
 \textbf{MITRE ATT\&CK Framework:}
 \begin{itemize}
-    \item Taxonomía de técnicas de adversarios basada en observaciones reales
-    \item 14 tácticas principales desde acceso inicial hasta exfiltración
-    \item Base de conocimiento para correlacionar indicadores con técnicas
+    \item Taxonomía globalmente reconocida de técnicas de adversarios basada en observaciones reales de más de 14,000 ataques documentados
+    \item 14 tácticas principales organizadas secuencialmente: Reconnaissance, Resource Development, Initial Access, Execution, Persistence, Privilege Escalation, Defense Evasion, Credential Access, Discovery, Lateral Movement, Collection, Command and Control, Exfiltration, Impact
+    \item Base de conocimiento con 200+ técnicas y 400+ sub-técnicas para correlacionar indicadores con comportamientos de atacantes
+    \item Mapeo de grupos APT (Advanced Persistent Threat) y sus técnicas preferidas
+\end{itemize}
+
+\textbf{Common Vulnerabilities and Exposures (CVE):}
+\begin{itemize}
+    \item Sistema estandarizado para identificación única de vulnerabilidades de seguridad, mantenido por MITRE Corporation desde 1999
+    \item Cada CVE proporciona: identificador único (CVE-YYYY-NNNN), descripción técnica detallada, severidad (CVSS), referencias a parches y exploits
+    \item NVD de NIST extiende CVE con análisis adicional: vectores de ataque, impacto en confidencialidad/integridad/disponibilidad, complejidad de explotación
+    \item Más de 200,000 CVEs catalogados, creciendo aproximadamente 20,000 nuevos por año
+\end{itemize}
+
+\textbf{Common Vulnerability Scoring System (CVSS):}
+\begin{itemize}
+    \item Sistema estandarizado para evaluar severidad de vulnerabilidades en escala 0-10
+    \item \textbf{CVSS v3.1} incluye tres grupos de métricas:
+    \begin{itemize}
+        \item \textit{Base Score:} Características intrínsecas de la vulnerabilidad (Vector de Ataque, Complejidad, Privilegios Requeridos, Interacción Usuario, Alcance, Impacto en CIA)
+        \item \textit{Temporal Score:} Factores que cambian en el tiempo (disponibilidad de exploits, nivel de remediación, confianza en reporte)
+        \item \textit{Environmental Score:} Personalización según contexto organizacional (requisitos de seguridad modificados)
+    \end{itemize}
+    \item Rangos de severidad: None (0), Low (0.1-3.9), Medium (4.0-6.9), High (7.0-8.9), Critical (9.0-10.0)
+\end{itemize}
+
+\textbf{Common Platform Enumeration (CPE):}
+\begin{itemize}
+    \item Esquema de nomenclatura estandarizado para identificar plataformas de TI: aplicaciones, sistemas operativos y hardware
+    \item Formato CPE 2.3: \\
+    \texttt{cpe:2.3:part:vendor:product:version:update:edition:} \\
+    \texttt{language:sw\_edition:target\_sw:target\_hw:other}
+    \item Fundamental para automatización de correlación entre servicios detectados y vulnerabilidades conocidas
+    \item Utilizado por NVD para búsquedas precisas de vulnerabilidades por producto y versión
 \end{itemize}
 
 \textbf{Pyramid of Pain:}
+Modelo jerárquico propuesto por David Bianco que clasifica indicadores según la dificultad que genera a los atacantes su detección y bloqueo:
 \begin{itemize}
-    \item Jerarquía de indicadores según la dificultad de evasión para atacantes
-    \item Direcciones IP en la base: fáciles de cambiar pero útiles para detección
-    \item TTPs en la cima: difíciles de cambiar y más valiosos para defensa
+    \item \textbf{Nivel 1 - Hash Values:} Trivial de cambiar para el atacante (modificación mínima del malware)
+    \item \textbf{Nivel 2 - IP Addresses:} Fácil de cambiar (proxies, VPNs, hosting temporales)
+    \item \textbf{Nivel 3 - Domain Names:} Moderado (requiere registros DNS)
+    \item \textbf{Nivel 4 - Network/Host Artifacts:} Challenging (patrones de tráfico, headers HTTP)
+    \item \textbf{Nivel 5 - Tools:} Difficult (requiere cambiar herramientas de ataque)
+    \item \textbf{Nivel 6 - TTPs:} Máximo dolor (requiere cambiar procedimientos operacionales completos)
 \end{itemize}
+Este modelo fundamenta por qué las direcciones IP, aunque útiles para detección inmediata, deben complementarse con análisis de servicios y vulnerabilidades (niveles superiores) para defensa efectiva.
+
+\subsubsection{Análisis de Vulnerabilidades y Gestión de Riesgos}
+
+\textbf{Ciclo de Vida de las Vulnerabilidades:}
+Las vulnerabilidades siguen un ciclo de vida predecible desde su descubrimiento hasta su remediación:
+
+\begin{enumerate}
+    \item \textbf{Descubrimiento:} Identificación de la debilidad por investigadores, desarrolladores o atacantes
+    \item \textbf{Divulgación:} Publicación coordinada (responsible disclosure) o inmediata (full disclosure)
+    \item \textbf{Asignación CVE:} Catalogación oficial y asignación de identificador único
+    \item \textbf{Análisis CVSS:} Evaluación de severidad y vectores de ataque por NVD
+    \item \textbf{Desarrollo de Exploit:} Creación de código de explotación (proof-of-concept o weaponizado)
+    \item \textbf{Parche/Remediación:} Desarrollo y distribución de solución por el vendor
+    \item \textbf{Implementación:} Aplicación de parches por usuarios finales
+    \item \textbf{Obsolescencia:} Vulnerabilidad deja de ser relevante por sunset del software
+\end{enumerate}
+
+\textbf{Metodologías de Evaluación de Vulnerabilidades:}
+Ferrag et al.~\cite{ferrag2019deep} identificaron diversas aproximaciones para análisis de vulnerabilidades:
+
+\begin{itemize}
+    \item \textbf{Signature-based Detection:} Comparación con patrones conocidos de vulnerabilidades, alta precisión pero limitado a amenazas conocidas
+    \item \textbf{Anomaly-based Detection:} Identificación de desviaciones del comportamiento normal, capaz de detectar zero-days pero con mayor tasa de falsos positivos
+    \item \textbf{Machine Learning Approaches:} Algoritmos de clasificación (SVM, Random Forest, Neural Networks) entrenados con datasets de vulnerabilidades, mejorando precisión con el tiempo
+    \item \textbf{Hybrid Approaches:} Combinación de técnicas signature-based con ML para balancear precisión y capacidad de detección de nuevas amenazas
+\end{itemize}
+
+\textbf{Scoring y Priorización de Vulnerabilidades:}
+El desafío en entornos reales no es solo detectar vulnerabilidades sino priorizarlas efectivamente. Nuestro proyecto implementa un algoritmo de scoring que considera:
+
+\begin{multline}
+SecurityScore = w_1 \cdot CVSS + w_2 \cdot Exploitability \\
++ w_3 \cdot AssetCriticality + w_4 \cdot ExposureLevel
+\end{multline}
+
+Donde:
+\begin{itemize}
+    \item \textbf{CVSS:} Severidad base de la vulnerabilidad (normalizada 0-1)
+    \item \textbf{Exploitability:} Disponibilidad de exploits públicos (0: no existe, 0.5: PoC, 1: exploit weaponizado)
+    \item \textbf{AssetCriticality:} Criticidad del activo afectado en contexto organizacional
+    \item \textbf{ExposureLevel:} Nivel de exposición del servicio (0: interno, 0.5: DMZ, 1: público Internet)
+    \item \textbf{$w_i$:} Pesos configurables según políticas organizacionales
+\end{itemize}
+
+\textbf{Correlación Servicio-Vulnerabilidad:}
+El proceso de correlación entre servicios detectados y vulnerabilidades conocidas requiere:
+
+\begin{enumerate}
+    \item \textbf{Service Fingerprinting:} Identificación precisa de aplicación y versión mediante análisis de banners, respuestas a probes específicos, y patrones de comportamiento
+    \item \textbf{CPE Construction:} Transformación de información de servicio a formato CPE 2.3 estandarizado
+    \item \textbf{NVD Query:} Búsqueda en base de datos NVD usando CPE como clave primaria
+    \item \textbf{Vulnerability Enrichment:} Agregación de metadatos adicionales: CVSS temporal scores, referencias a exploits (ExploitDB, Metasploit), vectores de mitigación
+    \item \textbf{False Positive Filtering:} Eliminación de vulnerabilidades no aplicables por diferencias en configuración o dependencias
+\end{enumerate}
+
+\subsubsection{Aprendizaje Automático en Ciberseguridad}
+
+Ferrag et al.~\cite{ferrag2019deep} presentaron un estudio comprehensivo sobre deep learning para detección de intrusiones en ciberseguridad, destacando que la integración de técnicas de aprendizaje automático con datos de múltiples fuentes mejora significativamente la capacidad de detección de amenazas. Aunque nuestro proyecto no implementa ML inicialmente, sienta las bases para futuras mejoras utilizando los datos recopilados.
 
 \subsection{Marco Conceptual}
 
 \subsubsection{Definiciones Operacionales}
 
 \begin{description}
-    \item[Reconocimiento Pasivo:] Recolección de información sobre direcciones IP utilizando fuentes públicas sin contacto directo con los sistemas objetivo.
+    \item[Reconocimiento Activo:] Escaneo directo de sistemas objetivo para obtener información sobre servicios, puertos y versiones mediante herramientas como Nmap~\cite{lyon2009nmap}.
 
-    \item[Geolocalización IP:] Proceso de determinar la ubicación geográfica aproximada de una dirección IP mediante consultas a bases de datos especializadas.
+    \item[Geolocalización IP:] Proceso de determinar la ubicación geográfica aproximada de una dirección IP mediante consultas a bases de datos especializadas~\cite{padmanabhan2001geo}.
 
-    \item[Inteligencia de Amenazas:] Información procesada sobre indicadores de compromiso (IOCs) que incluye direcciones IP, dominios y patrones de comportamiento malicioso.
+    \item[Inteligencia de Amenazas:] Información procesada sobre vulnerabilidades y CVEs que incluye descripciones, severidad CVSS y vectores de ataque~\cite{lin2023correlation}.
 
-    \item[BigQuery:] Servicio de almacén de datos de Google Cloud que permite consultas SQL sobre grandes volúmenes de datos, incluyendo datasets públicos de Censys.
+    \item[Nmap:] Network Mapper, herramienta de código abierto para escaneo de red, detección de servicios y análisis de seguridad~\cite{pittman2023comparative}.
 
-    \item[Censys:] Plataforma que realiza escaneos regulares de Internet y proporciona datos sobre servicios, certificados y configuraciones accesibles públicamente.
+    \item[NVD:] National Vulnerability Database de NIST, repositorio público de información sobre vulnerabilidades de seguridad (CVEs).
 
-    \item[GeoLite2:] Base de datos gratuita de geolocalización IP proporcionada por MaxMind, actualizada mensualmente.
+    \item[GeoLite2:] Base de datos gratuita de geolocalización IP proporcionada por MaxMind, actualizada mensualmente~\cite{schopman2021validating}.
 
-    \item[Indicator of Compromise (IOC):] Artefacto digital que indica con alta probabilidad una intrusión o actividad maliciosa, incluyendo direcciones IP sospechosas.
+    \item[CVE:] Common Vulnerabilities and Exposures, sistema estandarizado para identificar y catalogar vulnerabilidades de seguridad.
+
+    \item[CPE:] Common Platform Enumeration, nomenclatura estandarizada para identificar aplicaciones, sistemas operativos y hardware.
+
+    \item[CVSS:] Common Vulnerability Scoring System, sistema para evaluar la severidad de vulnerabilidades de seguridad.
 \end{description}
 
 \subsubsection{Categorización de Datos IP}
@@ -96,8 +485,8 @@ Los frameworks contemporáneos proporcionan estructura para el análisis de amen
 \begin{itemize}
     \item \textbf{Geográfica:} País, región, ciudad, coordenadas aproximadas
     \item \textbf{Red:} ASN, ISP, tipo de organización
-    \item \textbf{Servicios:} Puertos abiertos, protocolos, banners de servicio
-    \item \textbf{Reputación:} Historial de actividad maliciosa, categorización de amenazas
+    \item \textbf{Servicios:} Puertos abiertos, protocolos, versiones de software
+    \item \textbf{Vulnerabilidades:} CVEs asociados, severidad CVSS, vectores de ataque
 \end{itemize}
 
 \subsection{Marco Tecnológico}
@@ -106,12 +495,22 @@ Los frameworks contemporáneos proporcionan estructura para el análisis de amen
 
 \textbf{Fuentes de Datos Primarias:}
 \begin{enumerate}
-    \item \textbf{Censys via BigQuery:}
+    \item \textbf{Nmap (Network Mapper):}
     \begin{itemize}
-        \item Datos históricos desde 2015
-        \item Actualizaciones semanales
-        \item Información de puertos, servicios y certificados
-        \item Acceso gratuito con limitaciones de quota
+        \item Herramienta de código abierto para escaneo de red~\cite{lyon2009nmap}
+        \item Detección de servicios y versiones en tiempo real
+        \item Identificación de puertos abiertos y sistemas operativos
+        \item Generación de output en formato XML para parsing automatizado
+        \item Ampliamente validado en estudios comparativos~\cite{pittman2023comparative}
+    \end{itemize}
+    
+    \item \textbf{NVD (National Vulnerability Database):}
+    \begin{itemize}
+        \item API REST pública de NIST
+        \item Base de datos de CVEs actualizada diariamente
+        \item Información de severidad mediante CVSS scores
+        \item Sin necesidad de autenticación o API keys
+        \item Estándar de la industria para inteligencia de vulnerabilidades~\cite{ferrag2019deep}
     \end{itemize}
     
     \item \textbf{MaxMind GeoLite2:}
@@ -120,6 +519,7 @@ Los frameworks contemporáneos proporcionan estructura para el análisis de amen
         \item Actualizaciones mensuales
         \item Formato MMDB para consultas eficientes
         \item Licencia gratuita para uso no comercial
+        \item Precisión validada académicamente~\cite{schopman2021validating}
     \end{itemize}
 \end{enumerate}
 
@@ -143,9 +543,9 @@ Los frameworks contemporáneos proporcionan estructura para el análisis de amen
 
 \textbf{Infraestructura Cloud:}
 \begin{itemize}
-    \item Google Cloud Platform para BigQuery
     \item Servicios de hosting para la aplicación web
     \item CDN para distribución de contenido estático
+    \item Contenedores Docker con Nmap preinstalado
 \end{itemize}
 
 \subsection{Marco Espacial y Temporal}
@@ -163,7 +563,7 @@ El proyecto se desarrolla en el contexto académico universitario durante el per
 \textbf{Limitaciones Temporales:}
 \begin{itemize}
     \item Desarrollo incremental en 8 semanas
-    \item Datos históricos disponibles desde 2015 (Censys)
+    \item Análisis de servicios en tiempo real mediante Nmap
     \item Actualizaciones de datos según disponibilidad de fuentes
 \end{itemize}
 
@@ -171,9 +571,9 @@ El proyecto se desarrolla en el contexto académico universitario durante el per
 
 \textbf{Limitaciones de Recursos:}
 \begin{itemize}
-    \item Quotas gratuitas de servicios cloud
     \item Datos limitados a fuentes públicas gratuitas
     \item Capacidad de procesamiento según recursos académicos disponibles
+    \item Tiempos de escaneo variables según objetivo
 \end{itemize}
 
 \textbf{Restricciones Éticas y Legales:}
@@ -181,6 +581,6 @@ El proyecto se desarrolla en el contexto académico universitario durante el per
     \item Uso exclusivo de datos públicos
     \item Respeto a términos de servicio de proveedores de datos
     \item Implementación de medidas de privacidad por diseño
+    \item Escaneos responsables limitados a objetivos autorizados
 \end{itemize}
-
 

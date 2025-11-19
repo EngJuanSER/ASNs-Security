@@ -8,16 +8,16 @@
       <div class="summary-header">
         <h3 class="summary-ip">{{ result.ip }}</h3>
         <div class="summary-badges">
-          <span v-if="isWinner" class="winner-badge">Mejor Score</span>
-          <span v-if="fromCache" class="cache-badge">Caché</span>
+          <span v-if="isWinner" class="winner-badge">🏆 Mejor Score</span>
+          <span v-if="fromCache" class="cache-badge">📦 Caché</span>
         </div>
       </div>
-      <div class="summary-score">
-        <div class="score-number" :class="getScoreClass(result.securityScore)">
-          {{ result.securityScore }}/100
-        </div>
-        <div class="score-label">Score de Seguridad</div>
+      
+      <!-- Usar LiquidScoreSphere en lugar de número plano -->
+      <div class="summary-visual">
+        <LiquidScoreSphere :score="result.securityScore" />
       </div>
+      
       <div class="summary-details">
         <div class="detail-item">
           <span class="detail-label">País:</span>
@@ -31,6 +31,12 @@
           <span class="detail-label">Servicios:</span>
           <span class="detail-value">{{ result.services.length }} detectados</span>
         </div>
+        <div class="detail-item">
+          <span class="detail-label">Vulnerabilidades:</span>
+          <span class="detail-value" :class="getVulnClass(result.vulnerabilities.length)">
+            {{ result.vulnerabilities.length }} CVEs
+          </span>
+        </div>
       </div>
     </div>
     <div v-else class="empty-card">
@@ -41,6 +47,7 @@
 
 <script setup lang="ts">
 import type { AnalysisResult } from '@/services/api'
+import LiquidScoreSphere from './LiquidScoreSphere.vue'
 
 interface Props {
   query: string
@@ -53,10 +60,11 @@ interface Props {
 
 defineProps<Props>()
 
-const getScoreClass = (score: number): string => {
-  if (score >= 80) return 'score-high'
-  if (score >= 60) return 'score-medium'
-  return 'score-low'
+const getVulnClass = (count: number): string => {
+  if (count === 0) return 'vuln-none'
+  if (count <= 3) return 'vuln-low'
+  if (count <= 10) return 'vuln-medium'
+  return 'vuln-high'
 }
 </script>
 
@@ -179,28 +187,12 @@ const getScoreClass = (score: number): string => {
   letter-spacing: 0.5px;
 }
 
-.summary-score {
-  text-align: center;
-  padding: 1rem 0;
-}
-
-.score-number {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 0.25rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.score-number.score-high { color: #10B981; }
-.score-number.score-medium { color: #F59E0B; }
-.score-number.score-low { color: #EF4444; }
-
-.score-label {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  font-weight: 600;
+.summary-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0;
 }
 
 .summary-details {
@@ -229,6 +221,23 @@ const getScoreClass = (score: number): string => {
   color: var(--text-primary);
   text-align: right;
   font-size: 0.9rem;
+}
+
+.detail-value.vuln-none {
+  color: #10B981;
+}
+
+.detail-value.vuln-low {
+  color: #F59E0B;
+}
+
+.detail-value.vuln-medium {
+  color: #FB923C;
+}
+
+.detail-value.vuln-high {
+  color: #EF4444;
+  font-weight: 800;
 }
 
 @media (max-width: 768px) {

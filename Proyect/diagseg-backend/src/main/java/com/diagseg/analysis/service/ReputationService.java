@@ -105,17 +105,18 @@ public class ReputationService {
             detailsBuilder.append(" Reputación severamente degradada: múltiples indicadores de compromiso.");
         }
 
-        ReputationSourceDto censysRep = new ReputationSourceDto();
-        censysRep.source = "censys";
-        censysRep.name = "Censys Dataset";
-        censysRep.status = status;
-        censysRep.statusText = statusText;
-        censysRep.score = score;
-        censysRep.details = detailsBuilder.toString();
-        censysRep.lastChecked = System.currentTimeMillis();
+        // Crear reputación basada en análisis de Nmap + NVD
+        ReputationSourceDto scanRep = new ReputationSourceDto();
+        scanRep.source = "nmap-nvd";
+        scanRep.name = "Análisis de Servicios y Vulnerabilidades";
+        scanRep.status = status;
+        scanRep.statusText = statusText;
+        scanRep.score = score;
+        scanRep.details = detailsBuilder.toString();
+        scanRep.lastChecked = System.currentTimeMillis();
 
         List<ReputationSourceDto> result = new ArrayList<>();
-        result.add(censysRep);
+        result.add(scanRep);
         return result;
     }
 }

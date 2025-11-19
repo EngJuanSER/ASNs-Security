@@ -35,21 +35,21 @@
           <div class="footer-section">
             <h3 class="section-title">Fuentes de Datos</h3>
             <ul class="footer-list">
-              <li><a href="https://censys.io" target="_blank" class="list-link">Censys</a></li>
+              <li><a href="https://nmap.org/" target="_blank" class="list-link">Nmap</a></li>
+              <li><a href="https://nvd.nist.gov/" target="_blank" class="list-link">NVD (NIST)</a></li>
               <li><a href="https://dev.maxmind.com/geoip/geolite2-free-geolocation-data" target="_blank" class="list-link">GeoLite2</a></li>
-              <li><a href="https://www.abuseipdb.com" target="_blank" class="list-link">AbuseIPDB</a></li>
-              <li><span class="list-link">WHOIS/LACNIC</span></li>
+              <li><a href="https://ip-api.com/" target="_blank" class="list-link">IP-API</a></li>
             </ul>
           </div>
 
-          <!-- Recursos -->
+          <!-- Tecnologías -->
           <div class="footer-section">
-            <h3 class="section-title">Recursos</h3>
+            <h3 class="section-title">Tecnologías</h3>
             <ul class="footer-list">
-              <li><a href="#documentation" class="list-link">Documentación</a></li>
-              <li><a href="#api" class="list-link">API REST</a></li>
-              <li><a href="#examples" class="list-link">Ejemplos</a></li>
-              <li><a href="#faq" class="list-link">FAQ</a></li>
+              <li><span class="list-text">Frontend: Vue 3 + TypeScript</span></li>
+              <li><span class="list-text">Backend: Java 21 + Quarkus</span></li>
+              <li><span class="list-text">Cache: LocalForage (IndexedDB)</span></li>
+              <li><span class="list-text">Build: Vite + Gradle</span></li>
             </ul>
           </div>
 
@@ -59,8 +59,8 @@
             <ul class="footer-list">
               <li><span class="list-text">Versión: 1.0.0</span></li>
               <li><span class="list-text">Licencia: MIT</span></li>
-              <li><span class="list-text">Framework: Vue 3 + TypeScript</span></li>
-              <li><span class="list-text">Build: Vite</span></li>
+              <li><span class="list-text">Universidad Distrital</span></li>
+              <li><span class="list-text">Open Source</span></li>
             </ul>
           </div>
         </div>
@@ -71,14 +71,14 @@
         <div class="footer-copyright">
           <p>&copy; {{ currentYear }} DiagSEG. Proyecto de código abierto bajo licencia MIT.</p>
           <p class="footer-disclaimer">
-            Esta herramienta es solo para fines educativos y de investigación en ciberseguridad.
+            Herramienta educativa para diagnóstico de seguridad IP. Los datos se consultan desde Nmap, NVD, GeoLite2 e IP-API.
           </p>
         </div>
         
         <div class="footer-meta">
-          <span class="meta-item">Hecho en Colombia</span>
+          <span class="meta-item">Universidad Distrital</span>
           <span class="meta-separator">•</span>
-          <span class="meta-item">Powered by Vue</span>
+          <span class="meta-item">Hecho en Colombia</span>
         </div>
       </div>
     </div>

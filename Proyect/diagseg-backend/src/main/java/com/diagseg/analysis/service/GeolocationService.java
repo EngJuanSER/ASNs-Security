@@ -31,22 +31,29 @@ public class GeolocationService {
                     .getResourceAsStream(cityDbPath);
 
             if (dbStream == null) {
-                throw new GeolocationException("No se encontró la base de datos GeoLite2 en: " + cityDbPath);
+                LOG.warnf("⚠️ No se encontró la base de datos GeoLite2 en: %s - Usando fallback", cityDbPath);
+                LOG.warn("Para obtener geolocalización completa, descargue GeoLite2-City.mmdb desde https://dev.maxmind.com/geoip/geolite2-free-geolocation-data");
+                dbReader = null;
+                return;
             }
 
             dbReader = new DatabaseReader.Builder(dbStream).build();
-            LOG.infof("GeoLite2 City DB cargada correctamente desde '%s'", cityDbPath);
+            LOG.infof("✅ GeoLite2 City DB cargada correctamente desde '%s'", cityDbPath);
 
-        } catch (GeolocationException e) {
-            // Re-lanzamos tal cual
-            throw e;
         } catch (Exception e) {
-            // Error al inicializar: es crítico → dejamos que la app falle
-            throw new GeolocationException("Error inicializando GeoLite2 City DB", e);
+            // Error al inicializar: no es crítico, usamos fallback
+            LOG.warnf(e, "⚠️ Error inicializando GeoLite2 City DB, usando fallback");
+            dbReader = null;
         }
     }
 
     public GeolocationDto resolve(String ip) {
+        // Si no hay base de datos, usar fallback directamente
+        if (dbReader == null) {
+            LOG.debugf("GeoLite2 no disponible, usando fallback para IP '%s'", ip);
+            return fallbackGeolocation();
+        }
+        
         try {
             InetAddress ipAddress = InetAddress.getByName(ip);
             CityResponse response = dbReader.city(ipAddress);

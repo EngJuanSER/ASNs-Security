@@ -1,7 +1,7 @@
 \section{Objetivos de la Investigación}
 
 \subsection{Objetivo General}
-Diseñar, desarrollar y documentar una herramienta de software funcional que integre datos de geolocalización de la base de datos GeoLite2 y datos de infraestructura de Censys (vía BigQuery) para presentar un perfil unificado y de fácil consulta sobre una dirección IP.
+Diseñar, desarrollar y documentar una herramienta de software funcional que integre datos de geolocalización de la base de datos GeoLite2, escaneo de servicios con Nmap y análisis de vulnerabilidades mediante NVD API para presentar un perfil unificado y de fácil consulta sobre una dirección IP.
 
 \subsection{Objetivos Específicos}
 
@@ -12,8 +12,9 @@ Diseñar, desarrollar y documentar una herramienta de software funcional que int
     \begin{itemize}
         \item Recibir una dirección IP como entrada.
         \item Consultar la base de datos local de GeoLite2 para obtener la información de geolocalización.
-        \item Ejecutar una consulta a la base de datos de Censys en Google BigQuery para obtener información de puertos y servicios.
-        \item Combinar los resultados de ambas fuentes en una única respuesta estructurada (JSON).
+        \item Ejecutar escaneos con Nmap para detectar servicios, versiones y puertos abiertos.
+        \item Consultar la API de NVD para obtener vulnerabilidades (CVEs) asociadas a los servicios detectados.
+        \item Combinar los resultados de todas las fuentes en una única respuesta estructurada (JSON).
     \end{itemize}
     
     \item \textbf{Desarrollar una interfaz de usuario básica} en el frontend que permita:
