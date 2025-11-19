@@ -26,7 +26,8 @@ COPY --from=build /app/build/quarkus-app/*.jar ./
 COPY --from=build /app/build/quarkus-app/app/ ./app/
 COPY --from=build /app/build/quarkus-app/quarkus/ ./quarkus/
 
-COPY --from=build /app/src/main/resources/geo ./geo/
+RUN mkdir -p geo
+# COPY --from=build /app/src/main/resources/geo ./geo/
 
 EXPOSE 8080
 
