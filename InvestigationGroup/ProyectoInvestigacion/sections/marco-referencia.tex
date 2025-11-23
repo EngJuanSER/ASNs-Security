@@ -29,13 +29,15 @@ Según Alghamdi~\cite{alghamdi2024reconnaissance}, las técnicas de reconocimien
 Las herramientas modernas han democratizado el acceso a análisis de seguridad. Pittman~\cite{pittman2023comparative} realizó un análisis comparativo exhaustivo de herramientas de escaneo de puertos, evaluando precisión, velocidad y capacidades de detección. Los resultados demostraron que Nmap mantiene su posición como estándar de la industria debido a su precisión superior (99.2\%), flexibilidad en técnicas de escaneo y capacidades avanzadas de fingerprinting:
 
 \begin{itemize}
-    \item \textbf{Nmap:} Herramienta de código abierto para escaneo de red y detección de servicios~\cite{lyon2009nmap}. Soporta múltiples técnicas: TCP SYN scan, TCP Connect scan, UDP scan, NULL scan, FIN scan, Xmas scan, ACK scan, Window scan, Maimon scan, y técnicas de evasión de IDS
-    \item \textbf{NVD (National Vulnerability Database):} Base de datos pública de NIST con más de 200,000 vulnerabilidades documentadas, actualizada diariamente con información de severidad CVSS v3.1
-    \item \textbf{Shodan:} Motor de búsqueda para dispositivos IoT e infraestructura industrial conectada a Internet, indexando más de 500 millones de dispositivos
-    \item \textbf{Masscan:} Escáner de puertos de alta velocidad capaz de escanear toda Internet en menos de 6 minutos
+    \item \textbf{Nmap:} Herramienta de código abierto para escaneo de red y detección de servicios~\cite{lyon2009nmap}. Este proyecto utiliza TCP Connect scan (-sT) en lugar de SYN scan por compatibilidad con entornos cloud que bloquean raw sockets. Soporta detección de versiones (-sV) mediante fingerprinting activo de respuestas de servicios.
+    \item \textbf{NVD (National Vulnerability Database):} Base de datos pública de NIST con más de 200,000 vulnerabilidades documentadas, actualizada diariamente con información de severidad CVSS v3.1. Accesible mediante API REST sin autenticación para consultas individuales.
+    \item \textbf{MaxMind GeoLite2:} Base de datos geográfica gratuita de 61MB en formato MMDB, con actualizaciones mensuales. Proporciona información de país, región, ciudad y coordenadas con precisión del 95\% a nivel país.
+    \item \textbf{ipapi.co:} API REST complementaria para información de ASN e ISP actualizada, con 1000 requests diarios gratuitos.
 \end{itemize}
 
-Para este proyecto, nos enfocaremos en Nmap para detección activa de servicios y NVD API para análisis de vulnerabilidades, ambas herramientas completamente gratuitas y de código abierto, validadas ampliamente en literatura académica.
+\textbf{Nota sobre Herramientas Comerciales:} Aunque existen herramientas comerciales avanzadas como Shodan (motor de búsqueda IoT), Censys (escaneo Internet), y Masscan (escaneo alta velocidad), este proyecto se enfoca exclusivamente en fuentes gratuitas y de código abierto para demostrar viabilidad académica sin costos de licenciamiento.
+
+Para este proyecto, nos enfocaremos en Nmap (TCP connect scan) para detección activa de servicios, NVD API para análisis de vulnerabilidades, GeoLite2 para geolocalización e ipapi.co para datos de red, todas herramientas completamente gratuitas y validadas ampliamente en literatura académica.
 
 \subsubsection{Geolocalización de Direcciones IP}
 
@@ -498,54 +500,79 @@ Ferrag et al.~\cite{ferrag2019deep} presentaron un estudio comprehensivo sobre d
     \item \textbf{Nmap (Network Mapper):}
     \begin{itemize}
         \item Herramienta de código abierto para escaneo de red~\cite{lyon2009nmap}
-        \item Detección de servicios y versiones en tiempo real
-        \item Identificación de puertos abiertos y sistemas operativos
-        \item Generación de output en formato XML para parsing automatizado
+        \item Configuración: TCP connect scan (-sT) para compatibilidad con Railway
+        \item Comando: \texttt{nmap -sT -sV -p [ports] --open -T4 -oX [output] [target]}
+        \item Detección de servicios y versiones mediante fingerprinting activo
+        \item Output XML parseado con DocumentBuilder de Java
         \item Ampliamente validado en estudios comparativos~\cite{pittman2023comparative}
     \end{itemize}
     
     \item \textbf{NVD (National Vulnerability Database):}
     \begin{itemize}
-        \item API REST pública de NIST
-        \item Base de datos de CVEs actualizada diariamente
-        \item Información de severidad mediante CVSS scores
-        \item Sin necesidad de autenticación o API keys
+        \item API REST pública de NIST: https://services.nvd.nist.gov/rest/json/cves/2.0
+        \item Base de datos con $>$200,000 CVEs actualizada diariamente
+        \item Información de severidad mediante CVSS v3.1 scores
+        \item Modo gratuito con rate limiting natural de 5 requests/30 segundos
+        \item Sin necesidad de API key para consultas individuales
+        \item Búsqueda por CPE (Common Platform Enumeration)
         \item Estándar de la industria para inteligencia de vulnerabilidades~\cite{ferrag2019deep}
     \end{itemize}
     
     \item \textbf{MaxMind GeoLite2:}
     \begin{itemize}
-        \item Base de datos descargable
-        \item Actualizaciones mensuales
-        \item Formato MMDB para consultas eficientes
-        \item Licencia gratuita para uso no comercial
+        \item Base de datos descargable de 61MB en formato MMDB
+        \item Fuente: GitHub repository P3TERX/GeoLite.mmdb
+        \item Descarga automática durante Docker build con curl
+        \item Almacenamiento: src/main/resources/geo/ en backend
+        \item Actualizaciones mensuales (proceso manual)
+        \item Consultas: $<$1ms con maxmind-db-reader Java library
         \item Precisión validada académicamente~\cite{schopman2021validating}
+        \item Incluye: país, región, ciudad, coordenadas, timezone
+    \end{itemize}
+    
+    \item \textbf{ipapi.co (Complemento ASN/ISP):}
+    \begin{itemize}
+        \item API REST pública: https://ipapi.co/[ip]/json
+        \item Información actualizada de ASN, ISP y organización
+        \item Rate limit: 1000 requests/día en modo gratuito
+        \item Complementa datos de GeoLite2 con información de red actual
+        \item Sin necesidad de autenticación para uso básico
     \end{itemize}
 \end{enumerate}
 
 \subsubsection{Stack Tecnológico}
 
-\textbf{Backend - Quarkus:}
+\textbf{Backend - Quarkus Framework:}
 \begin{itemize}
-    \item Framework Java nativo en la nube
-    \item Tiempo de inicio rápido y bajo consumo de memoria
-    \item Integración nativa con APIs REST y bases de datos
-    \item Soporte para contenedores y despliegue cloud
+    \item Lenguaje: Java 21 LTS con eclipse-temurin runtime
+    \item Framework: Quarkus 3.29.2 optimizado para cloud-native
+    \item Tiempo de inicio: $<$1 segundo en modo JVM
+    \item Consumo de memoria: $\sim$100MB en runtime
+    \item Integración REST nativa con JAX-RS y Jackson
+    \item Arquitectura stateless sin base de datos persistente
+    \item Build: Gradle 9.0 con multi-stage Docker
+    \item Despliegue: Railway con autoscaling automático
 \end{itemize}
 
-\textbf{Frontend - Vue.js:}
+\textbf{Frontend - Vue.js Ecosystem:}
 \begin{itemize}
-    \item Framework JavaScript progresivo
-    \item Curva de aprendizaje suave
-    \item Ecosistema rico de componentes
-    \item Herramientas de desarrollo integradas
+    \item Framework: Vue.js 3 con Composition API y TypeScript 5
+    \item Build Tool: Vite 6 con HMR y optimización de bundles
+    \item Estado local: Composition API con ref/reactive
+    \item Cache: LocalForage (IndexedDB) con TTL de 7 días
+    \item Visualizaciones: Chart.js 4 para gráficos, Leaflet.js para mapas
+    \item UI: CSS personalizado con sistema de temas (claro/oscuro)
+    \item Despliegue: Vercel con edge network global
 \end{itemize}
 
 \textbf{Infraestructura Cloud:}
 \begin{itemize}
-    \item Servicios de hosting para la aplicación web
-    \item CDN para distribución de contenido estático
-    \item Contenedores Docker con Nmap preinstalado
+    \item Backend hosting: Railway (https://asns-security-production.up.railway.app)
+    \item Frontend hosting: Vercel (https://diagsec.vercel.app)
+    \item Contenedores: Docker multi-stage con Alpine Linux base
+    \item Nmap: Version 7.93+ con TCP connect scan (-sT) preinstalado
+    \item CI/CD: Despliegue automático desde GitHub main branch
+    \item Variables de entorno: CORS\_ORIGINS, VITE\_API\_BASE\_URL, QUARKUS\_PROFILE
 \end{itemize}
 
 \subsection{Marco Espacial y Temporal}

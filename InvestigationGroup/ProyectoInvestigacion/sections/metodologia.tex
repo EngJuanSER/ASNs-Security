@@ -43,27 +43,40 @@ Se utilizará una metodología ágil adaptada al contexto académico, siguiendo 
     \begin{itemize}
         \item Herramienta de escaneo de red de código abierto~\cite{lyon2009nmap}
         \item Detección de servicios activos y versiones de software
-        \item Identificación de sistemas operativos mediante fingerprinting
+        \item Configuración: TCP connect scan (-sT) en lugar de SYN scan para compatibilidad
         \item Salida en formato XML para procesamiento automatizado
+        \item Comando: \texttt{nmap -sT -sV -p [ports] --open -T4 -oX [output] [target]}
         \item Validada como herramienta estándar en estudios comparativos~\cite{pittman2023comparative}
     \end{itemize}
     
     \item \textbf{NVD API (National Vulnerability Database):}
     \begin{itemize}
         \item API REST pública de NIST para consulta de CVEs
+        \item Endpoint: https://services.nvd.nist.gov/rest/json/cves/2.0
         \item Búsqueda por CPE (Common Platform Enumeration)
-        \item Información detallada de severidad mediante CVSS v3
-        \item Sin límites de rate ni requerimientos de autenticación
+        \item Información detallada de severidad mediante CVSS v3.1
+        \item Modo gratuito con rate limiting natural (5 requests/30s)
+        \item Sin necesidad de API key para consultas individuales
         \item Utilizada en investigaciones de inteligencia de amenazas~\cite{lin2023correlation}
     \end{itemize}
     
     \item \textbf{MaxMind GeoLite2:}
     \begin{itemize}
-        \item Base de datos descargable en formato MMDB
-        \item Actualizaciones mensuales automáticas
-        \item Cobertura global con precisión variable por región
-        \item Licencia gratuita para uso académico
+        \item Base de datos descargable en formato MMDB (61MB comprimido)
+        \item Fuente: GitHub repository P3TERX/GeoLite.mmdb (actualizada mensualmente)
+        \item Descarga automática durante Docker build: \texttt{curl -L [url] -o geo/GeoLite2-City.mmdb}
+        \item Almacenamiento local en \texttt{src/main/resources/geo/} del backend
         \item Precisión validada en contextos académicos~\cite{schopman2021validating}
+        \item Incluye: país, región, ciudad, coordenadas, timezone, ASN, ISP
+    \end{itemize}
+    
+    \item \textbf{ipapi.co (API Complementaria):}
+    \begin{itemize}
+        \item API REST pública para información ASN e ISP actualizada
+        \item Endpoint: https://ipapi.co/[ip]/json
+        \item Complementa datos de GeoLite2 con información de red actual
+        \item Rate limit: 1000 requests/día en modo gratuito
+        \item Proporciona: ASN, ISP, organización, tipo de red
     \end{itemize}
 \end{enumerate}
 
@@ -92,35 +105,53 @@ Se utilizará una metodología ágil adaptada al contexto académico, siguiendo 
 
 \textbf{Backend (Quarkus):}
 \begin{itemize}
-    \item \textbf{API Gateway:} Punto de entrada único para solicitudes
-    \item \textbf{Servicio de Geolocalización:} Integración con GeoLite2
-    \item \textbf{Servicio de Escaneo:} Ejecución y parsing de Nmap
-    \item \textbf{Servicio de Vulnerabilidades:} Consultas a NVD API por CPE
-    \item \textbf{Servicio de Correlación:} Combinación de datos de múltiples fuentes
-    \item \textbf{Cache Service:} Almacenamiento temporal de resultados frecuentes
+    \item \textbf{AnalysisResource:} Endpoint REST principal POST /api/analysis/analyze
+    \item \textbf{AnalysisService:} Orquestador del flujo completo de análisis
+    \item \textbf{GeolocationService:} Lectura de GeoLite2 MMDB con maxmind-db-reader
+    \item \textbf{NmapService:} Ejecución de nmap via ProcessBuilder y parsing de XML
+    \item \textbf{NVDService:} Cliente REST para consultas a NVD API con rate limiting
+    \item \textbf{ASNService:} Consultas a ipapi.co para información de red actualizada
+    \item \textbf{SecurityScoringService:} Cálculo de score de seguridad basado en múltiples factores
+    \item \textbf{RecommendationService:} Sistema experto para generación de recomendaciones
+    \item \textbf{Arquitectura:} Stateless sin persistencia, todas las consultas son efímeras
 \end{itemize}
 
 \textbf{Frontend (Vue.js):}
 \begin{itemize}
-    \item \textbf{Interfaz de Consulta:} Formularios para ingreso de direcciones IP
-    \item \textbf{Dashboard de Resultados:} Visualización de datos integrados
-    \item \textbf{Componentes de Mapas:} Representación geográfica de resultados
-    \item \textbf{Exportación de Datos:} Funcionalidades para guardar resultados
+    \item \textbf{Vista de Análisis (Analysis.vue):} Análisis individual con visualización completa
+    \item \textbf{Vista de Comparación (IPComparator.vue):} Comparación lado a lado de dos targets
+    \item \textbf{Vista de Historial (History.vue):} Historial con estadísticas y gráficos Chart.js
+    \item \textbf{Sistema de Cache (LocalForage):} Almacenamiento local con TTL de 7 días
+    \item \textbf{Componentes de Mapas:} Leaflet.js para visualización geográfica interactiva
 \end{itemize}
 
 \subsubsection{Flujo de Datos}
 
 \begin{enumerate}
-    \item \textbf{Entrada:} Usuario ingresa dirección IP a analizar
-    \item \textbf{Validación:} Sistema verifica formato y validez de la IP
-    \item \textbf{Procesamiento Paralelo:}
+    \item \textbf{Entrada:} Usuario ingresa dirección IP o dominio a analizar
+    \item \textbf{Validación:} Sistema verifica formato (IPv4, IPv6, o dominio)
+    \item \textbf{Resolución DNS:} Si es dominio, resuelve a dirección IP mediante Java InetAddress
+    \item \textbf{Verificación de Cache:} Frontend consulta LocalForage (TTL 7 días)
+    \item \textbf{Procesamiento Paralelo en Backend:}
     \begin{itemize}
-        \item Geolocalización via GeoLite2 (local)
-        \item Escaneo de servicios via Nmap (activo)
+        \item Geolocalización via GeoLite2 (consulta local MMDB, $<$1ms)
+        \item Consulta ASN/ISP via ipapi.co (complementa datos de red)
+        \item Escaneo de servicios via Nmap (TCP connect scan -sT, 1-60s)
     \end{itemize}
-    \item \textbf{Análisis de Vulnerabilidades:} Consulta NVD API con CPEs de servicios detectados
-    \item \textbf{Correlación:} Integración de resultados con scoring de seguridad
-    \item \textbf{Presentación:} Visualización unificada en interfaz web
+    \item \textbf{Análisis de Vulnerabilidades:} 
+    \begin{itemize}
+        \item Construcción de CPEs desde servicios detectados
+        \item Consulta NVD API por cada CPE
+        \item Agregación de CVEs con metadatos (CVSS, severidad, referencias)
+    \end{itemize}
+    \item \textbf{Scoring de Seguridad:} Cálculo basado en: cantidad de vulnerabilidades, severidad CVSS máxima, puertos críticos expuestos, servicios desactualizados
+    \item \textbf{Generación de Recomendaciones:} Sistema experto basado en reglas para sugerir mitigaciones
+    \item \textbf{Presentación Frontend:} 
+    \begin{itemize}
+        \item Visualización unificada con componentes Vue
+        \item Almacenamiento en cache LocalForage
+        \item Registro en historial con statisticsService
+    \end{itemize}
 \end{enumerate}
 
 \subsection{Herramientas y Tecnologías}
@@ -129,27 +160,31 @@ Se utilizará una metodología ágil adaptada al contexto académico, siguiendo 
 
 \textbf{Backend - Quarkus Framework:}
 \begin{itemize}
-    \item Lenguaje: Java 17 LTS
-    \item Framework: Quarkus 3.x
-    \item Base de datos: PostgreSQL para cache y logs
-    \item APIs: REST con Jackson para JSON
+    \item Lenguaje: Java 21 LTS (eclipse-temurin:21)
+    \item Framework: Quarkus 3.29.2 con configuración optimizada
+    \item Arquitectura: Stateless sin base de datos persistente
+    \item APIs: REST con Jackson para serialización JSON
+    \item Build: Gradle 9.0 con multi-stage Docker build
 \end{itemize}
 
 \textbf{Frontend - Vue.js Ecosystem:}
 \begin{itemize}
-    \item Framework: Vue.js 3 con Composition API
-    \item Routing: Vue Router
-    \item State Management: Pinia
-    \item UI Components: Vuetify o Bootstrap Vue
-    \item Mapas: Leaflet.js para visualización geográfica
+    \item Framework: Vue.js 3 con Composition API y TypeScript 5
+    \item Build Tool: Vite 6 para desarrollo rápido y optimización
+    \item Routing: Vue Router para navegación SPA
+    \item Cache: LocalForage (IndexedDB) con TTL de 7 días
+    \item Visualizaciones: Chart.js para gráficos, Leaflet.js para mapas
+    \item UI: CSS personalizado con sistema de temas (claro/oscuro)
 \end{itemize}
 
 \textbf{Infraestructura y Despliegue:}
 \begin{itemize}
-    \item Cloud Platform: Servicio de hosting básico
-    \item Contenedores: Docker con Nmap preinstalado
-    \item CI/CD: GitHub Actions
-    \item Monitoreo: Logs básicos y métricas de rendimiento
+    \item Backend: Railway (https://asns-security-production.up.railway.app)
+    \item Frontend: Vercel (https://diagsec.vercel.app)
+    \item Contenedores: Docker multi-stage con Alpine Linux
+    \item Nmap: Preinstalado con TCP connect scan (-sT) para compatibilidad Railway
+    \item CI/CD: Despliegue automático desde GitHub (main branch)
+    \item Variables de entorno: CORS\_ORIGINS, VITE\_API\_BASE\_URL, QUARKUS\_PROFILE
 \end{itemize}
 
 \subsubsection{Herramientas de Desarrollo}
@@ -209,15 +244,25 @@ Se utilizará una metodología ágil adaptada al contexto académico, siguiendo 
 
 \subsubsection{Uso Responsable de Datos}
 \begin{itemize}
-    \item Uso exclusivo de datos públicos y gratuitos
-    \item Escaneos responsables con targets autorizados
-    \item No almacenamiento persistente de consultas de usuarios
-    \item Implementación de rate limiting para evitar abuso
+    \item Uso exclusivo de datos públicos y gratuitos (GeoLite2, NVD, ipapi.co)
+    \item TCP connect scan (-sT) en lugar de SYN scan (menos intrusivo, no requiere root)
+    \item No almacenamiento persistente en backend (arquitectura stateless)
+    \item Cache frontend limitado a 7 días con limpieza automática
+    \item Rate limiting natural de APIs externas respetado (NVD: 5/30s, ipapi: 1000/día)
+    \item URLs públicas desplegadas: https://diagsec.vercel.app (frontend) y https://asns-security-production.up.railway.app (backend)
 \end{itemize}
 
 \subsubsection{Limitaciones Técnicas Reconocidas}
 \begin{itemize}
-    \item Tiempo de ejecución de escaneos Nmap según red objetivo
+    \item \textbf{Escaneo Nmap:} TCP connect scan (-sT) es 20-30\% más lento que SYN scan (-sS), pero compatible con Railway que bloquea raw sockets
+    \item \textbf{Tiempo de ejecución:} Escaneos varían de 1-60 segundos según cantidad de puertos y red objetivo
+    \item \textbf{GeoLite2:} Base de datos de 61MB descargada durante Docker build, actualización manual mensual requerida
+    \item \textbf{NVD API:} Rate limiting natural de 5 requests/30s en modo gratuito (sin API key), suficiente para análisis individuales
+    \item Dependencia de disponibilidad de APIs externas (NVD, ipapi.co)
+    \item Precisión de geolocalización variable según región (95\% país, 50-75\% ciudad)
+    \item Capacidad de procesamiento limitada por plan gratuito de Railway
+    \item Sin persistencia de datos históricos en backend (solo cache temporal frontend)
+\end{itemize}
     \item Dependencia de disponibilidad de NVD API
     \item Precisión limitada por calidad de fuentes de datos
     \item Capacidad de procesamiento limitada a recursos académicos

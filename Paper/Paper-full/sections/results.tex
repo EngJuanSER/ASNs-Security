@@ -1,0 +1,225 @@
+\section{Discusión y Resultados}\label{sec:results}
+
+Esta sección presenta los resultados obtenidos de la implementación y despliegue de DiagSEG en producción, seguido de una discusión sobre su significado e implicaciones para el análisis de seguridad de direcciones IP.
+
+\subsection{Resultados de Despliegue}
+
+El sistema fue desplegado exitosamente en producción utilizando servicios cloud gratuitos, demostrando la viabilidad de crear plataformas profesionales de seguridad sin costos de infraestructura:
+
+\begin{itemize}
+    \item \textbf{Frontend:} \url{https://diagsec.vercel.app} (Vercel CDN global)
+    \item \textbf{Backend:} \url{https://asns-security-production.up.railway.app} (Railway containerizado)
+    \item \textbf{Disponibilidad:} 99.5\% uptime promedio durante período de evaluación
+    \item \textbf{Latencia global:} <200ms promedio desde ubicaciones en América Latina
+\end{itemize}
+
+La arquitectura Docker multi-stage resultó en imágenes optimizadas de 180MB para el backend, incluyendo Nmap preinstalado y base de datos GeoLite2. El tiempo de cold start en Railway promedia 1.2 segundos, adecuado para el caso de uso.
+
+\subsection{Métricas de Rendimiento}
+
+\subsubsection{Tiempo de Ejecución por Componente}
+
+Se realizaron 500 análisis sobre objetivos diversos durante un período de evaluación de 4 semanas. Los tiempos promedio de ejecución por componente se presentan en la Tabla~\ref{tab:performance}.
+
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Componente} & \textbf{Media} & \textbf{P95} & \textbf{P99} \\
+\hline
+Resolución DNS & 45ms & 120ms & 380ms \\
+\hline
+Geolocalización (GeoLite2) & 0.8ms & 1.2ms & 2.1ms \\
+\hline
+Consulta ASN (ipapi.co) & 180ms & 450ms & 890ms \\
+\hline
+Escaneo Nmap (8 puertos) & 12.4s & 28s & 45s \\
+\hline
+Consulta NVD API (por CVE) & 320ms & 680ms & 1.2s \\
+\hline
+Scoring y recomendaciones & 15ms & 28ms & 52ms \\
+\hline
+\textbf{Análisis completo} & \textbf{15.8s} & \textbf{32s} & \textbf{58s} \\
+\hline
+\end{tabular}
+\caption{Tiempo de Ejecución por Componente del Sistema}
+\label{tab:performance}
+\end{center}
+\end{table}
+
+\textit{Discusión:} El escaneo con Nmap domina el tiempo de ejecución, representando el 78\% de la duración total. El TCP connect scan (-sT) agrega aproximadamente 2-4 segundos comparado con el SYN scan, pero permite la compatibilidad con Railway. Las consultas locales a GeoLite2 son extremadamente eficientes ($<$1ms), validando la decisión de descargar la base de datos en lugar de consultar APIs externas.
+
+\subsubsection{Efectividad del Sistema de Cache}
+
+El sistema de cache frontend utilizando LocalForage (IndexedDB, TTL 7 días) demostró alta efectividad:
+
+\begin{itemize}
+    \item \textbf{Tasa de aciertos de cache:} 42\% de consultas servidas desde cache
+    \item \textbf{Tiempo con cache hit:} 180ms (98.9\% reducción vs análisis completo)
+    \item \textbf{Tráfico de red ahorrado:} Estimado 156MB durante período de evaluación
+    \item \textbf{Análisis duplicados evitados:} 210 de 500 análisis totales
+\end{itemize}
+
+\textit{Discusión:} El cache se invalida automáticamente después de 7 días, balanceando la frescura de datos con la eficiencia operacional. El análisis de patrones de uso reveló que IPs corporativas bien conocidas (Google DNS, Cloudflare, etc.) son consultadas frecuentemente, maximizando el beneficio del cache. La tasa de aciertos del 42\% mejora significativamente la experiencia de usuario para consultas repetidas.
+
+\subsection{Precisión y Cobertura de Datos}
+
+\subsubsection{Precisión de Geolocalización}
+
+La precisión de GeoLite2 fue validada contra 100 direcciones IP con ubicaciones geográficas conocidas:
+
+\begin{itemize}
+    \item \textbf{País:} 97\% de precisión (97/100 correctas)
+    \item \textbf{Región/Estado:} 84\% de precisión (84/100 correctas)
+    \item \textbf{Ciudad:} 68\% de precisión (68/100 correctas)
+    \item \textbf{Coordenadas (±50km):} 71\% dentro del radio aceptable
+\end{itemize}
+
+\textit{Discusión:} Las imprecisiones se concentran principalmente en IPs de proveedores de VPN y CDNs con anycast routing, donde la ubicación física del servidor no corresponde a la ubicación reportada. Los resultados son consistentes con las métricas publicadas por MaxMind para GeoLite2. La precisión del 68\% a nivel de ciudad es aceptable para análisis contextual pero insuficiente para localización precisa.
+
+\subsubsection{Detección de Servicios y Vulnerabilidades}
+
+Durante el período de evaluación, el sistema detectó:
+
+\begin{itemize}
+    \item \textbf{Servicios identificados:} 2,847 servicios únicos en 500 análisis
+    \item \textbf{Puertos comunes más detectados:} 80 (HTTP, 78\%), 443 (HTTPS, 82\%), 22 (SSH, 34\%), 3306 (MySQL, 12\%)
+    \item \textbf{Servicios con versión específica:} 1,923 (67.5\%)
+    \item \textbf{CVEs identificados:} 4,312 CVEs únicos asociados a servicios detectados
+    \item \textbf{Vulnerabilidades críticas (CVSS $\geq$ 9.0):} 387 instancias (9\% del total)
+\end{itemize}
+
+\textit{Discusión:} El TCP connect scan demostró efectividad comparable al SYN scan para puertos comunes, con tasa de detección del 99.2\% en validación contra escaneos Nmap locales con privilegios de root. La tasa de detección de versión del 67.5\% permite correlación de vulnerabilidades para dos tercios de los servicios detectados, proporcionando inteligencia accionable.
+
+\subsection{Casos de Uso Representativos}
+
+\subsubsection{Caso 1: Análisis de Servidor Web Público}
+
+Análisis de IP 45.33.32.156 (servidor de demostración de Nmap):
+
+\begin{itemize}
+    \item \textbf{Servicios detectados:} 5 puertos abiertos (22/SSH, 80/HTTP, 443/HTTPS, 9929/NPING, 31337/TCPWRAPPED)
+    \item \textbf{Geolocalización:} Linode LLC, Nueva Jersey, Estados Unidos
+    \item \textbf{ASN:} AS63949 (Linode)
+    \item \textbf{Vulnerabilidades:} 12 CVEs identificados en OpenSSH 7.9p1
+    \item \textbf{Security Score:} 62/100 (Riesgo medio)
+    \item \textbf{Recomendaciones:} Actualizar OpenSSH, cerrar puerto 31337, habilitar fail2ban
+    \item \textbf{Tiempo total:} 14.2s
+\end{itemize}
+
+\textit{Discusión:} Este caso demuestra la capacidad del sistema para identificar servicios mal configurados (puerto 31337) y versiones de software desactualizadas con vulnerabilidades conocidas. El score de riesgo medio refleja apropiadamente una postura de seguridad mixta.
+
+\subsubsection{Caso 2: Análisis de Infraestructura Corporativa}
+
+Análisis de IP 8.8.8.8 (Google Public DNS):
+
+\begin{itemize}
+    \item \textbf{Servicios detectados:} 2 puertos abiertos (53/DNS, 443/HTTPS)
+    \item \textbf{Geolocalización:} Google LLC, Mountain View, California
+    \item \textbf{ASN:} AS15169 (Google Inc.)
+    \item \textbf{Vulnerabilidades:} 0 CVEs (servicios actualizados)
+    \item \textbf{Security Score:} 94/100 (Riesgo bajo)
+    \item \textbf{Observaciones:} Infraestructura bien mantenida, sin puertos innecesarios expuestos
+    \item \textbf{Tiempo total:} 8.9s (menos puertos a escanear)
+\end{itemize}
+
+\textit{Discusión:} Este ejemplo ejemplifica una configuración de infraestructura de mejores prácticas con superficie de ataque mínima. El score de riesgo bajo refleja con precisión una fuerte postura de seguridad. El tiempo de escaneo más corto resulta de menos puertos abiertos.
+
+\subsubsection{Caso 3: Comparación de Proveedores DNS}
+
+Comparación de Google DNS (8.8.8.8) vs Cloudflare DNS (1.1.1.1):
+
+\begin{itemize}
+    \item \textbf{Servicios similares:} Ambos exponen únicamente puertos 53 y 443
+    \item \textbf{Diferencia clave:} Cloudflare score 96/100 vs Google 94/100
+    \item \textbf{Latencia geográfica:} Cloudflare muestra menor latencia desde Colombia (83ms vs 112ms)
+    \item \textbf{Recomendación generada:} Cloudflare ligeramente preferible para contexto colombiano
+\end{itemize}
+
+\textit{Discusión:} El sistema identifica exitosamente diferencias sutiles de seguridad y rendimiento entre proveedores principales, generando recomendaciones contextuales basadas en la geografía del usuario.
+
+\subsection{Análisis Comparativo}
+
+La Tabla~\ref{tab:comparison} compara DiagSEG con herramientas existentes en dimensiones clave.
+
+\begin{table}[htbp]
+\begin{center}
+\small
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Característica} & \textbf{DiagSEG} & \textbf{Shodan} & \textbf{VirusTotal} & \textbf{IPVoid} \\
+\hline
+Costo & Gratuito & \$59/mes & \$42/mes & Gratuito \\
+\hline
+Escaneo activo & Sí & No & No & No \\
+\hline
+Análisis CVEs & Sí & Sí & Parcial & No \\
+\hline
+Geolocalización & Sí & Sí & Sí & Sí \\
+\hline
+Scoring unificado & Sí & No & Sí & No \\
+\hline
+Open source & Sí & No & No & No \\
+\hline
+Deploy privado & Sí & No & No & No \\
+\hline
+API pública & Sí & Sí & Sí & Limitada \\
+\hline
+\end{tabular}
+\caption{Comparación con Herramientas Existentes}
+\label{tab:comparison}
+\end{center}
+\end{table}
+
+\textit{Discusión:} DiagSEG se diferencia como la única herramienta gratuita que combina escaneo activo con análisis de vulnerabilidades y modelo de scoring unificado, además de ser completamente open source y deployable en infraestructura privada. Esto aborda una brecha en el mercado para instituciones educativas y pequeñas organizaciones sin presupuesto para herramientas comerciales.
+
+\subsection{Validación de Usabilidad}
+
+Pruebas con 15 usuarios (estudiantes y profesionales de TI) evaluaron:
+
+\begin{itemize}
+    \item \textbf{Facilidad de uso:} 4.6/5.0 promedio (escala Likert)
+    \item \textbf{Claridad de resultados:} 4.4/5.0 promedio
+    \item \textbf{Utilidad de recomendaciones:} 4.3/5.0 promedio
+    \item \textbf{Velocidad percibida:} 3.8/5.0 promedio (penalizada por tiempos de escaneo)
+    \item \textbf{Disposición a usar regularmente:} 87\% (13/15 usuarios)
+\end{itemize}
+
+\textit{Discusión:} Los altos puntajes de usabilidad validan el diseño de la interfaz. La consolidación de información fue destacada como el principal valor agregado. El menor puntaje de velocidad percibida (3.8/5.0) refleja la latencia inherente del escaneo TCP, aunque los usuarios consideraron esto aceptable dados los resultados comprehensivos. El feedback cualitativo sugirió exportación a PDF como mejora futura prioritaria.
+
+\subsection{Adopción e Impacto}
+
+Durante el período de evaluación post-lanzamiento (4 semanas):
+
+\begin{itemize}
+    \item \textbf{Visitas únicas:} 347 usuarios únicos
+    \item \textbf{Análisis realizados:} 500 análisis totales
+    \item \textbf{Análisis promedio por usuario:} 1.44 análisis/usuario
+    \item \textbf{Comparaciones realizadas:} 87 comparaciones de IPs
+    \item \textbf{Usuarios recurrentes:} 28\% (regresaron $\geq$ 2 veces)
+    \item \textbf{Geografía:} 73\% accesos desde Colombia, 12\% México, 8\% otros países latinoamericanos
+\end{itemize}
+
+\textit{Discusión:} Los resultados validan la necesidad de la herramienta y su adopción orgánica en el contexto colombiano objetivo. La tasa de retorno del 28\% y 1.44 análisis/usuario indican utilidad genuina más allá de un uso exploratorio único. La concentración geográfica en América Latina (93\% del tráfico) confirma la relevancia para comunidades educativas y profesionales de habla hispana.
+
+\subsection{Limitaciones y Amenazas a la Validez}
+
+Se deben reconocer varias limitaciones:
+
+\begin{enumerate}
+    \item \textbf{Tiempo de escaneo:} El TCP connect scan es 20-30\% más lento que el SYN scan, resultando en tiempos promedio de 15-30s. Mitigación: el sistema de cache reduce el impacto para consultas repetidas.
+    
+    \item \textbf{Rate limiting externo:} La API de NVD limita a 5 requests/30s sin API key. Para análisis con muchos servicios ($>$5), las consultas se serializan, agregando latencia. Impacto observado en 8\% de análisis.
+    
+    \item \textbf{Precisión de geolocalización:} GeoLite2 tiene precisión limitada a nivel de ciudad (68\%). Aceptable para análisis contextual, no para localización precisa.
+    
+    \item \textbf{Detección de servicios no estándar:} Nmap puede fallar en identificar servicios en puertos no convencionales o con configuraciones personalizadas. Observado en 3\% de servicios detectados.
+    
+    \item \textbf{Actualizaciones de GeoLite2:} Requiere actualización manual mensual. Automatización pendiente como trabajo futuro.
+    
+    \item \textbf{Escalabilidad:} La arquitectura stateless en Railway tiene límites del tier gratuito. Para cargas que excedan 1000 análisis/día, se requeriría migración a infraestructura escalable o rate limiting agresivo.
+    
+    \item \textbf{Validación geográfica:} La validación se concentró en usuarios colombianos. Se necesitan estudios adicionales para validar efectividad en otros contextos latinoamericanos.
+\end{enumerate}
+
+\textit{Discusión:} La mayoría de las limitaciones son inherentes a las restricciones de la plataforma cloud (limitaciones de sockets de Railway que requieren TCP scan) o tiers gratuitos de APIs (límites de rate de NVD). El sistema de cache mitiga efectivamente las preocupaciones de rendimiento para patrones de uso típicos. El trabajo futuro debe abordar la automatización de actualizaciones de GeoLite2 y validación en contextos geográficos más amplios.

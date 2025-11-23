@@ -8,6 +8,23 @@
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage{listings}
+
+% Configuración para listings (código)
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=flexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  xleftmargin=0pt,
+  xrightmargin=0pt,
+  aboveskip=3pt,
+  belowskip=3pt,
+  captionpos=b
+}
 
 \newenvironment{resumen}
   {\renewcommand{\abstractname}{Resumen}\begin{abstract}}

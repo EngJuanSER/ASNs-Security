@@ -70,22 +70,27 @@ Cada servicio se implementa como un bean CDI (Contexts and Dependency Injection)
 
 La integración con fuentes de datos externas se realiza mediante conectores especializados:
 
-\textbf{GeoLite2 MaxMind:} Se utiliza la base de datos GeoLite2-City en formato MMDB (MaxMind database), descargada localmente y accedida mediante la librería \texttt{maxmind-db-reader}. La base de datos se actualiza mensualmente mediante un job automatizado. Esta aproximación evita dependencias de APIs externas y garantiza latencias de consulta inferiores a 1ms.
+\textbf{GeoLite2 MaxMind:} Se utiliza la base de datos GeoLite2-City en formato MMDB (MaxMind database, 61MB comprimido), descargada automáticamente durante el proceso de build de Docker desde el repositorio GitHub P3TERX/GeoLite.mmdb mediante curl. La base de datos se almacena en \texttt{src/main/resources/geo/} y se accede mediante la librería \texttt{maxmind-db-reader} de Java. Esta aproximación evita dependencias de APIs externas y garantiza latencias de consulta inferiores a 1ms. La actualización manual mensual se realiza rebuildeando la imagen Docker.
 
-\textbf{Nmap Network Scanner:} El sistema ejecuta Nmap mediante \texttt{ProcessBuilder} de Java para escaneo activo de puertos y detección de servicios. El flujo de ejecución implementado incluye:
+\textbf{Nmap Network Scanner:} El sistema ejecuta Nmap mediante \texttt{ProcessBuilder} de Java para escaneo activo de puertos y detección de servicios. Debido a restricciones de Railway que bloquean raw sockets, se utiliza TCP connect scan (-sT) en lugar de SYN scan (-sS). El flujo de ejecución implementado incluye:
 \begin{itemize}
-    \item Construcción del comando: \texttt{nmap -sV -oX - [target\_ip]} para escaneo de versiones con salida XML
-    \item Ejecución asíncrona del proceso con timeout configurable (establecido en 60 segundos)
-    \item Parsing del XML de salida mediante DOM parser
+    \item Construcción del comando: {\small \texttt{nmap -sT -sV -p [ports] --open -T4 -oX [output] [target]}} para escaneo con TCP connect y detección de versiones
+    \item Ejecución asíncrona del proceso con timeout configurable (60 segundos por defecto)
+    \item Parsing del XML de salida mediante DocumentBuilder (DOM parser de Java)
     \item Extracción automatizada de puertos abiertos, nombres de servicios, versiones de software y strings CPE
+    \item El TCP connect scan agrega 20-30\% de latencia vs SYN scan pero no requiere privilegios de root
 \end{itemize}
 
 La salida XML de Nmap proporciona información estructurada que el sistema procesa, incluyendo estado de puertos (open, closed, filtered), protocolo (tcp/udp), nombre del servicio (http, ssh, mysql), versión del producto cuando es detectable, y crucialmente, strings CPE (Common Platform Enumeration) en formato 2.3 que permiten la correlación directa con la base de datos de vulnerabilidades NVD.
 
-\textbf{National Vulnerability Database (NVD):} El sistema accede a la API REST pública de NIST en \texttt{https://services.nvd.nist.gov/rest/json/cves/2.0} para búsqueda de vulnerabilidades. El proceso de correlación implementado incluye:
+\textbf{National Vulnerability Database (NVD):} El sistema accede a la API REST pública de NIST en 
+
+\url{https://services.nvd.nist.gov/rest/json/cves/2.0} 
+
+para búsqueda de vulnerabilidades. El proceso de correlación implementado incluye:
 \begin{itemize}
-    \item Extracción automática de CPE strings de la salida de Nmap (formato: \texttt{cpe:2.3:a:vendor:product:version:*:*:*:*:*:*:*})
-    \item Ejecución de queries a NVD API filtrando por CPE exacto: \texttt{GET /cves/2.0?cpeName=<cpe\_string>}
+    \item Extracción automática de CPE strings de la salida de Nmap (formato: {\small \texttt{cpe:2.3:a:vendor:product:version:*}})
+    \item Ejecución de queries a NVD API filtrando por CPE exacto: {\small \texttt{GET /cves/2.0?cpeName=<cpe>}}
     \item Parsing automático de respuestas JSON conteniendo CVE ID, descripción, score CVSS 3.1, vector de ataque, y referencias
     \item Aplicación de filtrado por severidad mínima (CVSS $\geq$ 4.0) para reducir ruido de vulnerabilidades de bajo impacto
     \item Implementación de caché de resultados por 7 días aprovechando que la base de datos NVD se actualiza diariamente
@@ -93,7 +98,7 @@ La salida XML de Nmap proporciona información estructurada que el sistema proce
 
 La API de NVD no requiere autenticación para consultas limitadas a 5 requests por 30 segundos (modo sin API key), suficiente para el caso de uso de análisis individual de IPs. El sistema implementa rate limiting en el cliente REST para respetar estos límites y evitar bloqueos temporales.
 
-\textbf{WHOIS Regional Registries:} El sistema realiza consultas WHOIS directas a los registros regionales (ARIN, RIPE, LACNIC, APNIC, AFRINIC) mediante sockets TCP en puerto 43. La información extraída automáticamente incluye ASN, organización propietaria, rango de red asignado y datos de contacto cuando están disponibles públicamente.
+\textbf{ipapi.co API:} El sistema complementa los datos de GeoLite2 consultando ipapi.co para obtener información actualizada de ASN, ISP y organización propietaria de la red. Esta API REST pública (\url{https://ipapi.co/[ip]/json}) permite 1000 requests diarios sin autenticación. La integración proporciona contexto de red más preciso que WHOIS manual y enriquece el análisis con metadatos actualizados sobre el propietario de la IP.
 
 \subsection{Modelo de Datos}
 
@@ -248,29 +253,30 @@ Para garantizar tiempos de respuesta inferiores a 10 segundos (requisito no func
 
 El \texttt{AnalysisService} ejecuta consultas a GeoLite2 y escaneos Nmap en paralelo cuando es posible, utilizando \texttt{CompletableFuture}:
 
-\begin{verbatim}
+\begin{lstlisting}[language=Java]
 CompletableFuture<Geolocation> geoFuture = 
-    CompletableFuture.supplyAsync(() -> 
-        geolocationService.resolve(ip));
+  CompletableFuture.supplyAsync(() -> 
+    geolocationService.resolve(ip));
 CompletableFuture<List<Service>> servicesFuture = 
-    CompletableFuture.supplyAsync(() -> 
-        nmapService.scanIP(ip));
+  CompletableFuture.supplyAsync(() -> 
+    nmapService.scanIP(ip));
         
 CompletableFuture.allOf(geoFuture, servicesFuture)
-    .join();
-\end{verbatim}
+  .join();
+\end{lstlisting}
 
 Las consultas a NVD API se ejecutan secuencialmente después de obtener los servicios detectados por Nmap, pero se paralelizan cuando existen múltiples servicios a correlacionar. Esta estrategia implementada reduce el tiempo total de análisis significativamente.
 
 \subsubsection{Lazy Loading en Frontend}
 
 Las vistas se cargan bajo demanda con Vue Router:
-\begin{verbatim}
+
+\begin{lstlisting}[language=Java]
 {
   path: '/analysis',
   component: () => import('./views/Analysis.vue')
 }
-\end{verbatim}
+\end{lstlisting}
 
 Esta técnica reduce el bundle inicial de 850KB a 180KB, mejorando el Time to Interactive (TTI) en un 65\%.
 
@@ -338,11 +344,12 @@ El sistema se containeriza con Docker para garantizar reproducibilidad:
 \textbf{Frontend:} Imagen multi-stage que compila con Node.js 20 y sirve archivos estáticos con Nginx 1.25. Tamaño final: 25MB.
 
 \textbf{Backend:} Imagen Quarkus JVM con OpenJDK 21 y Nmap preinstalado. El Dockerfile incluye:
-\begin{verbatim}
-FROM quay.io/quarkus/ubi-quarkus-native-image:21-java21
+
+\begin{lstlisting}[language=bash]
+FROM quay.io/quarkus/ubi-quarkus-native-image:21
 RUN microdnf install nmap -y && microdnf clean all
 COPY target/quarkus-app /app
-\end{verbatim}
+\end{lstlisting}
 
 Tamaño final: 220MB. Tiempo de arranque: 0.8s. Consumo de memoria en reposo: 80MB RSS.
 
