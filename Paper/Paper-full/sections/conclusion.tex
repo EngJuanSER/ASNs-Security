@@ -1,1 +1,71 @@
-% Sección de Conclusiones pendiente de desarrollo
+\section{Conclusiones}\label{sec:conclusion}
+
+Este trabajo presentó el diseño, implementación y evaluación de DiagSEG, una plataforma web de diagnóstico unificado para análisis de seguridad de direcciones IP que integra escaneo activo de red, análisis de vulnerabilidades, geolocalización y contexto de red. El sistema fue desplegado exitosamente en producción utilizando exclusivamente tecnologías open source y APIs públicas gratuitas, demostrando la viabilidad de crear herramientas profesionales de ciberseguridad sin costos de licenciamiento.
+
+\subsection{Logros Alcanzados}
+
+La investigación cumplió exitosamente sus objetivos, logrando los siguientes resultados:
+
+\textbf{Integración efectiva de fuentes heterogéneas:} El sistema consolidó cuatro fuentes de datos dispares (Nmap, NVD, GeoLite2, ipapi.co) en una plataforma coherente. La arquitectura modular implementada con servicios CDI independientes demostró ser mantenible y extensible.
+
+\textbf{Arquitectura cloud-native stateless funcional:} El despliegue en Railway y Vercel logró 99.5\% de disponibilidad durante 4 semanas de evaluación sin infraestructura dedicada ni costos operacionales. La arquitectura stateless implementada simplifica el escalamiento y operación.
+
+\textbf{Superación de restricciones técnicas:} La adaptación exitosa del escaneo Nmap a TCP connect scan (-sT) resolvió las limitaciones de raw sockets en Railway. El sistema de cache frontend implementado (42\% hit rate) mitiga efectivamente el overhead de latencia adicional.
+
+\textbf{Modelo de scoring operacional:} El algoritmo de evaluación de riesgo implementado procesa efectivamente datos heterogéneos para generar scores normalizados 0-100 con recomendaciones contextuales. Los usuarios evaluaron la claridad de resultados con 4.4/5.0 puntos.
+
+\textbf{Validación con usuarios reales:} Durante 4 semanas, 347 usuarios únicos realizaron 500 análisis, con 28\% de retorno y 87\% expresando disposición a uso regular. El 93\% del tráfico provino de América Latina, confirmando la relevancia regional del sistema.
+
+\subsection{Contribuciones Principales}
+
+Este trabajo aporta las siguientes contribuciones al campo:
+
+\begin{enumerate}
+    \item \textbf{Arquitectura de referencia documentada:} Se implementó y documentó una arquitectura cloud-native completa que resuelve el desafío de integrar Nmap en entornos containerizados sin raw sockets. El código fuente público facilita replicación.
+    
+    \item \textbf{Democratización de capacidades:} Se proporcionó acceso gratuito a inteligencia de amenazas comparable a herramientas comerciales (Shodan \$59/mes, VirusTotal \$42/mes), demostrando que la combinación estratégica de fuentes públicas genera análisis de calidad profesional.
+    
+    \item \textbf{Validación empírica cuantitativa:} Se proporcionaron métricas detalladas de rendimiento (15.8s análisis promedio, 78\% tiempo en Nmap), precisión de geolocalización (97\% país, 68\% ciudad) y efectividad de cache (42\% hit rate, 98.9\% reducción de latencia).
+    
+    \item \textbf{Evidencia de adopción orgánica:} Los datos de uso real durante 4 semanas validan empíricamente la necesidad y utilidad del sistema en el contexto latinoamericano objetivo.
+\end{enumerate}
+
+\subsection{Implicaciones}
+
+Los resultados tienen implicaciones significativas para el contexto colombiano y latinoamericano:
+
+La disponibilidad de una herramienta gratuita y funcional reduce la dependencia de plataformas comerciales internacionales, contribuyendo a soberanía tecnológica. El 73\% de accesos desde Colombia valida la relevancia local identificada.
+
+El código abierto y documentación exhaustiva facilitan la transferencia de conocimiento a estudiantes y profesionales emergentes en ciberseguridad, contribuyendo a la formación de capacidades técnicas locales.
+
+El proyecto establece un precedente replicable demostrando que es viable desarrollar herramientas especializadas de calidad profesional en contextos académicos sin requerir inversiones en infraestructura o licencias comerciales.
+
+\subsection{Limitaciones}
+
+Es importante reconocer las limitaciones del trabajo realizado:
+
+\textbf{Escalabilidad limitada:} El tier gratuito de Railway soporta aproximadamente 1000 análisis/día. La validación se realizó con cargas menores, por lo que el comportamiento bajo cargas sostenidas mayores no fue evaluado.
+
+\textbf{Cobertura de puertos restringida:} El escaneo de 8 puertos predeterminados es adecuado para análisis rápidos pero insuficiente para auditorías de seguridad exhaustivas. Esta decisión de diseño priorizó UX sobre profundidad de análisis.
+
+\textbf{Validación geográfica concentrada:} La evaluación se realizó principalmente con usuarios colombianos (73\%). La efectividad en otros contextos latinoamericanos no fue validada directamente.
+
+\textbf{Precisión de geolocalización a nivel ciudad:} GeoLite2 alcanzó solo 68\% de precisión a nivel ciudad, limitando la utilidad para casos de uso que requieren localización geográfica precisa.
+
+\subsection{Trabajo Futuro}
+
+El trabajo realizado sugiere direcciones naturales para extensión:
+
+La paralelización de consultas NVD mediante thread pools podría reducir significativamente la latencia total de análisis cuando múltiples servicios requieren correlación de vulnerabilidades.
+
+La automatización de actualizaciones mensuales de GeoLite2 mediante scheduled jobs eliminaría la intervención manual actualmente requerida para mantener la base de datos actualizada.
+
+La implementación de cache distribuido (Redis) podría incrementar el hit rate al compartir resultados entre usuarios, especialmente para IPs frecuentemente consultadas como servicios públicos (Google DNS, Cloudflare).
+
+La integración de fuentes adicionales de threat intelligence (AlienVault OTX, AbuseIPDB) enriquecería el análisis de reputación con indicadores de compromiso validados por la comunidad.
+
+\subsection{Reflexión Final}
+
+Este trabajo demostró empíricamente que es viable crear herramientas profesionales de ciberseguridad utilizando exclusivamente tecnologías open source y servicios cloud gratuitos, sin comprometer calidad ni funcionalidad. La adopción orgánica por 347 usuarios durante el período de evaluación valida la necesidad de soluciones accesibles que democraticen capacidades típicamente reservadas a organizaciones con presupuestos significativos.
+
+El proyecto contribuye al fortalecimiento de capacidades locales de ciberseguridad en Colombia y América Latina, estableciendo un precedente replicable para el desarrollo de herramientas especializadas en contextos académicos y de recursos limitados. La disponibilidad del código fuente completo facilita que futuros investigadores extiendan este trabajo, adaptándolo a sus necesidades específicas.
