@@ -3,14 +3,7 @@
 \subsection{Duración y Alcance del Proyecto}
 
 \textbf{Período Total:} 8 semanas (del 10 de octubre al 1 de diciembre de 2025)\\
-\textbf{Equipo:} 2 estudiantes \subsubsection{Infraestructura Tecnológica}
-\begin{itemize}
-    \item \textbf{Desarrollo:} Computadoras personales con IDEs gratuitos
-    \item \textbf{Herramientas:} Nmap instalado localmente para desarrollo y testing
-    \item \textbf{Repositorio:} GitHub (cuenta gratuita)
-    \item \textbf{Comunicación:} Discord, WhatsApp, reuniones presenciales
-    \item \textbf{Documentación:} Google Docs, LaTeX para documentos formales
-\end{itemize}tarios\\
+\textbf{Equipo:} 2 estudiantes\\
 \textbf{Modalidad:} Desarrollo ágil con entregas incrementales
 
 \subsection{Metodología de Planificación}
@@ -28,6 +21,7 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
     \item Investigación de Nmap y formato de output XML
     \item Investigación de NVD API y formato de respuestas
     \item Descarga e instalación de GeoLite2
+    \item Investigación de ipapi.co para información de ASN/ISP
     \item Creación de prototipos de escaneo con Nmap
     \item Definición de arquitectura inicial del sistema
 \end{itemize}
@@ -44,14 +38,15 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
     \item Testing unitario de componentes básicos
 \end{itemize}
 
-\subsubsection{Semana 3: Integración Nmap y NVD (24-31 Octubre)}
-\textbf{Objetivos:} Conectar escaneo de servicios con análisis de vulnerabilidades
+\subsubsection{Semana 3: Integración Nmap, NVD e ipapi.co (24-31 Octubre)}
+\textbf{Objetivos:} Conectar escaneo de servicios con análisis de vulnerabilidades e información de ASN
 
 \textbf{Actividades principales:}
 \begin{itemize}
-    \item Implementación de servicio de ejecución de Nmap con ProcessBuilder
+    \item Implementación de servicio de ejecución de Nmap mediante APIs de procesos del lenguaje
     \item Desarrollo de parser XML para output de Nmap
     \item Implementación de cliente REST para NVD API
+    \item Implementación de cliente REST para ipapi.co (ASN/ISP)
     \item Desarrollo de lógica de correlación CPE para búsqueda de CVEs
     \item Integración con servicios existentes de geolocalización
     \item Implementación de cache básico para optimizar consultas
@@ -74,10 +69,10 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
 
 \textbf{Actividades principales:}
 \begin{itemize}
-    \item Implementación de búsqueda por lotes (múltiples IPs)
-    \item Desarrollo de funcionalidad de exportación (JSON, CSV)
-    \item Mejora de visualizaciones (gráficos, mapas interactivos)
-    \item Implementación de historial de búsquedas (local storage)
+    \item Implementación de comparador de IPs lado a lado
+    \item Desarrollo de funcionalidad de exportación (JSON, PDF)
+    \item Mejora de visualizaciones (gráficos estadísticos, mapas interactivos)
+    \item Implementación de historial de búsquedas con estadísticas
     \item Optimización de rendimiento frontend
 \end{itemize}
 
@@ -207,9 +202,9 @@ El cronograma se estructura utilizando sprints cortos de 1 semana para permitir 
 
 \subsubsection{Herramientas de Software}
 \begin{itemize}
-    \item \textbf{Backend:} Quarkus, Java 21, PostgreSQL
-    \item \textbf{Escaneo y Análisis:} Nmap, NVD API REST client
-    \item \textbf{Frontend:} Vue.js 3, Vuetify, Leaflet.js
-    \item \textbf{Testing:} JUnit, Jest, Postman
-    \item \textbf{Deployment:} Docker (con Nmap preinstalado), servicios de hosting básicos
+    \item \textbf{Backend:} Java con Quarkus, arquitectura REST stateless
+    \item \textbf{Escaneo y Análisis:} Nmap, NVD API, ipapi.co
+    \item \textbf{Frontend:} Vue.js con TypeScript, librerías de mapas, cache local
+    \item \textbf{Testing:} Framework de testing del lenguaje, herramientas de testing de APIs
+    \item \textbf{Deployment:} Docker, plataformas cloud con tier gratuito
 \end{itemize}

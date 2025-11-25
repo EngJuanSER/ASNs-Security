@@ -1,10 +1,10 @@
 \section{Selección y Definición del Tema de Investigación}
 
 \subsection{Tema de Investigación}
-"Desarrollo de una Herramienta de Diagnóstico Unificado para el Análisis de Seguridad y Geolocalización de Direcciones IP mediante Integración de Fuentes Abiertas en el Contexto de Ciberseguridad Colombiana"
+Desarrollo de una herramienta de diagnóstico unificado de direcciones IP mediante integración de fuentes abiertas para análisis de seguridad en el contexto colombiano.
 
 \subsection{Título Provisional}
-"Diagnóstico de Seguridad IP con Fuentes Abiertas en Colombia"
+Diagnóstico de Seguridad IP con Fuentes Abiertas en Colombia
 
 \subsection{Línea de Investigación}
 Este proyecto se enmarca dentro de la línea de investigación en \textbf{Inteligencia de Amenazas Cibernéticas}~\cite{lin2023correlation}, específicamente en el área de \textbf{Análisis Automatizado de Infraestructuras de Red} y \textbf{Desarrollo de Herramientas de Ciberseguridad Basadas en Fuentes Abiertas}~\cite{alghamdi2024reconnaissance}.
@@ -39,25 +39,26 @@ El problema central es la \textbf{fragmentación de la información}. Un desarro
     \item Consolidar y correlacionar toda esta información a mano para poder tomar una decisión.
 \end{enumerate}
 
-Este proceso manual es \textbf{ineficiente, lento y propenso a errores}. Limita la capacidad de realizar análisis rápidos y automatizados, especialmente cuando se necesita evaluar un gran número de direcciones IP. Aunque existen herramientas comerciales que resuelven este problema, sus costos son a menudo prohibitivos para estudiantes, desarrolladores independientes o pequeños equipos.
+Este proceso manual es \textbf{ineficiente, lento y propenso a errores}. Limita la capacidad de realizar análisis rápidos y automatizados, especialmente cuando se necesita evaluar un gran número de direcciones IP. Aunque existen herramientas comerciales que resuelven este problema, sus costos son a menudo prohibitivos para estudiantes, desarrolladores independientes o pequeños equipos. Esta situación evidencia la necesidad de desarrollar una solución automatizada que integre múltiples fuentes de datos en una única interfaz accesible.
 
 \subsection{Pregunta de Investigación}
 
-¿Es posible diseñar y desarrollar una herramienta de software que integre y unifique datos de fuentes abiertas y gratuitas (específicamente GeoLite2, Nmap para escaneo de red y NVD para vulnerabilidades) para presentar un diagnóstico de seguridad consolidado de una dirección IP, de manera eficiente y accesible?
+¿Cómo diseñar e implementar una herramienta de software que integre y unifique datos de fuentes abiertas y gratuitas (específicamente GeoLite2 para geolocalización, Nmap para escaneo de red, NVD para vulnerabilidades e ipapi.co para información de ASN/ISP) para presentar un diagnóstico de seguridad consolidado de una dirección IP, de manera eficiente y accesible?
 
-\subsection{Justificación de la Investigación}
+\subsection{Relevancia del Problema}
 
-La creación de esta herramienta aborda directamente la ineficiencia del proceso actual. Al automatizar la recolección y presentación de datos, el proyecto ofrece una solución práctica que:
+La solución a este problema aborda directamente la ineficiencia del proceso actual. Al automatizar la recolección y presentación de datos, el proyecto ofrece una solución práctica que:
 \begin{itemize}
     \item \textbf{Ahorra tiempo:} Reduce drásticamente el tiempo necesario para investigar una IP.
     \item \textbf{Centraliza la información:} Ofrece un "panel único" con los datos más relevantes.
-    \item \textbf{Es accesible:} Al basarse en fuentes gratuitas (GeoLite2, Nmap y NVD API), la solución es económicamente viable para un público amplio.
+    \item \textbf{Es accesible:} Al basarse en fuentes gratuitas (GeoLite2, Nmap, NVD API e ipapi.co), la solución es económicamente viable para un público amplio.
     \item \textbf{Tiene un propósito educativo:} Sirve como un excelente caso de estudio sobre cómo integrar diferentes APIs y herramientas de escaneo en una aplicación de ciberseguridad funcional.
 \end{itemize}
 
-Este proyecto, aunque de alcance limitado a tres fuentes principales (geolocalización, escaneo de red y vulnerabilidades), sienta las bases para una herramienta más completa y demuestra la viabilidad de construir soluciones de ciberseguridad efectivas sin depender exclusivamente de costosas licencias comerciales.
+Este proyecto, que integra cuatro fuentes principales (geolocalización, escaneo de red, vulnerabilidades e información de ASN/ISP), sienta las bases para una herramienta más completa y demuestra la viabilidad de construir soluciones de ciberseguridad efectivas sin depender exclusivamente de costosas licencias comerciales.
 
-\subsubsection{Análisis de Causas}
+\subsection{Análisis Causal del Problema}
+
 Con el fin de comprender de forma estructurada las raíces del problema identificado ---la \textit{fragmentación de la información de inteligencia sobre IPs en el contexto colombiano}--- se aplicó la metodología de Ishikawa (o diagrama de causa-efecto). Esta herramienta permitió clasificar las causas en cuatro grandes categorías: tecnológicas, económicas, humanas y regulatorias, lo cual facilita una visualización clara de los factores que convergen en el problema central.
 
 \begin{figure}[H]
@@ -100,14 +101,13 @@ A partir del análisis realizado, se identificaron las siguientes causas especí
     \item Limitaciones en marcos legales para compartir información de amenazas
 \end{itemize}
 
-\subsubsection{Pronóstico}
-Si persiste esta situación, se proyectan las siguientes consecuencias para el período 2025-2027:
+Si persiste esta situación, se estiman las siguientes consecuencias para el período 2025-2027:
 
-\textbf{Impacto Operacional:}
+\textbf{Impacto Operacional (estimaciones basadas en tendencias del sector):}
 \begin{itemize}
-    \item Incremento del 40\% en tiempos de respuesta ante incidentes de seguridad
-    \item Reducción del 25\% en la efectividad de detección de amenazas
-    \item Aumento del 60\% en costos operativos por múltiples licencias
+    \item Incremento estimado del 40\% en tiempos de respuesta ante incidentes de seguridad
+    \item Reducción estimada del 25\% en la efectividad de detección de amenazas
+    \item Aumento estimado del 60\% en costos operativos por múltiples licencias
 \end{itemize}
 
 \textbf{Impacto Estratégico:}
@@ -122,13 +122,4 @@ Si persiste esta situación, se proyectan las siguientes consecuencias para el p
     \item Limitación en adopción de tecnologías emergentes por riesgos de seguridad
 \end{itemize}
 
-\subsubsection{Control al Pronóstico}
-Para evitar este escenario negativo, es fundamental desarrollar una solución tecnológica que:
-
-\begin{enumerate}
-    \item \textbf{Integre fuentes abiertas gratuitas} como Nmap para escaneo de servicios, NVD para análisis de vulnerabilidades y MaxMind GeoLite2 para geolocalización, proporcionando análisis comprehensivos sin costos de licenciamiento.
-    \item \textbf{Implemente algoritmos de correlación avanzados} que combinen detección activa de servicios con análisis de vulnerabilidades para generar evaluaciones de riesgo contextualizadas.
-    \item \textbf{Proporcione interfaces intuitivas} que democraticen el acceso a capacidades avanzadas de análisis IP.
-    \item \textbf{Establezca metodologías reproducibles} que puedan ser adoptadas por organizaciones con diferentes niveles de madurez tecnológica.
-    \item \textbf{Genere capacidades técnicas locales} mediante documentación detallada y código abierto que facilite la transferencia de conocimiento.
-\end{enumerate}
+Para evitar este escenario negativo, es fundamental desarrollar una solución tecnológica que integre fuentes abiertas gratuitas (Nmap, NVD, GeoLite2, ipapi.co) en una arquitectura unificada, implementando algoritmos de correlación que combinen detección de servicios con análisis de vulnerabilidades, y proporcionando interfaces intuitivas con documentación que facilite la transferencia de conocimiento y la adopción por organizaciones con diferentes niveles de madurez tecnológica.

@@ -1,35 +1,16 @@
 \section{Objetivos de la Investigación}
 
 \subsection{Objetivo General}
-Diseñar, desarrollar y documentar una herramienta de software funcional que integre datos de geolocalización de MaxMind GeoLite2, escaneo de servicios con Nmap (TCP connect scan), análisis de vulnerabilidades mediante NVD API, e información de red mediante ipapi.co, para presentar un perfil unificado y de fácil consulta sobre direcciones IP y dominios, desplegada en plataformas cloud (Railway + Vercel).
+Diseñar y construir una herramienta de diagnóstico unificado de direcciones IP que integre datos de GeoLite2, Nmap, NVD e ipapi.co, mediante el desarrollo de un backend API REST y un frontend web interactivo, para facilitar el análisis inicial de seguridad y reducir el tiempo y esfuerzo requerido en la consulta manual de múltiples fuentes de información.
 
 \subsection{Objetivos Específicos}
 
 \begin{enumerate}
-    \item \textbf{Diseñar una arquitectura de software cloud-native} para la herramienta, basada en un backend stateless (Quarkus 3.29.2 + Java 21) que centralice la lógica de negocio, desplegado en Railway, y un frontend SPA (Vue.js 3 + Vite + TypeScript) que consuma y presente los datos al usuario, desplegado en Vercel.
+    \item Diseñar la arquitectura de la herramienta, definiendo los componentes del backend y frontend necesarios para integrar datos de geolocalización, escaneo de red, vulnerabilidades e información de ASN/ISP.
     
-    \item \textbf{Implementar la lógica en el backend} para que sea capaz de:
-    \begin{itemize}
-        \item Recibir una dirección IP o dominio como entrada mediante endpoint REST POST /api/analysis/analyze.
-        \item Resolver dominios a direcciones IP mediante Java InetAddress.
-        \item Consultar la base de datos local GeoLite2 (MMDB de 61MB) para información geográfica.
-        \item Ejecutar escaneos con Nmap usando TCP connect scan (-sT -sV) para detectar servicios, versiones y puertos abiertos.
-        \item Consultar ipapi.co para obtener información actualizada de ASN, ISP y organización.
-        \item Consultar la API de NVD para obtener vulnerabilidades (CVEs) asociadas a los servicios detectados mediante CPE matching.
-        \item Calcular score de seguridad basado en vulnerabilidades, puertos críticos y servicios desactualizados.
-        \item Generar recomendaciones de seguridad mediante sistema experto basado en reglas.
-        \item Combinar los resultados de todas las fuentes en una única respuesta estructurada (JSON).
-    \end{itemize}
+    \item Implementar un servicio backend que consulte, procese y unifique datos provenientes de GeoLite2, Nmap, NVD API e ipapi.co, generando un perfil de seguridad consolidado con evaluación de riesgos.
     
-    \item \textbf{Desarrollar una interfaz de usuario completa} en el frontend que permita:
-    \begin{itemize}
-        \item Ingresar una dirección IP o dominio en campo de búsqueda con validación.
-        \item Implementar sistema de cache local con LocalForage (IndexedDB) y TTL de 7 días.
-        \item Presentar análisis individual con visualización de servicios, vulnerabilidades, mapa geográfico y recomendaciones (Analysis.vue).
-        \item Comparar dos análisis lado a lado con resaltado de diferencias (IPComparator.vue).
-        \item Visualizar historial de análisis con estadísticas, gráficos Chart.js y gestión de cache (History.vue).
-        \item Soportar temas claro/oscuro con persistencia de preferencia.
-    \end{itemize}
+    \item Desarrollar una interfaz de usuario web que permita ingresar una dirección IP o dominio y visualizar de forma consolidada e interactiva la información obtenida, incluyendo representación geográfica y análisis de vulnerabilidades.
     
-    \item \textbf{Documentar el proyecto}, incluyendo configuración del entorno de desarrollo (requisitos: Java 21, Gradle 9, Node.js 20+), proceso de build con Docker multi-stage, configuración de variables de entorno (CORS\_ORIGINS, VITE\_API\_BASE\_URL, QUARKUS\_PROFILE), guía de despliegue en Railway y Vercel, y documentación de API con ejemplos de uso.
+    \item Documentar el funcionamiento, instalación y uso de la herramienta, incluyendo la arquitectura del sistema, guías técnicas y lineamientos para su futura ampliación o replicación.
 \end{enumerate}

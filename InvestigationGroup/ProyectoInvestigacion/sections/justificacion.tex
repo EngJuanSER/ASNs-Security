@@ -1,9 +1,11 @@
 \section{Justificación de la Investigación}
 
+El problema de la fragmentación de información de inteligencia sobre direcciones IP existe porque las fuentes de datos están dispersas en múltiples proveedores, cada uno con diferentes formatos, APIs y costos de acceso. Es importante resolverlo porque los analistas de seguridad en Colombia, especialmente en entornos académicos y organizaciones con recursos limitados, enfrentan barreras significativas para realizar diagnósticos integrales, lo que impacta directamente en la capacidad de respuesta ante amenazas cibernéticas. Esta investigación es necesaria y pertinente porque propone una alternativa práctica basada en fuentes abiertas y gratuitas, democratizando el acceso a herramientas de análisis de seguridad y generando capacidades técnicas locales que contribuyan al fortalecimiento de la ciberseguridad nacional.
+
 \subsection{Justificación Teórica}
 
 \subsubsection{Contribución al Conocimiento Científico}
-Esta investigación contribuye al campo de la ciberseguridad mediante el desarrollo de una herramienta práctica que integra fuentes abiertas de datos para el análisis de direcciones IP. Como proyecto académico, busca explorar la viabilidad de combinar datos públicos disponibles (GeoLite2, Nmap y NVD) para crear una solución funcional de análisis de seguridad.
+Esta investigación contribuye al campo de la ciberseguridad mediante el desarrollo de una herramienta práctica que integra fuentes abiertas de datos para el análisis de direcciones IP. Como proyecto académico, busca explorar la viabilidad de combinar datos públicos disponibles (GeoLite2, Nmap, NVD e ipapi.co) para crear una solución funcional de análisis de seguridad.
 
 El trabajo se enfoca en la implementación práctica de técnicas ya establecidas en la literatura~\cite{alghamdi2024reconnaissance, ferrag2019deep}, adaptándolas a un contexto de recursos limitados y fuentes de datos gratuitas. Se busca validar si es posible crear una herramienta útil para análisis integral de IP utilizando únicamente tecnologías y datos de acceso libre.
 
@@ -27,6 +29,7 @@ La metodología se basa en el desarrollo incremental de una aplicación web que 
     \item \textbf{MaxMind GeoLite2:} Base de datos gratuita de geolocalización IP, validada en estudios académicos~\cite{schopman2021validating}
     \item \textbf{Nmap:} Herramienta de código abierto para escaneo de red y detección de servicios~\cite{lyon2009nmap, pittman2023comparative}
     \item \textbf{NVD API:} API pública de NIST para consulta de vulnerabilidades (CVEs)
+    \item \textbf{ipapi.co:} API REST gratuita para obtención de información de ASN e ISP
 \end{itemize}
 
 \textbf{Stack Tecnológico:}

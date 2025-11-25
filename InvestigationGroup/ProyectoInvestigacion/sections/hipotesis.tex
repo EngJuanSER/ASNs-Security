@@ -2,19 +2,26 @@
 
 \subsection{Hipótesis Principal}
 
-Es factible desarrollar una herramienta de software que, utilizando exclusivamente las fuentes de datos gratuitas de GeoLite2, Nmap para escaneo de servicios y NVD API para análisis de vulnerabilidades, puede proporcionar un perfil de información consolidado sobre una dirección IP que es útil y suficiente para un análisis de seguridad integral.
+Es factible desarrollar una herramienta de software que, utilizando exclusivamente fuentes de datos gratuitas (GeoLite2 para geolocalización, Nmap con TCP connect scan para escaneo de servicios, NVD API para análisis de vulnerabilidades, e ipapi.co para información de ASN/ISP), proporcione un perfil de información consolidado sobre una dirección IP que sea útil y suficiente para un análisis de seguridad integral, medible mediante la completitud de datos obtenidos (mínimo 90\% de campos esperados), tiempos de respuesta aceptables ($<$60 segundos para análisis completo) y precisión en la detección de servicios comparable con herramientas estándar de la industria.
 
 \subsection{Sub-hipótesis}
+
+\begin{enumerate}
+    \item La integración de múltiples fuentes de datos heterogéneas (bases de datos locales, APIs REST, escaneo activo) puede realizarse de manera eficiente mediante una arquitectura cloud-native stateless.
+    \item Una interfaz web con sistema de caché local puede proporcionar tiempos de respuesta aceptables para análisis repetidos de direcciones IP.
+    \item El despliegue en plataformas cloud con niveles gratuitos es viable para una herramienta de análisis de seguridad de uso académico.
+\end{enumerate}
 
 \subsection{Variables}
 
 \begin{itemize}
-    \item \textbf{Variable Independiente:} La herramienta de software desarrollada que integra GeoLite2, Nmap y NVD.
+    \item \textbf{Variable Independiente:} La herramienta de software desarrollada que integra GeoLite2, Nmap, NVD e ipapi.co.
     \item \textbf{Variable Dependiente:} La utilidad y eficiencia del perfil de IP generado, medida en términos de:
     \begin{itemize}
-        \item \textbf{Completitud de la información:} ¿Contiene los datos esperados de las tres fuentes?
-        \item \textbf{Tiempo de respuesta:} ¿Cuánto tarda en generar un informe completo?
+        \item \textbf{Completitud de la información:} ¿Contiene los datos esperados de las cuatro fuentes?
+        \item \textbf{Tiempo de respuesta:} ¿Cuánto tarda en generar un informe completo? (objetivo: $<$60 segundos)
         \item \textbf{Precisión de detección:} ¿Identifica correctamente servicios y vulnerabilidades?
         \item \textbf{Facilidad de uso:} ¿La información se presenta de manera clara y comprensible?
+        \item \textbf{Disponibilidad:} ¿El sistema mantiene alta disponibilidad en producción?
     \end{itemize}
 \end{itemize}

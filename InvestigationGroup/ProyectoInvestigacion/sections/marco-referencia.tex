@@ -29,15 +29,15 @@ Según Alghamdi~\cite{alghamdi2024reconnaissance}, las técnicas de reconocimien
 Las herramientas modernas han democratizado el acceso a análisis de seguridad. Pittman~\cite{pittman2023comparative} realizó un análisis comparativo exhaustivo de herramientas de escaneo de puertos, evaluando precisión, velocidad y capacidades de detección. Los resultados demostraron que Nmap mantiene su posición como estándar de la industria debido a su precisión superior (99.2\%), flexibilidad en técnicas de escaneo y capacidades avanzadas de fingerprinting:
 
 \begin{itemize}
-    \item \textbf{Nmap:} Herramienta de código abierto para escaneo de red y detección de servicios~\cite{lyon2009nmap}. Este proyecto utiliza TCP Connect scan (-sT) en lugar de SYN scan por compatibilidad con entornos cloud que bloquean raw sockets. Soporta detección de versiones (-sV) mediante fingerprinting activo de respuestas de servicios.
+    \item \textbf{Nmap:} Herramienta de código abierto para escaneo de red y detección de servicios~\cite{lyon2009nmap}. Se propone utilizar TCP Connect scan (-sT) en lugar de SYN scan por compatibilidad con entornos cloud que bloquean raw sockets. Soporta detección de versiones (-sV) mediante fingerprinting activo de respuestas de servicios.
     \item \textbf{NVD (National Vulnerability Database):} Base de datos pública de NIST con más de 200,000 vulnerabilidades documentadas, actualizada diariamente con información de severidad CVSS v3.1. Accesible mediante API REST sin autenticación para consultas individuales.
     \item \textbf{MaxMind GeoLite2:} Base de datos geográfica gratuita de 61MB en formato MMDB, con actualizaciones mensuales. Proporciona información de país, región, ciudad y coordenadas con precisión del 95\% a nivel país.
     \item \textbf{ipapi.co:} API REST complementaria para información de ASN e ISP actualizada, con 1000 requests diarios gratuitos.
 \end{itemize}
 
-\textbf{Nota sobre Herramientas Comerciales:} Aunque existen herramientas comerciales avanzadas como Shodan (motor de búsqueda IoT), Censys (escaneo Internet), y Masscan (escaneo alta velocidad), este proyecto se enfoca exclusivamente en fuentes gratuitas y de código abierto para demostrar viabilidad académica sin costos de licenciamiento.
+Aunque existen herramientas comerciales avanzadas como Shodan (motor de búsqueda IoT), Censys (escaneo Internet) y Masscan (escaneo alta velocidad), el enfoque en fuentes gratuitas y de código abierto permite demostrar viabilidad académica sin costos de licenciamiento.
 
-Para este proyecto, nos enfocaremos en Nmap (TCP connect scan) para detección activa de servicios, NVD API para análisis de vulnerabilidades, GeoLite2 para geolocalización e ipapi.co para datos de red, todas herramientas completamente gratuitas y validadas ampliamente en literatura académica.
+Para el análisis propuesto, se consideran herramientas como Nmap (TCP connect scan) para detección activa de servicios, NVD API para análisis de vulnerabilidades, GeoLite2 para geolocalización e ipapi.co para datos de red, todas herramientas completamente gratuitas y validadas ampliamente en literatura académica.
 
 \subsubsection{Geolocalización de Direcciones IP}
 
@@ -96,7 +96,7 @@ La precisión de geolocalización varía significativamente según granularidad 
 \end{itemize}
 
 \textbf{MaxMind GeoLite2:}
-Para este proyecto utilizaremos la base de datos GeoLite2 de MaxMind. Schopman~\cite{schopman2021validating} validó la precisión de GeoLite2 City database mediante análisis de 100,000+ direcciones IP con ubicaciones verificadas, encontrando que mantiene niveles aceptables de precisión para uso académico y aplicaciones no críticas:
+Para el análisis de geolocalización se propone utilizar la base de datos GeoLite2 de MaxMind. Schopman~\cite{schopman2021validating} validó la precisión de GeoLite2 City database mediante análisis de 100,000+ direcciones IP con ubicaciones verificadas, encontrando que mantiene niveles aceptables de precisión para uso académico y aplicaciones no críticas:
 \begin{itemize}
     \item Datos de geolocalización gratuitos actualizados mensualmente mediante crawling web y partnerships con ISPs
     \item Cobertura global de 195 países con precisión estimada del 95\% a nivel país
@@ -150,23 +150,42 @@ La integración de datos provenientes de fuentes heterogéneas (bases de datos l
 Para facilitar integración, definimos un modelo de datos unificado que representa el resultado consolidado del análisis de una dirección IP:
 
 \begin{verbatim}
-IPAnalysisResult {
-    ipAddress: String
-    timestamp: DateTime
+AnalysisResult {
+    ip: String
+    domain: String (null si entrada fue IP)
+    type: Enum {IP, DOMAIN}
+    securityScore: Integer [0-100]
+    riskLevel: Enum {LOW, MEDIUM, HIGH}
+    timestamp: Long (epoch ms)
+    
     geolocation: {
-        country, region, city, latitude, longitude, 
-        asn, isp, timezone
+        country, countryCode, region, city, 
+        latitude, longitude, timezone,
+        asn, isp, org
     }
+    
     services: [{
-        port, protocol, service, version, cpe, 
-        state, banner
+        port, protocol, service, version, 
+        banner, vulnerabilities: [cveIds],
+        riskLevel
     }]
+    
     vulnerabilities: [{
-        cveId, cvssScore, severity, description,
-        affectedService, exploitability, references
+        id (CVE-ID), title, severity, cvss,
+        description, solution, references
     }]
-    securityScore: Float [0-100]
-    riskLevel: Enum {LOW, MEDIUM, HIGH, CRITICAL}
+    
+    reputation: [{
+        source, status, details, lastChecked
+    }]
+    
+    recommendations: [{
+        title, description, priority, category
+    }]
+    
+    metadata: {
+        scanDuration, sourcesUsed, cached, warnings
+    }
 }
 \end{verbatim}
 
@@ -210,7 +229,7 @@ Adaptamos conceptos de fusión multi-sensor al dominio de ciberseguridad:
     \end{itemize}
 \end{enumerate}
 
-\textbf{Proceso de Correlación Implementado:}
+\textbf{Proceso de Correlación Propuesto:}
 
 \begin{enumerate}
     \item \textbf{Normalización de Evidencias:}
@@ -325,7 +344,7 @@ La función sigmoide transforma el score lineal ponderado a una probabilidad en 
 \end{itemize}
 
 \textbf{Estratificación de Riesgo:}
-Clasificación de activos según niveles de riesgo agregado:
+Clasificación de activos según niveles de riesgo agregado (escala estándar 0-10):
 \begin{itemize}
     \item \textbf{CRÍTICO (9.0-10.0):} Múltiples vulnerabilidades críticas explotables, servicios sensibles expuestos, requiere atención inmediata
     \item \textbf{ALTO (7.0-8.9):} Vulnerabilidades de alta severidad o servicios críticos mal configurados, mitigación prioritaria
@@ -426,7 +445,7 @@ Ferrag et al.~\cite{ferrag2019deep} identificaron diversas aproximaciones para a
 \end{itemize}
 
 \textbf{Scoring y Priorización de Vulnerabilidades:}
-El desafío en entornos reales no es solo detectar vulnerabilidades sino priorizarlas efectivamente. Nuestro proyecto implementa un algoritmo de scoring que considera:
+El desafío en entornos reales no es solo detectar vulnerabilidades sino priorizarlas efectivamente. Se propone un algoritmo de scoring que considere:
 
 \begin{multline}
 SecurityScore = w_1 \cdot CVSS + w_2 \cdot Exploitability \\
@@ -455,7 +474,7 @@ El proceso de correlación entre servicios detectados y vulnerabilidades conocid
 
 \subsubsection{Aprendizaje Automático en Ciberseguridad}
 
-Ferrag et al.~\cite{ferrag2019deep} presentaron un estudio comprehensivo sobre deep learning para detección de intrusiones en ciberseguridad, destacando que la integración de técnicas de aprendizaje automático con datos de múltiples fuentes mejora significativamente la capacidad de detección de amenazas. Aunque nuestro proyecto no implementa ML inicialmente, sienta las bases para futuras mejoras utilizando los datos recopilados.
+Ferrag et al.~\cite{ferrag2019deep} presentaron un estudio comprehensivo sobre deep learning para detección de intrusiones en ciberseguridad, destacando que la integración de técnicas de aprendizaje automático con datos de múltiples fuentes mejora significativamente la capacidad de detección de amenazas. Los datos recopilados mediante herramientas de análisis de IP pueden servir como base para futuras implementaciones de modelos de machine learning.
 
 \subsection{Marco Conceptual}
 
@@ -500,10 +519,10 @@ Ferrag et al.~\cite{ferrag2019deep} presentaron un estudio comprehensivo sobre d
     \item \textbf{Nmap (Network Mapper):}
     \begin{itemize}
         \item Herramienta de código abierto para escaneo de red~\cite{lyon2009nmap}
-        \item Configuración: TCP connect scan (-sT) para compatibilidad con Railway
-        \item Comando: \texttt{nmap -sT -sV -p [ports] --open -T4 -oX [output] [target]}
+        \item Configuración propuesta: TCP connect scan (-sT) para compatibilidad con entornos cloud
+        \item Comando base: \texttt{nmap -sT -sV -p [ports] --open -T4 -oX [output] [target]}
         \item Detección de servicios y versiones mediante fingerprinting activo
-        \item Output XML parseado con DocumentBuilder de Java
+        \item Output XML parseado mediante librerías estándar del lenguaje
         \item Ampliamente validado en estudios comparativos~\cite{pittman2023comparative}
     \end{itemize}
     
@@ -520,12 +539,12 @@ Ferrag et al.~\cite{ferrag2019deep} presentaron un estudio comprehensivo sobre d
     
     \item \textbf{MaxMind GeoLite2:}
     \begin{itemize}
-        \item Base de datos descargable de 61MB en formato MMDB
-        \item Fuente: GitHub repository P3TERX/GeoLite.mmdb
-        \item Descarga automática durante Docker build con curl
-        \item Almacenamiento: src/main/resources/geo/ en backend
-        \item Actualizaciones mensuales (proceso manual)
-        \item Consultas: $<$1ms con maxmind-db-reader Java library
+        \item Base de datos descargable en formato MMDB (aproximadamente 60MB)
+        \item Disponible en repositorios públicos de GitHub
+        \item Descarga automática durante proceso de build con herramientas estándar
+        \item Almacenamiento: directorio de recursos del backend
+        \item Actualizaciones mensuales disponibles
+        \item Consultas: $<$1ms con librerías nativas de lectura MMDB
         \item Precisión validada académicamente~\cite{schopman2021validating}
         \item Incluye: país, región, ciudad, coordenadas, timezone
     \end{itemize}
@@ -540,39 +559,31 @@ Ferrag et al.~\cite{ferrag2019deep} presentaron un estudio comprehensivo sobre d
     \end{itemize}
 \end{enumerate}
 
-\subsubsection{Stack Tecnológico}
+\subsubsection{Stack Tecnológico Propuesto}
 
-\textbf{Backend - Quarkus Framework:}
+Para el desarrollo del sistema se consideran las siguientes tecnologías, seleccionadas por su madurez, documentación disponible y compatibilidad con los recursos del proyecto:
+
+\textbf{Backend:}
 \begin{itemize}
-    \item Lenguaje: Java 21 LTS con eclipse-temurin runtime
-    \item Framework: Quarkus 3.29.2 optimizado para cloud-native
-    \item Tiempo de inicio: $<$1 segundo en modo JVM
-    \item Consumo de memoria: $\sim$100MB en runtime
-    \item Integración REST nativa con JAX-RS y Jackson
-    \item Arquitectura stateless sin base de datos persistente
-    \item Build: Gradle 9.0 con multi-stage Docker
-    \item Despliegue: Railway con autoscaling automático
+    \item Lenguaje: Java (versión LTS reciente) por su robustez y ecosistema maduro
+    \item Framework: Quarkus, optimizado para aplicaciones cloud-native con bajo consumo de recursos
+    \item Arquitectura: API REST stateless para facilitar escalabilidad y despliegue
+    \item Build: Gradle o Maven para gestión de dependencias
 \end{itemize}
 
-\textbf{Frontend - Vue.js Ecosystem:}
+\textbf{Frontend:}
 \begin{itemize}
-    \item Framework: Vue.js 3 con Composition API y TypeScript 5
-    \item Build Tool: Vite 6 con HMR y optimización de bundles
-    \item Estado local: Composition API con ref/reactive
-    \item Cache: LocalForage (IndexedDB) con TTL de 7 días
-    \item Visualizaciones: Chart.js 4 para gráficos, Leaflet.js para mapas
-    \item UI: CSS personalizado con sistema de temas (claro/oscuro)
-    \item Despliegue: Vercel con edge network global
+    \item Framework: Vue.js 3 con Composition API para interfaces reactivas
+    \item Lenguaje: TypeScript para tipado estático y mejor mantenibilidad
+    \item Visualizaciones: Librerías de gráficos (Chart.js) y mapas (Leaflet.js)
+    \item Cache local: IndexedDB mediante LocalForage para persistencia en navegador
 \end{itemize}
 
-\textbf{Infraestructura Cloud:}
+\textbf{Infraestructura:}
 \begin{itemize}
-    \item Backend hosting: Railway (https://asns-security-production.up.railway.app)
-    \item Frontend hosting: Vercel (https://diagsec.vercel.app)
-    \item Contenedores: Docker multi-stage con Alpine Linux base
-    \item Nmap: Version 7.93+ con TCP connect scan (-sT) preinstalado
-    \item CI/CD: Despliegue automático desde GitHub main branch
-    \item Variables de entorno: CORS\_ORIGINS, VITE\_API\_BASE\_URL, QUARKUS\_PROFILE
+    \item Contenedores: Docker para empaquetado consistente
+    \item Despliegue: Plataformas cloud con tier gratuito (Railway, Vercel, Render)
+    \item CI/CD: Integración con repositorio Git para despliegue automático
 \end{itemize}
 
 \subsection{Marco Espacial y Temporal}

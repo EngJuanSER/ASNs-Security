@@ -2,23 +2,7 @@
 
 \subsection{Contexto del Presupuesto}
 
-Este presupuesto está diseñado para un proyecto académico desarrollado por dos estudiantes universitarios durante un período de 8 se\begin{table}[H]
-    \centering
-    \small
-    \begin{tabular}{|l|c|l|}
-        \hline
-        \textbf{Riesgo} & \textbf{Probabilidad} & \textbf{Mitigación} \\
-        \hline
-        Tiempo excesivo de escaneos Nmap & Media & Timeouts configurables, scope limitado \\
-        \hline
-        Necesidad de recursos adicionales & Baja & Todas las herramientas son gratuitas \\
-        \hline
-        Costos no previstos & Baja & Buffer de \$100.000 COP \\
-        \hline
-    \end{tabular}
-    \caption{Riesgos Financieros}
-    \label{tab:riesgos_financieros}
-\end{table}en recursos realmente necesarios y aprovecha herramientas gratuitas y créditos académicos disponibles.
+Este presupuesto está diseñado para un proyecto académico desarrollado por dos estudiantes universitarios durante un período de 8 semanas. Se enfoca en recursos realmente necesarios y aprovecha herramientas gratuitas y créditos académicos disponibles.
 
 \subsection{Filosofía de Costos}
 
@@ -41,7 +25,9 @@ El proyecto se basa en el principio de \textbf{desarrollo económico} utilizando
         \hline
         \textbf{Servicio} & \textbf{Descripción} & \textbf{Costo} \\
         \hline
-        Hosting básico & Servicio de hosting con créditos estudiantiles & \$0 \\
+        Plataforma Cloud (Backend) & Servicios con tier gratuito & \$0 \\
+        \hline
+        Hosting Estático (Frontend) & Servicios con tier gratuito & \$0 \\
         \hline
         Nmap & Herramienta de código abierto (gratuita) & \$0 \\
         \hline
@@ -49,7 +35,7 @@ El proyecto se basa en el principio de \textbf{desarrollo económico} utilizando
         \hline
         GeoLite2 & Base de datos gratuita de MaxMind & \$0 \\
         \hline
-        Cloud Storage & Almacenamiento de datos y backups & \$0 \\
+        ipapi.co & API de ASN/ISP con tier gratuito & \$0 \\
         \hline
         \textbf{Subtotal Cloud} & & \textbf{\$0} \\
         \hline
@@ -119,9 +105,9 @@ El proyecto se basa en el principio de \textbf{desarrollo económico} utilizando
         \hline
         Dominio personalizado & .com o .net para demo (1 año) & \$15.000 \\
         \hline
-        Hosting adicional & Si se requiere más allá de GCP gratuito & \$30.000 \\
+        Hosting adicional & Si se exceden límites del tier gratuito & \$30.000 \\
         \hline
-        Certificado SSL & Si no está incluido en hosting & \$0 \\
+        Certificado SSL & Generalmente incluido en plataformas cloud & \$0 \\
         \hline
         Servicios de validación & APIs premium para comparación & \$50.000 \\
         \hline
@@ -187,17 +173,17 @@ El proyecto se basa en el principio de \textbf{desarrollo económico} utilizando
     \small
     \begin{tabular}{|l|r|r|}
         \hline
-        	extbf{Opción} & 	extbf{Costo Mensual} & 	extbf{Costo 2 Meses} 
+        \textbf{Opción} & \textbf{Costo Mensual} & \textbf{Costo 2 Meses} \\
         \hline
-        Nuestro proyecto & \$0 -- \$50.000 & \$0 -- \$100.000 
+        Nuestro proyecto & \$0 -- \$50.000 & \$0 -- \$100.000 \\
         \hline
-        Nessus Professional & \$2.500.000 & \$5.000.000 
+        Nessus Professional & \$2.500.000 & \$5.000.000 \\
         \hline
-        Shodan Enterprise & \$1.500.000 & \$3.000.000 
+        Shodan Enterprise & \$1.500.000 & \$3.000.000 \\
         \hline
-        MaxMind GeoIP2 Precision & \$800.000 & \$1.600.000 
+        MaxMind GeoIP2 Precision & \$800.000 & \$1.600.000 \\
         \hline
-        	extbf{Ahorro estimado} & & 	extbf{\$9.500.000} 
+        \textbf{Ahorro estimado} & & \textbf{\$9.500.000} \\
         \hline
     \end{tabular}
     \caption{Comparación de Costos}
@@ -215,7 +201,7 @@ El proyecto se basa en el principio de \textbf{desarrollo económico} utilizando
         \hline
         \textbf{Riesgo} & \textbf{Probabilidad} & \textbf{Mitigación} \\
         \hline
-        Agotamiento de créditos GCP & Baja & Monitoreo de uso, optimización \\
+        Límites del tier gratuito & Baja & Monitoreo de uso, optimización \\
         \hline
         Necesidad de recursos adicionales & Media & Fuentes alternativas gratuitas \\
         \hline
